@@ -1,8 +1,8 @@
-# Quest Automations for ERPNext
+# Automations for ERPNext
 
 **n8n-style visual automation, built into ERPNext—with an API so agents can build workflows and humans can review them.**
 
-Quest Automations adds a no-code workflow builder to your ERPNext site. Connect document events, webhooks, conditions, API requests, email, and optional JavaScript in one visual flow. An AI agent can create the same workflow through the API; a person can open it, inspect every trigger and action, test it, and publish it when ready.
+This app adds a no-code workflow builder to your ERPNext site. Connect document events, webhooks, conditions, API requests, email, and optional JavaScript in one visual flow. An AI agent can create the same workflow through the API; a person can open it, inspect every trigger and action, test it, and publish it when ready.
 
 This is an independent Frappe custom app, not n8n embedded in ERPNext or an n8n-compatible workflow importer.
 
@@ -52,8 +52,8 @@ Requirements: **Frappe v16, ERPNext v16, Python 3.14+**, and an environment that
 
 1. Add `https://github.com/joscasjac/quest_automations` to your private bench group, using the `main` branch.
 2. Deploy the bench and update the target site.
-3. Open the site's **Apps → Install App** and install **Quest Automations**.
-4. Sign in as a System Manager and open `https://your-site.example/automations`, or choose Quest Automations on the ERPNext desktop.
+3. Open the site's **Apps → Install App** and install the `quest_automations` app.
+4. Sign in as a System Manager and open `https://your-site.example/automations`, or open the automation app from the ERPNext desktop.
 
 Adding an app to a bench and installing it on a site are separate steps. See [Frappe Cloud custom apps](https://docs.frappe.io/cloud/benches/custom-app) and [installing an app](https://docs.frappe.io/cloud/installing-an-app).
 
