@@ -4143,10 +4143,10 @@ function defaultTriggerFilter(entityType: EntityType): TriggerFilter {
 function workflowTriggerList(workflow: Workflow | undefined): DraftTriggerList {
   if (!workflow) return [];
   const version = workflow.currentVersion;
-  if (version?.triggers?.length) return version.triggers;
+  if (version?.triggers) return version.triggers;
   if (version?.trigger) return [version.trigger];
-  if (workflow.triggers?.length) return workflow.triggers;
-  return [workflow.trigger];
+  if (workflow.triggers) return workflow.triggers;
+  return workflow.trigger ? [workflow.trigger] : [];
 }
 
 function createDefaultStep(kind: StepKind): DraftStep {

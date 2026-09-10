@@ -1,0 +1,17 @@
+{
+  "schemaVersion": 2,
+  "name": "Calculate order total \u2014 review draft",
+  "triggers": [
+    {
+      "id": "manual",
+      "kind": "manual"
+    }
+  ],
+  "steps": [
+    {
+      "kind": "custom_code",
+      "label": "Calculate total",
+      "code": "return { total: (input.items || []).reduce((sum, item) => sum + item.qty * item.rate, 0) };"
+    }
+  ]
+}

@@ -104,3 +104,12 @@ class StoreContractTests(unittest.TestCase):
         row=self.store.save(self.definition())
         with self.assertRaises(DefinitionError):self.store.delete(row['id'],999)
         self.assertIn(row['id'],self.data)
+
+    def test_reusing_deleted_trigger_id_does_not_restore_old_secret(self):
+        d=self.definition();d['triggers'].append({'id':'hook','kind':'incoming_webhook'})
+        row=self.store.save(d);identifier=row['id']
+        with patch.object(frappe,'get_doc',return_value=Mock(get_password=Mock(return_value='test-root-secret')),create=True):
+            old=self.store.hook_secret(identifier,'hook')
+            self.store.delete_trigger(identifier,'hook',1)
+            self.store.save(d,identifier,2)
+            self.assertNotEqual(old,self.store.hook_secret(identifier,'hook'))
