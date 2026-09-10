@@ -1,3 +1,4 @@
+import {WorkflowDraftContext} from '../adapter/WorkflowDraft';
 import {EmailFields} from "../adapter/EmailFields";
 import {FieldSourcesProvider} from '../adapter/FieldSources';
 import {CodeFields} from '../adapter/CodeFields';
@@ -552,6 +553,8 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
   const navigate = useNavigate();
   const params = useParams<{ workflowId: string }>();
   const createDraft = useMutation(api.workflows.createDraft);
+  const deleteWorkflow = useMutation(api.workflows.deleteWorkflow);
+  const deleteSavedTrigger = useMutation(api.workflows.deleteTrigger);
   const updateDefinition = useMutation(api.workflows.updateDefinition);
   const publishVersion = useMutation(api.workflows.publishVersion);
   const setStatus = useMutation(api.workflows.setStatus);
@@ -635,11 +638,9 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     setDraftDescription(selected.description ?? "");
     setDraftTriggers(workflowTriggerList(selected));
     setDraftSteps(
-      selected.currentVersion?.steps.length
-        ? selected.currentVersion.steps
-        : [createDefaultStep("log")],
+      selected.currentVersion?.steps ?? [],
     );
-    setSelectedNode({ type: "trigger", index: 0 });
+    setSelectedNode(previous=>previous.type==="trigger" && previous.index<workflowTriggerList(selected).length?previous:{type:"trigger",index:0});
     setStepPickerAfter(null);
     setBranchStepPicker(null);
     setTriggerPickerOpen(false);
@@ -784,7 +785,14 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     setGotoPickerFor(null);
   };
 
-  const removeTrigger = (index: number) => {
+  const removeTrigger = async (index: number) => {
+    const target=draftTriggers[index];
+    if(selected && target?.id && workflowTriggerList(selected).some(t=>t.id===target.id)){
+      setBusy('delete-trigger');
+      try{await deleteSavedTrigger({definitionId:selected._id,triggerId:target.id})}
+      catch(error){setFormError((error as Error).message);return}
+      finally{setBusy(null)}
+    }
     setDraftTriggers((triggers) =>
       triggers.filter((_, itemIndex) => itemIndex !== index),
     );
@@ -832,7 +840,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
   };
 
   const appendTrigger = (trigger: DraftTrigger) => {
-    setDraftTriggers((triggers) => [...triggers, trigger]);
+    setDraftTriggers((triggers) => [...triggers, {...trigger,id:trigger.id??'trigger_'+crypto.randomUUID().slice(0,8)}]);
     setSelectedNode({ type: "trigger", index: draftTriggers.length });
     setTriggerPickerOpen(false);
     setStepPickerAfter(null);
@@ -1018,14 +1026,14 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     setOpenNodeMenu({ type: "none" });
   };
 
-  const saveBuilder = async (): Promise<Id<"workflowDefinitions"> | null> => {
+  const saveBuilder = async (draftOnly = false): Promise<Id<"workflowDefinitions"> | null> => {
     const name = draftName.trim();
     if (!name) {
       setFormError("Workflow name is required.");
       return null;
     }
     const primaryTrigger = draftTriggers[0];
-    const localErrors = validateDraft(name, draftTriggers, draftSteps);
+    const localErrors = validateDraft(name, draftTriggers, draftSteps, true);
     if (localErrors.length > 0) {
       setFormError(localErrors.join(" "));
       return null;
@@ -1055,6 +1063,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
         description: draftDescription.trim() || undefined,
       });
       const result = await publishVersion({
+        draftOnly,
         definitionId: selected._id,
         trigger: primaryTrigger,
         triggers: draftTriggers,
@@ -1111,7 +1120,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
   };
 
   return (
-    <FieldSourcesProvider triggers={draftTriggers} steps={draftSteps} selection={selectedNode}><div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] flex-col bg-ink">
+    <WorkflowDraftContext.Provider value={{save:()=>saveBuilder(true),busy:busy!==null,savedTriggerIds:workflowTriggerList(selected).flatMap(t=>t.id?[t.id]:[])}}><FieldSourcesProvider triggers={draftTriggers} steps={draftSteps} selection={selectedNode}><div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] flex-col bg-ink">
       {!creating && workflow === undefined ? (
         <main className="flex flex-1 items-center justify-center p-6">
           <Panel className="w-full max-w-md p-6 text-sm text-neutral-500">
@@ -1207,13 +1216,13 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
               />
             </div>
           ) : activeTab === "settings" ? (
-            <WorkflowSettingsPanel
+            <><WorkflowSettingsPanel
               name={draftName}
               description={draftDescription}
               formError={formError}
               onName={setDraftName}
               onDescription={setDraftDescription}
-            />
+            />{selected&&<div className="border-t border-edge px-6 py-4"><p className="mb-3 text-sm text-neutral-500">Deleting removes this workflow, its webhook endpoints, captured samples, schedules, versions, and run history.</p><Button variant="danger" disabled={busy!==null} onClick={async()=>{if(!window.confirm('Delete this workflow and all its stored automation records? This cannot be undone.'))return;setBusy('delete');try{await deleteWorkflow({definitionId:selected._id});navigate('/app/workflows')}catch(error){setFormError((error as Error).message)}finally{setBusy(null)}}}>Delete workflow</Button></div>}</>
           ) : activeTab === "enrollment" ? (
             <RunHistory workflow={selected} runs={runs} title="Enrollment History" />
           ) : (
@@ -1226,7 +1235,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
           )}
         </main>
       )}
-    </div></FieldSourcesProvider>
+    </div></FieldSourcesProvider></WorkflowDraftContext.Provider>
   );
 }
 
@@ -4358,6 +4367,7 @@ function validateDraft(
   name: string,
   triggers: DraftTriggerList,
   steps: Array<DraftStep>,
+  allowEmpty = false,
 ) {
   const errors: Array<string> = [];
   if (!name.trim()) errors.push("Workflow name is required.");
@@ -4397,7 +4407,7 @@ function validateDraft(
       }
     }
   }
-  if (steps.length === 0) errors.push("Workflow needs at least one safe step.");
+  if (!allowEmpty && steps.length === 0) errors.push("Add at least one action before testing or publishing.");
   for (const [index, step] of steps.entries()) {
     const label = `Action ${index + 1}`;
     if (!step.label.trim()) errors.push(`${label} needs a name.`);

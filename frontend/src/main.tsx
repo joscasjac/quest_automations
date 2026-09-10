@@ -14,7 +14,7 @@ function Appearance(){
   document.documentElement.style.colorScheme=theme;
   try{localStorage.setItem('quest-automations-theme',theme)}catch{/* Theme still works when browser storage is unavailable. */}
  },[theme]);
- return <header className="flex items-center justify-between gap-4 border-b border-edge px-6 py-2"><span className="text-sm font-medium text-white">Quest Automations</span><div role="group" aria-label="Appearance" className="flex items-center gap-1"><span className="mr-2 text-xs text-neutral-500">Appearance</span>{(['light','dark'] as const).map(value=><Button key={value} aria-pressed={theme===value} variant={theme===value?'primary':'ghost'} onClick={()=>setTheme(value)}>{value==='light'?'Light':'Dark'}</Button>)}</div></header>
+ return <header className="flex items-center justify-between gap-4 border-b border-edge px-6 py-2"><div className="flex flex-wrap items-center gap-4"><a href="/desk" className="text-sm text-accent hover:underline focus-visible:outline focus-visible:outline-2 focus-visible:outline-accent">← Back to ERPNext</a><span className="text-sm font-medium text-white">Quest Automations</span></div><div role="group" aria-label="Appearance" className="flex items-center gap-1"><span className="mr-2 text-xs text-neutral-500">Appearance</span>{(['light','dark'] as const).map(value=><Button key={value} aria-pressed={theme===value} variant={theme===value?'primary':'ghost'} onClick={()=>setTheme(value)}>{value==='light'?'Light':'Dark'}</Button>)}</div></header>
 }
 function App(){
  const [connected,setConnected]=useState(false);const [token,setToken]=useState(sessionStorage.getItem('automation-token')??'');const [error,setError]=useState('');

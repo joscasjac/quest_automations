@@ -42,10 +42,10 @@ class StoreContractTests(unittest.TestCase):
         def put(name,kind,value,parent=None):self.data[name]=(kind,copy.deepcopy(value),parent)
         def load(name,lock=False):return copy.deepcopy(self.data[name][1])
         def names(kind,filters=None,order='modified desc',limit=200):
-            return [name for name,(k,v,p) in self.data.items() if k==kind and (not filters or all((p if f=='parent_record' else v.get(f))==expected for f,expected in filters.items()))][:limit]
+            return [name for name,(k,v,p) in self.data.items() if k==kind and (not filters or all((p if f=='parent_record' else v.get(f))==expected for f,expected in filters.items()))][:limit or None]
         db=Mock();db.exists.side_effect=lambda dt,name:name in self.data
         db.get_value.side_effect=lambda dt,name,field:'configured-secret' if field=='secret' else self.data[name][0]
-        self.patches=[patch.object(store,'put',side_effect=put),patch.object(store,'load',side_effect=load),patch.object(store,'names',side_effect=names),patch.object(frappe,'db',db,create=True)]
+        self.patches=[patch.object(store,'put',side_effect=put),patch.object(store,'load',side_effect=load),patch.object(store,'names',side_effect=names),patch.object(frappe,'db',db,create=True),patch.object(frappe,'delete_doc',side_effect=lambda dt,name,**kw:self.data.pop(name,None),create=True)]
         for p in self.patches:p.start()
         self.store=store.Store()
     def tearDown(self):
@@ -67,3 +67,40 @@ class StoreContractTests(unittest.TestCase):
         self.store.save({**self.definition(),'name':'Edited draft'},row['id'],1)
         run=self.store.enqueue(row['id'],{},'event','manual','manual')
         self.assertEqual(run['definition']['name'],'Native test')
+
+    def test_empty_action_draft_is_saved_but_cannot_publish(self):
+        from quest_automations.core.definition import DefinitionError
+        row=self.store.save({**self.definition(),'steps':[]})
+        self.assertEqual(row['draft']['steps'],[])
+        with self.assertRaises(DefinitionError):self.store.publish(row['id'],1)
+    def test_delete_workflow_removes_all_children_and_secret_record(self):
+        row=self.store.save(self.definition());identifier=row['id']
+        for kind in ('Run','Sample','Schedule','Version'):
+            self.module.put(kind,kind,{'id':kind,'status':'queued'},identifier)
+        result=self.store.delete(identifier,1)
+        self.assertTrue(result['deleted']);self.assertEqual(self.data,{})
+    def test_delete_trigger_invalidates_secret_and_cleans_pending_data(self):
+        from quest_automations.core.definition import DefinitionError
+        d=self.definition();d['triggers'].append({'id':'hook','kind':'incoming_webhook'})
+        row=self.store.save(d);identifier=row['id'];self.store.publish(identifier,1)
+        run=self.store.enqueue(identifier,{},'event','incoming_webhook','hook')
+        self.store.listen(identifier,'hook')
+        self.module.put(self.module.identity('schedule',identifier,'hook'),'Schedule',{'trigger_id':'hook'},identifier)
+        self.store.delete_trigger(identifier,'hook',1)
+        self.assertEqual(self.store.run(run['id'])['status'],'canceled')
+        self.assertFalse(self.store.sample(identifier,'hook')['listening'])
+        self.assertNotIn(self.module.identity('sample',identifier,'hook'),self.data)
+        self.assertNotIn(self.module.identity('schedule',identifier,'hook'),self.data)
+        self.assertEqual([t['id'] for t in self.store.workflow(identifier)['published']['triggers']],['manual'])
+        with self.assertRaises(DefinitionError):self.store.hook_secret(identifier,'hook')
+        with self.assertRaises(DefinitionError):self.store.hook_secret(identifier,'test:hook')
+    def test_delete_last_trigger_pauses_published_workflow(self):
+        row=self.store.save(self.definition());self.store.publish(row['id'],1)
+        result=self.store.delete_trigger(row['id'],'manual',1)
+        self.assertEqual(result['draft']['triggers'],[])
+        self.assertEqual(result['status'],'paused');self.assertIsNone(result['published'])
+    def test_stale_delete_does_not_remove_records(self):
+        from quest_automations.core.definition import DefinitionError
+        row=self.store.save(self.definition())
+        with self.assertRaises(DefinitionError):self.store.delete(row['id'],999)
+        self.assertIn(row['id'],self.data)

@@ -1,4 +1,15 @@
-import {useRef,useState,type ReactNode} from 'react';
+import {useEffect,useRef,useState} from 'react';
+import {basicSetup} from 'codemirror';
+import {EditorView,keymap} from '@codemirror/view';
+import {Compartment} from '@codemirror/state';
+import {indentWithTab} from '@codemirror/commands';
+import {indentUnit,syntaxHighlighting,HighlightStyle} from '@codemirror/language';
+import {javascript,javascriptLanguage} from '@codemirror/lang-javascript';
+import type {Completion,CompletionContext} from '@codemirror/autocomplete';
+function javascriptLanguageCompletions(options:Completion[]){return javascriptLanguage.data.of({autocomplete:(context:CompletionContext)=>{const word=context.matchBefore(/[\w.]+/);if(!word&&!context.explicit)return null;return {from:word?.from??context.pos,options,validFor:/^[\w.]*$/}}})}
+import {json} from '@codemirror/lang-json';
+import {html} from '@codemirror/lang-html';
+import {tags} from '@lezer/highlight';
 import {SearchSelect} from './SearchSelect';
 import {useFieldSources} from './FieldSources';
 import {Button} from '../components/ui';
@@ -10,15 +21,47 @@ export function MappedInput({label,value,onChange,multiline=false,secret=false}:
 }
 
 export function CodeEditor({label,value,onChange,language='javascript'}:{label:string;value:string;onChange:(v:string)=>void;language?:'javascript'|'json'|'html'|'text'}){
- const editor=useRef<HTMLTextAreaElement>(null);const gutter=useRef<HTMLPreElement>(null);const highlight=useRef<HTMLPreElement>(null);const latest=useRef(value);latest.current=value;const [error,setError]=useState('');const [busy,setBusy]=useState(false);const [fields,setFields]=useState(false);const sources=useFieldSources();
- const insert=(text:string)=>{const start=editor.current?.selectionStart??value.length;const end=editor.current?.selectionEnd??start;onChange(value.slice(0,start)+text+value.slice(end));requestAnimationFrame(()=>{editor.current?.focus();editor.current?.setSelectionRange(start+text.length,start+text.length)})};
- const format=async()=>{setBusy(true);setError('');const original=value;try{const [{format},babel,estree,html]=await Promise.all([import('prettier/standalone'),import('prettier/plugins/babel'),import('prettier/plugins/estree'),import('prettier/plugins/html')]);const formatted=await format(original,{parser:language==='javascript'?'babel':language==='json'?'json':'html',plugins:[babel.default,estree.default,html.default],tabWidth:2,printWidth:80});if(latest.current===original)onChange(formatted)}catch(e){setError((e as Error).message)}finally{setBusy(false)}};
- return <div className="space-y-2"><div className="flex items-center justify-between"><span className="text-sm font-medium text-white">{label}</span><div className="flex gap-2"><Button onClick={()=>setFields(!fields)}>Custom values</Button>{language!=='text'&&<Button disabled={busy} onClick={format}>{busy?'Formatting…':'Format code'}</Button>}</div></div>{language==='html'&&<div className="flex flex-wrap gap-2">{[['Bold','strong'],['Italic','em'],['Heading','h2'],['Paragraph','p'],['List','ul']].map(([title,tag])=><Button key={tag} onClick={()=>{const selected=value.slice(editor.current?.selectionStart??0,editor.current?.selectionEnd??0)||'Text';insert('<'+tag+'>'+(tag==='ul'?'<li>'+selected+'</li>':selected)+'</'+tag+'>')}}>{title}</Button>)}</div>}{fields&&<SearchSelect label={'Custom values for '+label} value="" placeholder="Choose a field…" options={sources.map(s=>({value:s.path,label:s.label,detail:s.group}))} onChange={path=>{insert(language==='javascript'?path.replace(/^trigger/,'input'):'{{'+path+'}}');setFields(false)}}/>}<div className="flex overflow-hidden rounded-md border border-edge bg-ink focus-within:border-accent"><pre ref={gutter} aria-hidden="true" className="m-0 max-h-80 select-none overflow-hidden border-r border-edge bg-panel px-2 py-3 text-right font-mono text-xs leading-5 text-neutral-500">{value.split('\n').map((_,i)=>i+1).join('\n')}</pre><div className="relative min-w-0 flex-1"><pre ref={highlight} aria-hidden="true" className="pointer-events-none absolute inset-0 m-0 overflow-hidden whitespace-pre p-3 font-mono text-xs leading-5 text-white">{highlightCode(value)}{'\n'}</pre><textarea ref={editor} aria-label={label} spellCheck={false} wrap="off" value={value} style={{color:'transparent',WebkitTextFillColor:'transparent'}} className="relative block min-h-64 max-h-80 w-full min-w-0 resize-y bg-transparent p-3 font-mono text-xs leading-5 caret-black focus:outline-none" onScroll={()=>{if(gutter.current&&editor.current)gutter.current.scrollTop=editor.current.scrollTop;if(highlight.current&&editor.current){highlight.current.scrollTop=editor.current.scrollTop;highlight.current.scrollLeft=editor.current.scrollLeft}}} onChange={e=>{setError('');onChange(e.target.value)}} onKeyDown={e=>{if(e.key==='Tab'&&!e.shiftKey){e.preventDefault();insert('  ')}if(e.key==='Enter'){e.preventDefault();const before=value.slice(0,e.currentTarget.selectionStart);const indent=before.split('\n').at(-1)?.match(/^\s*/)?.[0]??'';insert('\n'+indent+(/[\[{]\s*$/.test(before)?'  ':''))}if(e.altKey&&e.shiftKey&&e.key.toLowerCase()==='f'){e.preventDefault();void format()}}}/></div></div>{error&&<pre role="alert" className="whitespace-pre-wrap text-xs text-red-400">{error}</pre>}</div>
-}
-
-function highlightCode(code:string):ReactNode[]{
- const pattern=/(\/\*[\s\S]*?\*\/|\/\/[^\n]*|"(?:\\.|[^"\\])*"|'(?:\\.|[^'\\])*'|`(?:\\.|[^`\\])*`|\b(?:const|let|var|return|await|async|function|if|else|for|of|throw|new|try|catch|true|false|null|undefined)\b|\b\d+(?:\.\d+)?\b)/g;
- const parts:ReactNode[]=[];let end=0;
- for(const match of code.matchAll(pattern)){const at=match.index!;if(at>end)parts.push(code.slice(end,at));const token=match[0];const color=token.startsWith('/')?'#a34800':/^["'`]/.test(token)?'#187342':/^\d/.test(token)?'#1558d6':'#7523bb';parts.push(<span key={at} style={{color}}>{token}</span>);end=at+token.length}
- parts.push(code.slice(end));return parts;
+ const host=useRef<HTMLDivElement>(null);const editor=useRef<EditorView|null>(null);
+ const latest=useRef(value);latest.current=value;
+ const change=useRef(onChange);change.current=onChange;
+ const mode=useRef(new Compartment());const completion=useRef(new Compartment());
+ const [error,setError]=useState('');const [busy,setBusy]=useState(false);const [fields,setFields]=useState(false);const sources=useFieldSources();
+ const format=async()=>{setBusy(true);setError('');const original=latest.current;try{const [{format},babel,estree,htmlPlugin]=await Promise.all([import('prettier/standalone'),import('prettier/plugins/babel'),import('prettier/plugins/estree'),import('prettier/plugins/html')]);const formatted=await format(original,{parser:language==='javascript'?'babel':language==='json'?'json':'html',plugins:[babel.default,estree.default,htmlPlugin.default],tabWidth:2,printWidth:80});if(latest.current===original)change.current(formatted)}catch(e){setError((e as Error).message)}finally{setBusy(false)}};
+ const formatRef=useRef(format);formatRef.current=format;
+ useEffect(()=>{
+  if(!host.current)return;
+  const view=new EditorView({parent:host.current,doc:latest.current,extensions:[
+   basicSetup,indentUnit.of('  '),mode.current.of([]),completion.current.of([]),
+   keymap.of([indentWithTab,{key:'Alt-Shift-f',run:()=>{void formatRef.current();return true}}]),
+   EditorView.contentAttributes.of({'aria-label':label,spellcheck:'false'}),
+   EditorView.updateListener.of(update=>{if(update.docChanged){setError('');change.current(update.state.doc.toString())}}),
+   EditorView.theme({
+    '&':{color:'var(--color-white)',backgroundColor:'var(--color-ink)',fontSize:'13px'},
+    '.cm-scroller':{fontFamily:'ui-monospace, SFMono-Regular, Menlo, monospace',minHeight:'260px',maxHeight:'440px',overflow:'auto'},
+    '.cm-content':{padding:'12px 0',caretColor:'var(--color-white)'},
+    '.cm-gutters':{backgroundColor:'var(--color-panel)',color:'var(--color-neutral-500)',borderColor:'var(--color-edge)'},
+    '.cm-activeLine, .cm-activeLineGutter':{backgroundColor:'var(--color-raised)'},
+    '.cm-cursor':{borderLeftColor:'var(--color-white)'},
+    '&.cm-focused .cm-selectionBackground, .cm-selectionBackground, ::selection':{backgroundColor:'var(--color-glow)'},
+    '.cm-tooltip, .cm-panels':{backgroundColor:'var(--color-panel)',color:'var(--color-white)',borderColor:'var(--color-edge)'},
+    '.cm-searchMatch':{backgroundColor:'var(--color-glow)'},
+    '.cm-matchingBracket':{backgroundColor:'var(--color-glow)',outline:'1px solid var(--color-accent)'},
+    '&.cm-focused':{outline:'2px solid var(--color-accent)',outlineOffset:'-2px'},
+   }),
+   syntaxHighlighting(HighlightStyle.define([
+    {tag:[tags.keyword,tags.operator],color:'var(--color-accent)'},
+    {tag:[tags.string,tags.special(tags.string)],color:'var(--color-emerald-400)'},
+    {tag:[tags.number,tags.bool,tags.null],color:'var(--color-yellow-400)'},
+    {tag:tags.comment,color:'var(--color-neutral-500)'},
+   ])),
+  ]});editor.current=view;return()=>{view.destroy();editor.current=null};
+ },[label]);
+ useEffect(()=>{editor.current?.dispatch({effects:mode.current.reconfigure(language==='javascript'?javascript():language==='json'?json():language==='html'?html():[])})},[language,label]);
+ useEffect(()=>{
+  const options=[{label:'input',type:'variable',info:'Incoming trigger data'},{label:'steps',type:'variable',info:'Earlier action results'},{label:'api.request',type:'function',info:'Call an HTTPS API'},...sources.map(s=>({label:s.path.replace(/^trigger/,'input'),type:'property',info:s.label}))];
+  editor.current?.dispatch({effects:completion.current.reconfigure(language==='javascript'?javascriptLanguageCompletions(options):[])});
+ },[sources,language,label]);
+ useEffect(()=>{const view=editor.current;if(view&&view.state.doc.toString()!==value)view.dispatch({changes:{from:0,to:view.state.doc.length,insert:value}})},[value,label]);
+ const insert=(text:string)=>{const view=editor.current;if(!view)return;view.dispatch(view.state.replaceSelection(text));view.focus()};
+ return <div className="space-y-2"><div className="flex flex-wrap items-center justify-between gap-2"><span className="text-sm font-medium text-white">{label}</span><div className="flex gap-2"><Button onClick={()=>setFields(!fields)}>Custom values</Button>{language!=='text'&&<Button disabled={busy} onClick={format}>{busy?'Formatting…':'Format code'}</Button>}</div></div>{language==='html'&&<div className="flex flex-wrap gap-2">{[['Bold','strong'],['Italic','em'],['Heading','h2'],['Paragraph','p'],['List','ul']].map(([title,tag])=><Button key={tag} onClick={()=>{const view=editor.current;const selected=view?view.state.sliceDoc(view.state.selection.main.from,view.state.selection.main.to)||'Text':'Text';insert('<'+tag+'>'+(tag==='ul'?'<li>'+selected+'</li>':selected)+'</'+tag+'>')}}>{title}</Button>)}</div>}{fields&&<SearchSelect label={'Custom values for '+label} value="" placeholder="Choose a field…" options={sources.map(s=>({value:s.path,label:s.label,detail:s.group}))} onChange={path=>{insert(language==='javascript'?path.replace(/^trigger/,'input'):'{{'+path+'}}');setFields(false)}}/>}<div ref={host} className="min-w-0 overflow-hidden rounded-md border border-edge"/><p className="text-xs text-neutral-500">Tab indents · Shift+Tab outdents · Ctrl/⌘+F searches · Alt+Shift+F formats. Press Esc then Tab to leave the editor.</p>{error&&<pre role="alert" className="whitespace-pre-wrap text-xs text-red-400">{error}</pre>}</div>
 }

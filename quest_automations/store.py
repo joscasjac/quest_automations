@@ -33,6 +33,8 @@ class Store:
             row=load(identifier,True)
             if row.get('_kind')!='Workflow':raise KeyError('Workflow not found')
             if type(revision) is not int or row['revision']!=revision:raise DefinitionError('Revision conflict: reload before saving')
+            removed={t['id'] for t in row['draft'].get('triggers',[])}-{t['id'] for t in draft.get('triggers',[])}
+            if removed:self._cleanup_triggers(row,removed)
             row.update(draft=draft,revision=revision+1,updated=now)
         else:
             identifier=str(uuid.uuid4());row={'id':identifier,'_kind':'Workflow','draft':draft,'published':None,'revision':1,'version':0,'status':'draft','updated':now,'run_as':frappe.session.user}
@@ -53,10 +55,51 @@ class Store:
         return self.workflow(identifier)
     def pause(self,identifier):
         row=load(identifier,True);row.update(status='paused',updated=time.time());put(identifier,'Workflow',row);return self.workflow(identifier)
+    def _cleanup_triggers(self,row,removed):
+        # Completed run history remains an audit trail; pending work is canceled.
+        for name in names('Run',{'parent_record':row['id']},limit=0):
+            run=load(name)
+            if run.get('trigger_id') not in removed:continue
+            if run['status']=='running':raise DefinitionError('This trigger is running. Wait for it to finish before deleting.')
+            if run['status'] in ('queued','waiting'):
+                run.update(status='canceled',error='Trigger deleted');put(name,'Run',run,row['id'])
+        for trigger_id in removed:
+            epochs=row.setdefault('webhook_epochs',{});epochs[trigger_id]=epochs.get(trigger_id,0)+1
+            for kind in ('sample','schedule'):
+                name=identity(kind,row['id'],trigger_id)
+                if frappe.db.exists(TYPE,name):frappe.delete_doc(TYPE,name,ignore_permissions=True)
+        if row.get('published'):
+            row['published']['triggers']=[t for t in row['published']['triggers'] if t['id'] not in removed]
+            if not row['published']['triggers']:row.update(published=None,status='paused')
+    def delete_trigger(self,identifier,trigger_id,revision):
+        row=load(identifier,True)
+        if row.get('_kind')!='Workflow':raise KeyError('Workflow not found')
+        if row['revision']!=revision:raise DefinitionError('Revision conflict: reload before deleting')
+        if trigger_id not in {t['id'] for t in row['draft'].get('triggers',[])}:raise DefinitionError('Trigger not found')
+        self._cleanup_triggers(row,{trigger_id})
+        row['draft']['triggers']=[t for t in row['draft']['triggers'] if t['id']!=trigger_id]
+        row.update(revision=row['revision']+1,updated=time.time())
+        put(identifier,'Workflow',row)
+        return self.workflow(identifier)
+    def delete(self,identifier,revision):
+        row=load(identifier,True)
+        if row.get('_kind')!='Workflow':raise KeyError('Workflow not found')
+        if row['revision']!=revision:raise DefinitionError('Revision conflict: reload before deleting')
+        # Caller holds the worker lock until commit, so no run can start here.
+        for kind in ('Run','Schedule','Sample','Version'):
+            for name in names(kind,{'parent_record':identifier},limit=0):
+                frappe.delete_doc(TYPE,name,ignore_permissions=True)
+        frappe.delete_doc(TYPE,identifier,ignore_permissions=True)
+        return {'deleted':True,'id':identifier}
     def hook_secret(self,identifier,trigger_id=None):
-        if load(identifier).get('_kind')!='Workflow':raise KeyError('Workflow not found')
+        row=load(identifier)
+        if row.get('_kind')!='Workflow':raise KeyError('Workflow not found')
+        if trigger_id:
+            select_trigger(row['draft'],'incoming_webhook',trigger_id.removeprefix('test:'))
         secret=frappe.get_doc(TYPE,identifier).get_password('secret')
-        return hmac.new(secret.encode(),trigger_id.encode(),hashlib.sha256).hexdigest() if trigger_id else secret
+        epoch=row.get('webhook_epochs',{}).get(trigger_id.removeprefix('test:'),0) if trigger_id else 0
+        signed=(trigger_id+':'+str(epoch)) if epoch else trigger_id
+        return hmac.new(secret.encode(),signed.encode(),hashlib.sha256).hexdigest() if trigger_id else secret
     def enqueue(self,identifier,payload,event_key,expected_trigger=None,trigger_id=None):
         row=load(identifier,True)
         if row['status']!='active' or not row['published']:raise DefinitionError('Workflow must be published and active')

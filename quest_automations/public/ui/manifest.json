@@ -1,58 +1,58 @@
 {
-  "../../../CRM/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2": {
-    "file": "assets/mona-sans-latin-ext-wght-normal-BqSk0Z3x.woff2",
-    "src": "../../../CRM/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2"
-  },
-  "../../../CRM/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2": {
-    "file": "assets/mona-sans-latin-wght-normal-Pz49MTQZ.woff2",
-    "src": "../../../CRM/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2"
-  },
-  "../../../CRM/node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2": {
-    "file": "assets/mona-sans-vietnamese-wght-normal-DsUdksa4.woff2",
-    "src": "../../../CRM/node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2"
-  },
-  "../../../CRM/node_modules/prettier/plugins/babel.mjs": {
-    "file": "assets/babel-Dw5Eu3O9.js",
-    "name": "babel",
-    "src": "../../../CRM/node_modules/prettier/plugins/babel.mjs",
-    "isDynamicEntry": true
-  },
-  "../../../CRM/node_modules/prettier/plugins/estree.mjs": {
-    "file": "assets/estree-C8kMrFB9.js",
-    "name": "estree",
-    "src": "../../../CRM/node_modules/prettier/plugins/estree.mjs",
-    "isDynamicEntry": true
-  },
-  "../../../CRM/node_modules/prettier/plugins/html.mjs": {
-    "file": "assets/html-D_KpGVuL.js",
-    "name": "html",
-    "src": "../../../CRM/node_modules/prettier/plugins/html.mjs",
-    "isDynamicEntry": true
-  },
-  "../../../CRM/node_modules/prettier/standalone.mjs": {
-    "file": "assets/standalone-CqKwLAfv.js",
-    "name": "standalone",
-    "src": "../../../CRM/node_modules/prettier/standalone.mjs",
-    "isDynamicEntry": true
-  },
   "index.html": {
-    "file": "assets/index-WbsJykOk.js",
+    "file": "assets/index-DzCfaoRS.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "dynamicImports": [
-      "../../../CRM/node_modules/prettier/standalone.mjs",
-      "../../../CRM/node_modules/prettier/plugins/babel.mjs",
-      "../../../CRM/node_modules/prettier/plugins/estree.mjs",
-      "../../../CRM/node_modules/prettier/plugins/html.mjs"
+      "node_modules/prettier/standalone.mjs",
+      "node_modules/prettier/plugins/babel.mjs",
+      "node_modules/prettier/plugins/estree.mjs",
+      "node_modules/prettier/plugins/html.mjs"
     ],
     "css": [
-      "assets/index-DrWZ-dhx.css"
+      "assets/index-C2iEnfG7.css"
     ],
     "assets": [
       "assets/mona-sans-vietnamese-wght-normal-DsUdksa4.woff2",
       "assets/mona-sans-latin-ext-wght-normal-BqSk0Z3x.woff2",
       "assets/mona-sans-latin-wght-normal-Pz49MTQZ.woff2"
     ]
+  },
+  "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2": {
+    "file": "assets/mona-sans-latin-ext-wght-normal-BqSk0Z3x.woff2",
+    "src": "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2": {
+    "file": "assets/mona-sans-latin-wght-normal-Pz49MTQZ.woff2",
+    "src": "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2"
+  },
+  "node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2": {
+    "file": "assets/mona-sans-vietnamese-wght-normal-DsUdksa4.woff2",
+    "src": "node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2"
+  },
+  "node_modules/prettier/plugins/babel.mjs": {
+    "file": "assets/babel-Dw5Eu3O9.js",
+    "name": "babel",
+    "src": "node_modules/prettier/plugins/babel.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/prettier/plugins/estree.mjs": {
+    "file": "assets/estree-C8kMrFB9.js",
+    "name": "estree",
+    "src": "node_modules/prettier/plugins/estree.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/prettier/plugins/html.mjs": {
+    "file": "assets/html-D_KpGVuL.js",
+    "name": "html",
+    "src": "node_modules/prettier/plugins/html.mjs",
+    "isDynamicEntry": true
+  },
+  "node_modules/prettier/standalone.mjs": {
+    "file": "assets/standalone-CqKwLAfv.js",
+    "name": "standalone",
+    "src": "node_modules/prettier/standalone.mjs",
+    "isDynamicEntry": true
   }
 }

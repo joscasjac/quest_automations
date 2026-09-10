@@ -53,6 +53,16 @@ def dispatch(path='',method='GET',body=None):
                     if t['kind']!='incoming_webhook':raise DefinitionError('Choose an incoming webhook trigger')
                     url=endpoint(identifier,t['id']);return {'triggerId':t['id'],'url':url,'path':url,'testUrl':endpoint(identifier,t['id'],True),'secret':store.hook_secret(identifier,t['id']),'testSecret':store.hook_secret(identifier,'test:'+t['id']),'authentication':'X-Automation-Secret: <secret>','publicUrlConfigured':True}
             if method=='POST':
+                if operation in ('delete','delete-trigger'):
+                    lock=frappe.cache.lock('quest_automations_worker:'+frappe.local.site,timeout=60,blocking_timeout=1)
+                    if not lock.acquire():raise DefinitionError('An automation is running. Try deleting again after it finishes.')
+                    try:
+                        result=store.delete(identifier,body.get('revision')) if operation=='delete' else store.delete_trigger(identifier,body['triggerId'],body.get('revision'))
+                        frappe.db.commit()
+                        return result
+                    except Exception:
+                        frappe.db.rollback();raise
+                    finally:lock.release()
                 if operation=='listen':return store.listen(identifier,body['triggerId'])
                 if operation=='validate':validate(body.get('definition',store.workflow(identifier)['draft']));return {'valid':True}
                 if operation=='test':

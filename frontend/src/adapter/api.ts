@@ -8,7 +8,7 @@ export async function request(path:string,method='GET',body?:unknown){
 }
 type Ref<T>={name:string;result?:T};
 const ref=<T,>(name:string):Ref<T>=>({name});
-export const api={workflows:{list:ref<Workflow[]>('list'),get:ref<Workflow|null>('get'),runsForDefinition:ref<Run[]>('runs'),versionsForDefinition:ref<Version[]>('versions'),createDraft:ref<string>('create'),updateDefinition:ref<void>('update'),publishVersion:ref<{validationErrors:string[]}>('save'),setStatus:ref<void>('status'),runManual:ref<string>('test')}};
+export const api={workflows:{list:ref<Workflow[]>('list'),get:ref<Workflow|null>('get'),runsForDefinition:ref<Run[]>('runs'),versionsForDefinition:ref<Version[]>('versions'),deleteWorkflow:ref<void>('delete'),deleteTrigger:ref<void>('delete-trigger'),createDraft:ref<string>('create'),updateDefinition:ref<void>('update'),publishVersion:ref<{validationErrors:string[]}>('save'),setStatus:ref<void>('status'),runManual:ref<string>('test')}};
 const cached=new Map<string,any>();const pending=new Map<string,any>();
 let generation=0;
 export function normalizeDefinition(d:any){
@@ -41,13 +41,14 @@ export function useQuery<T>(reference:Ref<T>,args?:any):T|undefined{
 }
 export function useMutation(reference:Ref<unknown>){return async(args:any):Promise<any>=>{
  let result:any;const id=args.definitionId;
+ if(reference.name==='delete'||reference.name==='delete-trigger'){const row=cached.get(id);result=await request(`workflows/${id}/${reference.name}`,'POST',{revision:row?.revision,triggerId:args.triggerId});if(reference.name==='delete')cached.delete(id);else cached.set(id,result);generation++;return result}
  if(reference.name==='update'){pending.set(id,{name:args.name,description:args.description});return}
  if(reference.name==='create'||reference.name==='save'){
   const row=cached.get(id);
   const triggers:Trigger[]=(args.triggers??[args.trigger]).map((t:Trigger)=>({...t,id:t.id??'trigger_'+crypto.randomUUID().slice(0,8)}));
   const definition={schemaVersion:2,name:args.name??pending.get(id)?.name??row?.draft.name,description:args.description??pending.get(id)?.description??row?.draft.description,triggers,steps:args.steps};
   result=await request('workflows'+(id?'/'+id:''),id?'PUT':'POST',{definition,revision:row?.revision});cached.set(result.id,result);pending.delete(id);
-  if(id&&row.status==='active')await request(`workflows/${id}/publish`,'POST',{revision:result.revision});
+  if(id&&row.status==='active'&&!args.draftOnly)await request(`workflows/${id}/publish`,'POST',{revision:result.revision});
   result=reference.name==='create'?result.id:{validationErrors:[]};
  }else if(reference.name==='status'){
   const row=cached.get(id);result=await request(`workflows/${id}/${args.status==='active'?'publish':args.status==='archived'?'archive':'pause'}`,'POST',{revision:row?.revision});
