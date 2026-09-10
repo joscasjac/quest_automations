@@ -1,932 +1,25 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "ERPNext Automations",
+    "title": "Quest Automations for Frappe",
     "version": "0.2.0",
     "description": "One definition for the visual editor and assistant clients. Replace localhost with your deployed HTTPS origin."
   },
   "servers": [
     {
-      "url": "http://127.0.0.1:8766"
+      "url": "/"
     }
   ],
   "security": [
     {
-      "bearerAuth": []
+      "frappeToken": []
     }
   ],
   "paths": {
-    "/api/v1/workflows": {
-      "get": {
-        "operationId": "listWorkflows",
-        "summary": "List up to 200 workflows",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        }
-      },
+    "/api/method/quest_automations.api.dispatch": {
       "post": {
-        "operationId": "createWorkflow",
-        "summary": "Create an editable draft",
-        "responses": {
-          "201": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "definition": {
-                    "$ref": "#/components/schemas/DraftDefinition"
-                  }
-                },
-                "required": [
-                  "definition"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}": {
-      "get": {
-        "operationId": "getWorkflow",
-        "summary": "Read draft, published snapshot, and revision",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      },
-      "put": {
-        "operationId": "updateWorkflow",
-        "summary": "Update draft with optimistic revision check",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "definition": {
-                    "$ref": "#/components/schemas/DraftDefinition"
-                  },
-                  "revision": {
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "definition",
-                  "revision"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/validate": {
-      "post": {
-        "operationId": "validateWorkflow",
-        "summary": "Validate a workflow without writes",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "definition": {
-                    "$ref": "#/components/schemas/Definition"
-                  }
-                },
-                "required": []
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/test": {
-      "post": {
-        "operationId": "testWorkflow",
-        "summary": "Preview mappings without making any network calls",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "definition": {
-                    "$ref": "#/components/schemas/Definition"
-                  },
-                  "input": {
-                    "type": "object"
-                  }
-                },
-                "required": []
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/publish": {
-      "post": {
-        "operationId": "publishWorkflow",
-        "summary": "Publish the draft snapshot; source webhook must be registered separately",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "revision": {
-                    "type": "integer"
-                  }
-                },
-                "required": [
-                  "revision"
-                ]
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/pause": {
-      "post": {
-        "operationId": "pauseWorkflow",
-        "summary": "Stop accepting new events",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {},
-                "required": []
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/run": {
-      "post": {
-        "operationId": "runWorkflow",
-        "summary": "Execute the published workflow with a unique idempotency key",
-        "responses": {
-          "202": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Idempotency-Key",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "maxLength": 200
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "input": {
-                    "type": "object"
-                  },
-                  "triggerId": {
-                    "type": "string",
-                    "description": "ID of the manual trigger; required if there are multiple manual triggers."
-                  }
-                },
-                "required": []
-              }
-            }
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/runs": {
-      "get": {
-        "operationId": "listWorkflowRuns",
-        "summary": "Read the last 100 runs and step outputs",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "array",
-                  "items": {
-                    "type": "object"
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/api/v1/workflows/{id}/webhook": {
-      "get": {
-        "operationId": "getWebhookCredentials",
-        "summary": "Read endpoint and per-workflow webhook secret",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "triggerId",
-            "in": "query",
-            "schema": {
-              "type": "string"
-            },
-            "description": "Required when more than one trigger is configured."
-          }
-        ]
-      }
-    },
-    "/api/v1/catalog": {
-      "get": {
-        "operationId": "getCatalog",
-        "summary": "Discover supported trigger and action kinds",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        }
-      }
-    },
-    "/api/v1/connection": {
-      "get": {
-        "operationId": "getConnectionStatus",
-        "summary": "Read server connection configuration status",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        }
-      }
-    },
-    "/api/v1/doctypes/{name}": {
-      "get": {
-        "operationId": "getDoctype",
-        "summary": "Read permitted ERPNext DocType metadata",
-        "responses": {
-          "200": {
-            "description": "Success",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object"
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Invalid request"
-          },
-          "401": {
-            "description": "Invalid bearer token"
-          },
-          "409": {
-            "description": "Revision conflict"
-          }
-        },
-        "parameters": [
-          {
-            "name": "name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ]
-      }
-    },
-    "/hooks/incoming/{id}": {
-      "post": {
-        "operationId": "receiveIncomingWebhook",
-        "summary": "Receive JSON and enqueue a run; return 202 with runId",
-        "responses": {
-          "202": {
-            "description": "Queued or already received"
-          },
-          "401": {
-            "description": "Invalid webhook authentication"
-          },
-          "400": {
-            "description": "Invalid event or inactive workflow"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Bearer per-workflow secret"
-          },
-          {
-            "name": "X-Event-ID",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Stable source event ID; incoming webhook deduplication key"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "security": []
-      }
-    },
-    "/hooks/erpnext/{id}": {
-      "post": {
-        "operationId": "receiveErpnextWebhook",
-        "summary": "Receive JSON and enqueue a run; return 202 with runId",
-        "responses": {
-          "202": {
-            "description": "Queued or already received"
-          },
-          "401": {
-            "description": "Invalid webhook authentication"
-          },
-          "400": {
-            "description": "Invalid event or inactive workflow"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Frappe-Webhook-Signature",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Base64 HMAC-SHA256 of raw body using per-workflow secret"
-          },
-          {
-            "name": "X-Event-ID",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Stable source event ID; incoming webhook deduplication key"
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "security": []
-      }
-    },
-    "/hooks/incoming/{id}/{triggerId}": {
-      "post": {
-        "operationId": "receiveIncomingWebhookByTrigger",
-        "summary": "Receive JSON and enqueue a run; return 202 with runId",
-        "responses": {
-          "202": {
-            "description": "Queued or already received"
-          },
-          "401": {
-            "description": "Invalid webhook authentication"
-          },
-          "400": {
-            "description": "Invalid event or inactive workflow"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "Authorization",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Bearer per-workflow secret"
-          },
-          {
-            "name": "X-Event-ID",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Stable source event ID; incoming webhook deduplication key"
-          },
-          {
-            "name": "triggerId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "security": []
-      }
-    },
-    "/hooks/erpnext/{id}/{triggerId}": {
-      "post": {
-        "operationId": "receiveErpnextWebhookByTrigger",
-        "summary": "Receive JSON and enqueue a run; return 202 with runId",
-        "responses": {
-          "202": {
-            "description": "Queued or already received"
-          },
-          "401": {
-            "description": "Invalid webhook authentication"
-          },
-          "400": {
-            "description": "Invalid event or inactive workflow"
-          }
-        },
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "X-Frappe-Webhook-Signature",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Base64 HMAC-SHA256 of raw body using per-workflow secret"
-          },
-          {
-            "name": "X-Event-ID",
-            "in": "header",
-            "required": false,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Stable source event ID; incoming webhook deduplication key"
-          },
-          {
-            "name": "triggerId",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object"
-              }
-            }
-          }
-        },
-        "security": []
-      }
-    },
-    "/api/v1/workflows/{id}/versions": {
-      "get": {
-        "operationId": "listWorkflowVersions",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Saved version snapshots in descending order"
-          }
-        }
-      }
-    },
-    "/api/v1/doctypes": {
-      "get": {
-        "operationId": "listDocumentTypes",
-        "summary": "List the site DocType catalog with live or snapshot provenance",
-        "responses": {
-          "200": {
-            "description": "items, source, capturedAt"
-          }
-        }
-      }
-    },
-    "/api/v1/workflows/{id}/listen": {
-      "post": {
-        "operationId": "listen",
-        "parameters": [
-          {
-            "name": "id",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Capture state: listening, sample, received"
-          }
-        },
+        "operationId": "automation_dispatch",
+        "summary": "Manage workflows, metadata, preview and execution through the native Frappe adapter",
         "requestBody": {
           "required": true,
           "content": {
@@ -934,63 +27,101 @@
               "schema": {
                 "type": "object",
                 "required": [
-                  "triggerId"
+                  "path"
                 ],
                 "properties": {
-                  "triggerId": {
-                    "type": "string"
+                  "path": {
+                    "type": "string",
+                    "description": "Logical route, e.g. api/v1/workflows or api/v1/workflows/{id}/publish"
+                  },
+                  "method": {
+                    "type": "string",
+                    "enum": [
+                      "GET",
+                      "POST",
+                      "PUT"
+                    ],
+                    "default": "GET"
+                  },
+                  "body": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "Route arguments, including definition, revision, input, triggerId or eventId"
                   }
                 }
               }
             }
           }
+        },
+        "responses": {
+          "200": {
+            "description": "Result in Frappe message envelope"
+          },
+          "403": {
+            "description": "System Manager access required"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
         }
       }
     },
-    "/api/v1/workflows/{id}/webhook-sample": {
-      "get": {
-        "operationId": "webhook_sample",
+    "/api/method/quest_automations.api.webhook": {
+      "post": {
+        "operationId": "automation_webhook",
+        "summary": "Deliver a webhook event or capture test fields",
+        "security": [],
         "parameters": [
           {
-            "name": "id",
-            "in": "path",
+            "name": "workflow_id",
+            "in": "query",
             "required": true,
             "schema": {
               "type": "string"
             }
           },
           {
-            "name": "triggerId",
+            "name": "trigger_id",
             "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "test",
+            "in": "query",
+            "schema": {
+              "type": "string",
+              "enum": [
+                "1"
+              ]
+            }
+          },
+          {
+            "name": "X-Automation-Secret",
+            "in": "header",
             "required": true,
             "schema": {
               "type": "string"
             }
           }
         ],
-        "responses": {
-          "200": {
-            "description": "Capture state: listening, sample, received"
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
           }
-        }
-      }
-    },
-    "/api/v1/email-accounts": {
-      "get": {
-        "summary": "List enabled outgoing ERPNext email accounts",
+        },
         "responses": {
           "200": {
-            "description": "Live enabled outgoing accounts; source is not_connected with an empty list when server credentials are missing."
-          }
-        }
-      }
-    },
-    "/api/v1/files": {
-      "get": {
-        "summary": "List up to 1000 recently modified ERPNext files available to the integration user",
-        "responses": {
-          "200": {
-            "description": "items contain name, file_name and file_url"
+            "description": "Enqueued, filtered or captured"
+          },
+          "401": {
+            "description": "Invalid secret"
           }
         }
       }
@@ -998,9 +129,11 @@
   },
   "components": {
     "securitySchemes": {
-      "bearerAuth": {
-        "type": "http",
-        "scheme": "bearer"
+      "frappeToken": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "Authorization",
+        "description": "Frappe token API_KEY:API_SECRET for a System Manager"
       }
     },
     "schemas": {

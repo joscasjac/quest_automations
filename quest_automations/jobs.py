@@ -40,8 +40,8 @@ def receive_document(payload):
     finally:frappe.set_user(original)
 
 def drain():
-    # Redis lock is site-prefixed by Frappe; expires after the job's hard timeout.
-    with frappe.cache.lock('quest_automations_worker',timeout=960,blocking_timeout=1):
+    # Lock is scoped to this site and expires after the job's hard timeout.
+    with frappe.cache.lock('quest_automations_worker:'+frappe.local.site,timeout=960,blocking_timeout=1):
         store=Store();original=frappe.session.user;started=time.monotonic()
         # A previous worker holding this lock cannot still be executing.
         for name in names('Run',{'status':'running'},limit=10000):
