@@ -1,0 +1,171 @@
+@import "tailwindcss";
+@import "@fontsource-variable/mona-sans";
+
+/* Two themes, one token set.
+
+   Dark follows the Composio pattern: near-black canvas, achromatic surface
+   steps, hairline borders, a white CTA fill, and #51a2ff reserved for links.
+   Light follows the Minimax pattern: white canvas, soft gray secondary
+   surfaces, a near-black #181e25 CTA fill, and #1456f0 links.
+
+   The palette classes the app uses (white, neutral 200 to 600, and the badge
+   tones) are declared here with their standard dark values and remapped under
+   html.light, so every existing utility class flips with the theme. */
+@theme {
+  --color-ink: #0f0f0f;
+  --color-panel: #1a1a1a;
+  --color-raised: #242424;
+  --color-edge: rgb(255 255 255 / 0.12);
+  --color-edge-strong: rgb(255 255 255 / 0.25);
+  --color-primary: #ffffff;
+  --color-primary-hover: #d9d9d9;
+  --color-primary-ink: #0f0f0f;
+  --color-accent: #51a2ff;
+  --color-glow: #142a45;
+
+  /* Muted grays stay at or above 4.5:1 on the ink canvas (WCAG AA for
+     normal text); 600 is the floor, not a decoration tone. */
+  --color-white: #ffffff;
+  --color-neutral-200: #e8e8e8;
+  --color-neutral-300: #d6d6d6;
+  --color-neutral-400: #b3b3b3;
+  --color-neutral-500: #9a9a9a;
+  --color-neutral-600: #808080;
+  --color-red-400: #f87171;
+  --color-red-500: #ef4444;
+  --color-red-900: #7f1d1d;
+  --color-yellow-400: #fbbf24;
+  --color-yellow-800: #854d0e;
+  --color-amber-200: #fde68a;
+  --color-amber-500: #f59e0b;
+  --color-emerald-400: #4ade80;
+  --color-emerald-800: #065f46;
+
+  --font-sans:
+    "Mona Sans Variable", -apple-system, system-ui, "Segoe UI", "Noto Sans",
+    Helvetica, Arial, sans-serif;
+}
+
+/* Minimax light theme. Same tokens, light values. text-white intentionally
+   resolves to ink here so headings flip without touching every component. */
+html.light {
+  --color-ink: #ffffff;
+  --color-panel: #fafafa;
+  --color-raised: #eef0f2;
+  --color-edge: #e5e7eb;
+  --color-edge-strong: #c9cdd4;
+  --color-primary: #181e25;
+  --color-primary-hover: #2c3542;
+  --color-primary-ink: #ffffff;
+  --color-accent: #1456f0;
+  --color-glow: #dbeafe;
+
+  /* Same AA floor on the white canvas: 600 lands near 4.6:1, 500 near
+     5.3:1, so small helper text stays readable in light mode. */
+  --color-white: #18181b;
+  --color-neutral-200: #3d4854;
+  --color-neutral-300: #46515e;
+  --color-neutral-400: #525d6b;
+  --color-neutral-500: #626d7a;
+  --color-neutral-600: #6d7683;
+  --color-red-400: #dc2626;
+  --color-red-500: #b91c1c;
+  --color-red-900: #fecaca;
+  --color-yellow-400: #b45309;
+  --color-yellow-800: #fcd34d;
+  --color-amber-200: #92400e;
+  --color-amber-500: #d97706;
+  --color-emerald-400: #047857;
+  --color-emerald-800: #6ee7b7;
+}
+
+html {
+  background: var(--color-ink);
+  color: var(--color-neutral-200);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+/* White marks (the Convex logo and the framework icons) invert to ink in
+   light mode so they stay visible on a white canvas. */
+html.light img.themed-logo {
+  filter: invert(1);
+}
+
+/* Native number spinners never match the theme; NumberInput draws its own. */
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+input[type="number"] {
+  -moz-appearance: textfield;
+  appearance: textfield;
+}
+
+::selection {
+  background: color-mix(in srgb, var(--color-accent) 30%, transparent);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--color-edge-strong) transparent;
+}
+
+.workflow-react-flow {
+  --xy-background-color: transparent;
+  --xy-edge-stroke: var(--color-edge-strong);
+  --xy-node-boxshadow-default: none;
+  --xy-node-border-default: transparent;
+  --xy-controls-button-background-color-default: var(--color-panel);
+  --xy-controls-button-background-color-hover-default: var(--color-raised);
+  --xy-controls-button-color-default: var(--color-neutral-400);
+  --xy-controls-button-color-hover-default: var(--color-white);
+  --xy-controls-button-border-color-default: var(--color-edge);
+}
+
+.workflow-react-flow .react-flow__node {
+  background: transparent;
+  border: 0;
+  color: inherit;
+}
+
+.workflow-react-flow .react-flow__edge-path {
+  stroke-linecap: round;
+}
+
+.workflow-react-flow .workflow-goto-edge .react-flow__edge-path {
+  transition:
+    stroke 160ms ease,
+    stroke-width 160ms ease;
+}
+
+.workflow-react-flow .workflow-goto-edge:hover .react-flow__edge-path,
+.workflow-react-flow .workflow-goto-edge-active .react-flow__edge-path {
+  stroke: var(--color-accent) !important;
+  stroke-width: 2.6px !important;
+}
+
+.workflow-react-flow .workflow-handle {
+  width: 1px;
+  height: 1px;
+  border: 0;
+  background: transparent;
+  opacity: 0;
+  pointer-events: none;
+}
+
+.workflow-react-flow .react-flow__controls {
+  border: 1px solid var(--color-edge);
+  box-shadow: none;
+}
+
+.workflow-react-flow .react-flow__controls-button {
+  width: 28px;
+  height: 28px;
+  border-bottom: 1px solid var(--color-edge);
+}
+
+.workflow-react-flow .react-flow__controls-button:last-child {
+  border-bottom: 0;
+}

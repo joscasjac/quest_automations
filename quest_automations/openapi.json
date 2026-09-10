@@ -1,0 +1,3050 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "ERPNext Automations",
+    "version": "0.2.0",
+    "description": "One definition for the visual editor and assistant clients. Replace localhost with your deployed HTTPS origin."
+  },
+  "servers": [
+    {
+      "url": "http://127.0.0.1:8766"
+    }
+  ],
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ],
+  "paths": {
+    "/api/v1/workflows": {
+      "get": {
+        "operationId": "listWorkflows",
+        "summary": "List up to 200 workflows",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        }
+      },
+      "post": {
+        "operationId": "createWorkflow",
+        "summary": "Create an editable draft",
+        "responses": {
+          "201": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "definition": {
+                    "$ref": "#/components/schemas/DraftDefinition"
+                  }
+                },
+                "required": [
+                  "definition"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}": {
+      "get": {
+        "operationId": "getWorkflow",
+        "summary": "Read draft, published snapshot, and revision",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      },
+      "put": {
+        "operationId": "updateWorkflow",
+        "summary": "Update draft with optimistic revision check",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "definition": {
+                    "$ref": "#/components/schemas/DraftDefinition"
+                  },
+                  "revision": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "definition",
+                  "revision"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/validate": {
+      "post": {
+        "operationId": "validateWorkflow",
+        "summary": "Validate a workflow without writes",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "definition": {
+                    "$ref": "#/components/schemas/Definition"
+                  }
+                },
+                "required": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/test": {
+      "post": {
+        "operationId": "testWorkflow",
+        "summary": "Preview mappings without making any network calls",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "definition": {
+                    "$ref": "#/components/schemas/Definition"
+                  },
+                  "input": {
+                    "type": "object"
+                  }
+                },
+                "required": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/publish": {
+      "post": {
+        "operationId": "publishWorkflow",
+        "summary": "Publish the draft snapshot; source webhook must be registered separately",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "revision": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "revision"
+                ]
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/pause": {
+      "post": {
+        "operationId": "pauseWorkflow",
+        "summary": "Stop accepting new events",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {},
+                "required": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/run": {
+      "post": {
+        "operationId": "runWorkflow",
+        "summary": "Execute the published workflow with a unique idempotency key",
+        "responses": {
+          "202": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Idempotency-Key",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "maxLength": 200
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "input": {
+                    "type": "object"
+                  },
+                  "triggerId": {
+                    "type": "string",
+                    "description": "ID of the manual trigger; required if there are multiple manual triggers."
+                  }
+                },
+                "required": []
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/runs": {
+      "get": {
+        "operationId": "listWorkflowRuns",
+        "summary": "Read the last 100 runs and step outputs",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object"
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/api/v1/workflows/{id}/webhook": {
+      "get": {
+        "operationId": "getWebhookCredentials",
+        "summary": "Read endpoint and per-workflow webhook secret",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "triggerId",
+            "in": "query",
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required when more than one trigger is configured."
+          }
+        ]
+      }
+    },
+    "/api/v1/catalog": {
+      "get": {
+        "operationId": "getCatalog",
+        "summary": "Discover supported trigger and action kinds",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        }
+      }
+    },
+    "/api/v1/connection": {
+      "get": {
+        "operationId": "getConnectionStatus",
+        "summary": "Read server connection configuration status",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        }
+      }
+    },
+    "/api/v1/doctypes/{name}": {
+      "get": {
+        "operationId": "getDoctype",
+        "summary": "Read permitted ERPNext DocType metadata",
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request"
+          },
+          "401": {
+            "description": "Invalid bearer token"
+          },
+          "409": {
+            "description": "Revision conflict"
+          }
+        },
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ]
+      }
+    },
+    "/hooks/incoming/{id}": {
+      "post": {
+        "operationId": "receiveIncomingWebhook",
+        "summary": "Receive JSON and enqueue a run; return 202 with runId",
+        "responses": {
+          "202": {
+            "description": "Queued or already received"
+          },
+          "401": {
+            "description": "Invalid webhook authentication"
+          },
+          "400": {
+            "description": "Invalid event or inactive workflow"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bearer per-workflow secret"
+          },
+          {
+            "name": "X-Event-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stable source event ID; incoming webhook deduplication key"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/hooks/erpnext/{id}": {
+      "post": {
+        "operationId": "receiveErpnextWebhook",
+        "summary": "Receive JSON and enqueue a run; return 202 with runId",
+        "responses": {
+          "202": {
+            "description": "Queued or already received"
+          },
+          "401": {
+            "description": "Invalid webhook authentication"
+          },
+          "400": {
+            "description": "Invalid event or inactive workflow"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Frappe-Webhook-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 HMAC-SHA256 of raw body using per-workflow secret"
+          },
+          {
+            "name": "X-Event-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stable source event ID; incoming webhook deduplication key"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/hooks/incoming/{id}/{triggerId}": {
+      "post": {
+        "operationId": "receiveIncomingWebhookByTrigger",
+        "summary": "Receive JSON and enqueue a run; return 202 with runId",
+        "responses": {
+          "202": {
+            "description": "Queued or already received"
+          },
+          "401": {
+            "description": "Invalid webhook authentication"
+          },
+          "400": {
+            "description": "Invalid event or inactive workflow"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "Authorization",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Bearer per-workflow secret"
+          },
+          {
+            "name": "X-Event-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stable source event ID; incoming webhook deduplication key"
+          },
+          {
+            "name": "triggerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/hooks/erpnext/{id}/{triggerId}": {
+      "post": {
+        "operationId": "receiveErpnextWebhookByTrigger",
+        "summary": "Receive JSON and enqueue a run; return 202 with runId",
+        "responses": {
+          "202": {
+            "description": "Queued or already received"
+          },
+          "401": {
+            "description": "Invalid webhook authentication"
+          },
+          "400": {
+            "description": "Invalid event or inactive workflow"
+          }
+        },
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "X-Frappe-Webhook-Signature",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Base64 HMAC-SHA256 of raw body using per-workflow secret"
+          },
+          {
+            "name": "X-Event-ID",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Stable source event ID; incoming webhook deduplication key"
+          },
+          {
+            "name": "triggerId",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object"
+              }
+            }
+          }
+        },
+        "security": []
+      }
+    },
+    "/api/v1/workflows/{id}/versions": {
+      "get": {
+        "operationId": "listWorkflowVersions",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Saved version snapshots in descending order"
+          }
+        }
+      }
+    },
+    "/api/v1/doctypes": {
+      "get": {
+        "operationId": "listDocumentTypes",
+        "summary": "List the site DocType catalog with live or snapshot provenance",
+        "responses": {
+          "200": {
+            "description": "items, source, capturedAt"
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/listen": {
+      "post": {
+        "operationId": "listen",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Capture state: listening, sample, received"
+          }
+        },
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "triggerId"
+                ],
+                "properties": {
+                  "triggerId": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/v1/workflows/{id}/webhook-sample": {
+      "get": {
+        "operationId": "webhook_sample",
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "triggerId",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Capture state: listening, sample, received"
+          }
+        }
+      }
+    },
+    "/api/v1/email-accounts": {
+      "get": {
+        "summary": "List enabled outgoing ERPNext email accounts",
+        "responses": {
+          "200": {
+            "description": "Live enabled outgoing accounts; source is not_connected with an empty list when server credentials are missing."
+          }
+        }
+      }
+    },
+    "/api/v1/files": {
+      "get": {
+        "summary": "List up to 1000 recently modified ERPNext files available to the integration user",
+        "responses": {
+          "200": {
+            "description": "items contain name, file_name and file_url"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    },
+    "schemas": {
+      "Definition": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DefinitionV1"
+          },
+          {
+            "$ref": "#/components/schemas/GraphDefinition"
+          }
+        ]
+      },
+      "DraftDefinition": {
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/DraftDefinitionV1"
+          },
+          {
+            "$ref": "#/components/schemas/GraphDefinition"
+          }
+        ]
+      },
+      "DefinitionV1": {
+        "type": "object",
+        "required": [
+          "schemaVersion",
+          "name",
+          "steps"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "const": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "trigger": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "manual"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "incoming_webhook"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "doctype",
+                  "event"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "document_event"
+                  },
+                  "doctype": {
+                    "type": "string"
+                  },
+                  "event": {
+                    "enum": [
+                      "after_insert",
+                      "on_update",
+                      "on_submit",
+                      "on_cancel",
+                      "on_update_after_submit"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 100,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "outgoing_webhook"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "method": {
+                          "enum": [
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "GET",
+                            "DELETE"
+                          ],
+                          "default": "POST"
+                        },
+                        "headers": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "description": "Use secret:ENV_NAME for server-held header values."
+                        },
+                        "body": {}
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "get_document"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "name"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "required": [
+                                "$ref"
+                              ],
+                              "properties": {
+                                "$ref": {
+                                  "type": "string",
+                                  "pattern": "^(trigger($|\\.)|steps\\.)"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "create_document"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "fields"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "fields": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "update_document"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "name",
+                        "fields"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "required": [
+                                "$ref"
+                              ],
+                              "properties": {
+                                "$ref": {
+                                  "type": "string",
+                                  "pattern": "^(trigger($|\\.)|steps\\.)"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "fields": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "apply_workflow"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "name",
+                        "action"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "required": [
+                                "$ref"
+                              ],
+                              "properties": {
+                                "$ref": {
+                                  "type": "string",
+                                  "pattern": "^(trigger($|\\.)|steps\\.)"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "action": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "condition"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "left",
+                        "operator"
+                      ],
+                      "properties": {
+                        "left": {},
+                        "right": {},
+                        "operator": {
+                          "enum": [
+                            "equals",
+                            "not_equals",
+                            "greater_than",
+                            "less_than",
+                            "contains",
+                            "is_set"
+                          ]
+                        },
+                        "onFalse": {
+                          "const": "stop"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "delay"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "seconds"
+                      ],
+                      "properties": {
+                        "seconds": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2592000
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "manual"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "incoming_webhook"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "doctype",
+                    "event",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "document_event"
+                    },
+                    "doctype": {
+                      "type": "string"
+                    },
+                    "event": {
+                      "enum": [
+                        "after_insert",
+                        "on_update",
+                        "on_submit",
+                        "on_cancel",
+                        "on_update_after_submit"
+                      ]
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    }
+                  }
+                }
+              ]
+            },
+            "description": "Alternative triggers (OR). Each independently starts the shared action sequence."
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "trigger"
+            ],
+            "not": {
+              "required": [
+                "triggers"
+              ]
+            }
+          },
+          {
+            "required": [
+              "triggers"
+            ],
+            "not": {
+              "required": [
+                "trigger"
+              ]
+            }
+          }
+        ]
+      },
+      "DraftDefinitionV1": {
+        "type": "object",
+        "required": [
+          "schemaVersion",
+          "name",
+          "steps"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "const": 1
+          },
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 200
+          },
+          "description": {
+            "type": "string"
+          },
+          "trigger": {
+            "oneOf": [
+              {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "manual"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "incoming_webhook"
+                  }
+                },
+                "additionalProperties": false
+              },
+              {
+                "type": "object",
+                "required": [
+                  "kind",
+                  "doctype",
+                  "event"
+                ],
+                "properties": {
+                  "kind": {
+                    "const": "document_event"
+                  },
+                  "doctype": {
+                    "type": "string"
+                  },
+                  "event": {
+                    "enum": [
+                      "after_insert",
+                      "on_update",
+                      "on_submit",
+                      "on_cancel",
+                      "on_update_after_submit"
+                    ]
+                  }
+                }
+              }
+            ]
+          },
+          "steps": {
+            "type": "array",
+            "minItems": 0,
+            "maxItems": 100,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "outgoing_webhook"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "url"
+                      ],
+                      "properties": {
+                        "url": {
+                          "type": "string",
+                          "format": "uri"
+                        },
+                        "method": {
+                          "enum": [
+                            "POST",
+                            "PUT",
+                            "PATCH",
+                            "GET",
+                            "DELETE"
+                          ],
+                          "default": "POST"
+                        },
+                        "headers": {
+                          "type": "object",
+                          "additionalProperties": {
+                            "type": "string"
+                          },
+                          "description": "Use secret:ENV_NAME for server-held header values."
+                        },
+                        "body": {}
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "get_document"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "name"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "required": [
+                                "$ref"
+                              ],
+                              "properties": {
+                                "$ref": {
+                                  "type": "string",
+                                  "pattern": "^(trigger($|\\.)|steps\\.)"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "create_document"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "fields"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "fields": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "update_document"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "name",
+                        "fields"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "required": [
+                                "$ref"
+                              ],
+                              "properties": {
+                                "$ref": {
+                                  "type": "string",
+                                  "pattern": "^(trigger($|\\.)|steps\\.)"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "fields": {
+                          "type": "object"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "apply_workflow"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "doctype",
+                        "name",
+                        "action"
+                      ],
+                      "properties": {
+                        "doctype": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "oneOf": [
+                            {
+                              "type": "string"
+                            },
+                            {
+                              "type": "object",
+                              "required": [
+                                "$ref"
+                              ],
+                              "properties": {
+                                "$ref": {
+                                  "type": "string",
+                                  "pattern": "^(trigger($|\\.)|steps\\.)"
+                                }
+                              },
+                              "additionalProperties": false
+                            }
+                          ]
+                        },
+                        "action": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "condition"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "left",
+                        "operator"
+                      ],
+                      "properties": {
+                        "left": {},
+                        "right": {},
+                        "operator": {
+                          "enum": [
+                            "equals",
+                            "not_equals",
+                            "greater_than",
+                            "less_than",
+                            "contains",
+                            "is_set"
+                          ]
+                        },
+                        "onFalse": {
+                          "const": "stop"
+                        }
+                      }
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "config"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "delay"
+                    },
+                    "config": {
+                      "type": "object",
+                      "required": [
+                        "seconds"
+                      ],
+                      "properties": {
+                        "seconds": {
+                          "type": "integer",
+                          "minimum": 1,
+                          "maximum": 2592000
+                        }
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "triggers": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "manual"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "incoming_webhook"
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    }
+                  },
+                  "additionalProperties": false
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "kind",
+                    "doctype",
+                    "event",
+                    "id"
+                  ],
+                  "properties": {
+                    "kind": {
+                      "const": "document_event"
+                    },
+                    "doctype": {
+                      "type": "string"
+                    },
+                    "event": {
+                      "enum": [
+                        "after_insert",
+                        "on_update",
+                        "on_submit",
+                        "on_cancel",
+                        "on_update_after_submit"
+                      ]
+                    },
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    }
+                  }
+                }
+              ]
+            },
+            "description": "Alternative triggers (OR). Each independently starts the shared action sequence."
+          }
+        },
+        "oneOf": [
+          {
+            "required": [
+              "trigger"
+            ],
+            "not": {
+              "required": [
+                "triggers"
+              ]
+            }
+          },
+          {
+            "required": [
+              "triggers"
+            ],
+            "not": {
+              "required": [
+                "trigger"
+              ]
+            }
+          }
+        ]
+      },
+      "GraphCondition": {
+        "type": "object",
+        "required": [
+          "field",
+          "operator"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "operator": {
+            "enum": [
+              "is",
+              "is_not",
+              "contains",
+              "does_not_contain",
+              "is_empty",
+              "is_not_empty"
+            ]
+          },
+          "value": {
+            "type": "string"
+          },
+          "match": {
+            "enum": [
+              "all",
+              "any"
+            ],
+            "default": "all"
+          },
+          "conditions": {
+            "type": "array",
+            "maxItems": 19,
+            "items": {
+              "$ref": "#/components/schemas/ConditionLeaf"
+            },
+            "description": "Additional conditions combined with the primary condition."
+          }
+        }
+      },
+      "BranchAction": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label"
+            ],
+            "properties": {
+              "kind": {
+                "const": "noop"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "message"
+            ],
+            "properties": {
+              "kind": {
+                "const": "log"
+              },
+              "label": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "durationMinutes"
+            ],
+            "properties": {
+              "kind": {
+                "const": "wait"
+              },
+              "label": {
+                "type": "string"
+              },
+              "durationMinutes": {
+                "type": "number",
+                "minimum": 0.016666666666666666
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "targetStepIndex"
+            ],
+            "properties": {
+              "kind": {
+                "const": "go_to"
+              },
+              "label": {
+                "type": "string"
+              },
+              "targetStepIndex": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "operation",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "erpnext"
+              },
+              "label": {
+                "type": "string"
+              },
+              "operation": {
+                "enum": [
+                  "get_document",
+                  "create_document",
+                  "update_document",
+                  "apply_workflow",
+                  "condition"
+                ]
+              },
+              "configJson": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "outgoing_webhook"
+              },
+              "label": {
+                "type": "string"
+              },
+              "configJson": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label"
+            ],
+            "properties": {
+              "kind": {
+                "const": "create_note"
+              },
+              "label": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "title"
+            ],
+            "properties": {
+              "kind": {
+                "const": "create_task"
+              },
+              "label": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "projectId": {
+                "type": "string"
+              },
+              "parentTaskId": {
+                "type": "string"
+              },
+              "assigneeId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string"
+              },
+              "dueOffsetDays": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "entityType",
+              "recordId",
+              "field",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "const": "update_record"
+              },
+              "label": {
+                "type": "string"
+              },
+              "entityType": {
+                "type": "string"
+              },
+              "recordId": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "to",
+              "subject",
+              "body"
+            ],
+            "properties": {
+              "kind": {
+                "const": "send_email"
+              },
+              "label": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "message"
+            ],
+            "properties": {
+              "kind": {
+                "const": "send_notification"
+              },
+              "label": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "channel": {
+                "enum": [
+                  "activity",
+                  "slack"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "code"
+            ],
+            "properties": {
+              "kind": {
+                "const": "custom_code"
+              },
+              "label": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "description": "Async JavaScript body with input, steps, api.request({url,method,headers,body}); return JSON. Up to five HTTPS API calls. Preview never sends requests."
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "get_document"
+              },
+              "label": {
+                "type": "string"
+              },
+              "configJson": {
+                "type": "string",
+                "description": "JSON containing doctype and name, with merge references supported."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "api_request"
+              },
+              "label": {
+                "type": "string"
+              },
+              "configJson": {
+                "type": "string",
+                "description": "JSON with url, method, headers, body. Response contains status and body."
+              }
+            }
+          }
+        ]
+      },
+      "GraphStep": {
+        "oneOf": [
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label"
+            ],
+            "properties": {
+              "kind": {
+                "const": "noop"
+              },
+              "label": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "message"
+            ],
+            "properties": {
+              "kind": {
+                "const": "log"
+              },
+              "label": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "durationMinutes"
+            ],
+            "properties": {
+              "kind": {
+                "const": "wait"
+              },
+              "label": {
+                "type": "string"
+              },
+              "durationMinutes": {
+                "type": "number",
+                "minimum": 0.016666666666666666
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "targetStepIndex"
+            ],
+            "properties": {
+              "kind": {
+                "const": "go_to"
+              },
+              "label": {
+                "type": "string"
+              },
+              "targetStepIndex": {
+                "type": "integer",
+                "minimum": 0
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "operation",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "erpnext"
+              },
+              "label": {
+                "type": "string"
+              },
+              "operation": {
+                "enum": [
+                  "get_document",
+                  "create_document",
+                  "update_document",
+                  "apply_workflow",
+                  "condition"
+                ]
+              },
+              "configJson": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "outgoing_webhook"
+              },
+              "label": {
+                "type": "string"
+              },
+              "configJson": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label"
+            ],
+            "properties": {
+              "kind": {
+                "const": "create_note"
+              },
+              "label": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "title"
+            ],
+            "properties": {
+              "kind": {
+                "const": "create_task"
+              },
+              "label": {
+                "type": "string"
+              },
+              "title": {
+                "type": "string"
+              },
+              "description": {
+                "type": "string"
+              },
+              "projectId": {
+                "type": "string"
+              },
+              "parentTaskId": {
+                "type": "string"
+              },
+              "assigneeId": {
+                "type": "string"
+              },
+              "status": {
+                "type": "string"
+              },
+              "priority": {
+                "type": "string"
+              },
+              "dueOffsetDays": {
+                "type": "number"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "entityType",
+              "recordId",
+              "field",
+              "value"
+            ],
+            "properties": {
+              "kind": {
+                "const": "update_record"
+              },
+              "label": {
+                "type": "string"
+              },
+              "entityType": {
+                "type": "string"
+              },
+              "recordId": {
+                "type": "string"
+              },
+              "field": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "to",
+              "subject",
+              "body"
+            ],
+            "properties": {
+              "kind": {
+                "const": "send_email"
+              },
+              "label": {
+                "type": "string"
+              },
+              "to": {
+                "type": "string"
+              },
+              "subject": {
+                "type": "string"
+              },
+              "body": {
+                "type": "string"
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "message"
+            ],
+            "properties": {
+              "kind": {
+                "const": "send_notification"
+              },
+              "label": {
+                "type": "string"
+              },
+              "message": {
+                "type": "string"
+              },
+              "channel": {
+                "enum": [
+                  "activity",
+                  "slack"
+                ]
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "branches",
+              "elseLabel"
+            ],
+            "properties": {
+              "kind": {
+                "const": "if_else"
+              },
+              "label": {
+                "type": "string"
+              },
+              "branches": {
+                "type": "array",
+                "minItems": 1,
+                "maxItems": 10,
+                "items": {
+                  "type": "object",
+                  "required": [
+                    "field",
+                    "operator",
+                    "name"
+                  ],
+                  "properties": {
+                    "field": {
+                      "type": "string"
+                    },
+                    "operator": {
+                      "enum": [
+                        "is",
+                        "is_not",
+                        "contains",
+                        "does_not_contain",
+                        "is_empty",
+                        "is_not_empty"
+                      ]
+                    },
+                    "value": {
+                      "type": "string"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "steps": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/BranchAction"
+                      }
+                    },
+                    "match": {
+                      "enum": [
+                        "all",
+                        "any"
+                      ],
+                      "default": "all"
+                    },
+                    "conditions": {
+                      "type": "array",
+                      "maxItems": 19,
+                      "items": {
+                        "$ref": "#/components/schemas/ConditionLeaf"
+                      },
+                      "description": "Additional conditions combined with the primary condition."
+                    }
+                  }
+                }
+              },
+              "elseLabel": {
+                "type": "string"
+              },
+              "elseSteps": {
+                "type": "array",
+                "items": {
+                  "$ref": "#/components/schemas/BranchAction"
+                }
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "code"
+            ],
+            "properties": {
+              "kind": {
+                "const": "custom_code"
+              },
+              "label": {
+                "type": "string"
+              },
+              "code": {
+                "type": "string",
+                "minLength": 1,
+                "maxLength": 20000
+              }
+            },
+            "description": "Async JavaScript body with input, steps, api.request({url,method,headers,body}); return JSON. Up to five HTTPS API calls. Preview never sends requests."
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "get_document"
+              },
+              "label": {
+                "type": "string"
+              },
+              "configJson": {
+                "type": "string",
+                "description": "JSON containing doctype and name, with merge references supported."
+              }
+            }
+          },
+          {
+            "type": "object",
+            "required": [
+              "kind",
+              "label",
+              "configJson"
+            ],
+            "properties": {
+              "kind": {
+                "const": "api_request"
+              },
+              "label": {
+                "type": "string"
+              },
+              "configJson": {
+                "type": "string",
+                "description": "JSON with url, method, headers, body. Response contains status and body."
+              }
+            }
+          }
+        ]
+      },
+      "GraphDefinition": {
+        "type": "object",
+        "required": [
+          "schemaVersion",
+          "name",
+          "triggers",
+          "steps"
+        ],
+        "properties": {
+          "schemaVersion": {
+            "const": 2
+          },
+          "name": {
+            "type": "string"
+          },
+          "description": {
+            "type": "string"
+          },
+          "triggers": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 20,
+            "items": {
+              "oneOf": [
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "manual"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "incoming_webhook"
+                    },
+                    "name": {
+                      "type": "string"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "doctype",
+                    "event"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "document_event"
+                    },
+                    "doctype": {
+                      "type": "string"
+                    },
+                    "event": {
+                      "enum": [
+                        "after_insert",
+                        "on_update",
+                        "on_submit",
+                        "on_cancel",
+                        "on_update_after_submit"
+                      ]
+                    },
+                    "condition": {
+                      "$ref": "#/components/schemas/GraphCondition"
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "intervalMinutes"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "schedule"
+                    },
+                    "intervalMinutes": {
+                      "type": "number",
+                      "minimum": 5,
+                      "maximum": 525600
+                    }
+                  }
+                },
+                {
+                  "type": "object",
+                  "required": [
+                    "id",
+                    "kind",
+                    "entityType",
+                    "event"
+                  ],
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "pattern": "^[a-zA-Z][a-zA-Z0-9_-]{0,63}$"
+                    },
+                    "kind": {
+                      "const": "record"
+                    },
+                    "entityType": {
+                      "enum": [
+                        "company",
+                        "contact",
+                        "deal",
+                        "project",
+                        "task",
+                        "note"
+                      ]
+                    },
+                    "event": {
+                      "enum": [
+                        "created",
+                        "updated",
+                        "stage_changed",
+                        "status_changed"
+                      ]
+                    },
+                    "filters": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/GraphCondition"
+                      }
+                    }
+                  }
+                }
+              ]
+            }
+          },
+          "steps": {
+            "type": "array",
+            "maxItems": 100,
+            "items": {
+              "$ref": "#/components/schemas/GraphStep"
+            }
+          }
+        },
+        "description": "Full original editor graph. Empty drafts may be saved; publishing requires actions. Go To uses zero-based top-level indices. configJson encodes the version 1 action configuration. Merge fields support {{trigger.field}} and {$ref: path} objects."
+      },
+      "ConditionLeaf": {
+        "type": "object",
+        "required": [
+          "field",
+          "operator"
+        ],
+        "properties": {
+          "field": {
+            "type": "string"
+          },
+          "operator": {
+            "enum": [
+              "is",
+              "is_not",
+              "contains",
+              "does_not_contain",
+              "is_empty",
+              "is_not_empty"
+            ]
+          },
+          "value": {
+            "type": "string"
+          }
+        }
+      },
+      "ApiRequestConfig": {
+        "type": "object",
+        "required": [
+          "url"
+        ],
+        "properties": {
+          "url": {
+            "type": "string"
+          },
+          "method": {
+            "enum": [
+              "GET",
+              "POST",
+              "PUT",
+              "PATCH",
+              "DELETE"
+            ]
+          },
+          "headers": {
+            "type": "object"
+          },
+          "query": {
+            "type": "object"
+          },
+          "authorization": {
+            "type": "object",
+            "properties": {
+              "type": {
+                "enum": [
+                  "none",
+                  "bearer",
+                  "basic",
+                  "api_key"
+                ]
+              },
+              "token": {
+                "type": "string"
+              },
+              "username": {
+                "type": "string"
+              },
+              "password": {
+                "type": "string"
+              },
+              "name": {
+                "type": "string"
+              },
+              "value": {
+                "type": "string"
+              },
+              "in": {
+                "enum": [
+                  "header",
+                  "query"
+                ]
+              }
+            }
+          },
+          "contentType": {
+            "enum": [
+              "application/json",
+              "application/x-www-form-urlencoded",
+              "text/plain",
+              "application/xml"
+            ]
+          },
+          "body": {},
+          "saveResponse": {
+            "type": "boolean",
+            "default": true
+          },
+          "responseSample": {}
+        }
+      }
+    }
+  }
+}

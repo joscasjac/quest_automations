@@ -1,0 +1,57 @@
+{
+  "doctype": "DocType",
+  "name": "Automation Record",
+  "module": "Quest Automations",
+  "autoname": "prompt",
+  "engine": "InnoDB",
+  "track_changes": 0,
+  "fields": [
+    {
+      "fieldname": "kind",
+      "label": "Kind",
+      "fieldtype": "Select",
+      "options": "Workflow\nRun\nVersion\nSchedule\nSample"
+    },
+    {
+      "fieldname": "parent_record",
+      "label": "Parent Record",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Data"
+    },
+    {
+      "fieldname": "due",
+      "label": "Due",
+      "fieldtype": "Float"
+    },
+    {
+      "fieldname": "payload",
+      "label": "Payload",
+      "fieldtype": "Long Text"
+    },
+    {
+      "fieldname": "secret",
+      "label": "Secret",
+      "fieldtype": "Password"
+    }
+  ],
+  "field_order": [
+    "kind",
+    "parent_record",
+    "status",
+    "due",
+    "payload",
+    "secret"
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}
