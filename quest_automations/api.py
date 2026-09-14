@@ -81,9 +81,19 @@ def dispatch(path='',method='GET',body=None):
         frappe.db.rollback();frappe.local.response.http_status_code=409 if 'Revision conflict' in str(e) else 400;return {'error':str(e)}
 
 @frappe.whitelist(allow_guest=True,methods=['POST'])
-def webhook(workflow_id,trigger_id,token=None,test=None,**kwargs):
+def webhook(workflow_id=None,trigger_id=None,token=None,test=None,**kwargs):
     store=Store()
     try:
+        # Frappe dispatches JSON body fields without merging URL parameters.
+        # Read routing and authentication from the URL explicitly; body fields
+        # must not override a configured webhook URL.
+        args=frappe.request.args
+        workflow_id=args.get('workflow_id') or workflow_id
+        trigger_id=args.get('trigger_id') or trigger_id
+        token=args.get('token') or token
+        test=args.get('test') or test
+        if not isinstance(workflow_id,str) or not workflow_id or not isinstance(trigger_id,str) or not trigger_id:
+            raise DefinitionError('Webhook URL requires workflow_id and trigger_id')
         # Keep already-configured header-based integrations working. New URLs carry
         # the same per-trigger credential for both capture and live execution.
         legacy_test=not token and str(test)=='1'
