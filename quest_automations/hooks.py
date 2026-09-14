@@ -5,6 +5,7 @@ app_description = "Visual API-first ERPNext automation workflows"
 app_email = "joseph@questmediahub.com"
 app_license = "mit"
 required_apps = ["erpnext"]
+assistant_tools = ["quest_automations.assistant_tools.automations.QuestAutomations"]
 website_route_rules = [{"from_route":"/automations/<path:app_path>","to_route":"automations"}]
 scheduler_events = {"cron":{"* * * * *":["quest_automations.jobs.wake"]}}
 doc_events = {"*":{event:"quest_automations.jobs.document_event" for event in ("after_insert","on_update","on_submit","on_cancel","on_update_after_submit")}}

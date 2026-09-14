@@ -77,6 +77,29 @@ The editor defaults to **Light**. Use **Appearance → Light / Dark** in the hea
 
 ## API: create a workflow an agent can hand to a human
 
+### ERPNext connector (Frappe Assistant Core)
+
+When Frappe Assistant Core is installed, this app registers the `quest_automations`
+MCP tool through the same `assistant_tools` hook used by other custom connector tools.
+FAC remains optional for the editor. Deploy this app update, migrate the site,
+enable FAC's `custom_tools` plugin, and enable the new tool for the intended
+System Manager users in FAC tool settings. Refresh/reconnect the ERPNext connector
+to discover it. The installed site must be smoke-tested; local tests use a Frappe stub.
+
+The tool supports `catalog`, `list`, `create`, `get`, `update`, `validate`, `test`,
+`publish`, `pause`, `runs`, `versions`, `webhook`, `listen`, and `webhook_sample`.
+It calls the existing editor API as the authenticated user and retains its
+System Manager checks. It cannot dispatch arbitrary Frappe methods, delete workflows,
+or manually execute live runs. `create` saves a draft; `test` is a dry preview.
+`update` and `publish` require the current revision. **Pause active workflows before
+editing:** the existing editor save behavior republishes active workflows.
+After an uncertain create response, reconcile using `list`/`get` before retrying.
+Webhook details contain sensitive signing credentials; keep them out of shared output.
+
+Example sequence: `catalog` → `create` with a complete `definition` → `validate`
+with `workflow_id` → `test` with sample `input` → `publish` with the reviewed `revision`.
+Use ERPNext's existing `get_doctype_info` tool to discover exact CRM field names.
+
 The native API endpoint is:
 
 ```text
