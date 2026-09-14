@@ -16,6 +16,7 @@ class UnifiedWebhookTests(unittest.TestCase):
         self.store.capture.return_value={'captured':True}
         self.store.enqueue.return_value={'id':'run-1','status':'queued'}
         self.request=Mock(method='POST')
+        self.request.args={}
         self.request.get_data.return_value=b'{"event":"meeting.summarized","meeting_id":"m-1"}'
         self.headers={}
         self.local=types.SimpleNamespace(response=types.SimpleNamespace(http_status_code=200))
@@ -82,3 +83,17 @@ class UnifiedWebhookTests(unittest.TestCase):
         self.store.enqueue.side_effect=DefinitionError('Workflow must be published and active')
         self.assertIn('published and active',self.post_url(self.details()['url'])['error'])
         self.store.capture.assert_not_called()
+
+    def test_json_dispatch_reads_routing_and_token_from_url(self):
+        self.request.args={'workflow_id':'wf-1','trigger_id':'fireflies','token':'live-secret'}
+        self.store.sample.return_value={'listening':True}
+        self.assertEqual(api.webhook(event='meeting.summarized',meeting_id='m-1'),{'captured':True})
+        self.store.capture.assert_called_once_with('wf-1','fireflies',{'event':'meeting.summarized','meeting_id':'m-1'})
+    def test_json_body_cannot_override_url_route_or_token(self):
+        self.request.args={'workflow_id':'wf-1','trigger_id':'fireflies','token':'live-secret'}
+        self.assertEqual(api.webhook(workflow_id='body-workflow',trigger_id='body-trigger',token='wrong')['status'],'queued')
+        self.store.hook_secret.assert_called_once_with('wf-1','fireflies')
+    def test_missing_route_returns_validation_error_instead_of_type_error(self):
+        self.assertIn('requires workflow_id',api.webhook(event='meeting.summarized')['error'])
+        self.assertEqual(self.local.response.http_status_code,400)
+        self.store.hook_secret.assert_not_called()
