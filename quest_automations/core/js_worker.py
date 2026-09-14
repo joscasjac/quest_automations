@@ -10,10 +10,11 @@ try:
  ctx.eval('''
  globalThis.__queue=[];globalThis.__pending={};globalThis.__done=false;globalThis.__error=null;globalThis.__result=null;
  let __counter=0;
- const api=Object.freeze({request: config => new Promise((resolve,reject)=>{
+ const call = (operation, config) => new Promise((resolve,reject)=>{
    const id=++__counter;if(id>5){reject(new Error('At most 5 API calls per code action'));return;}
-   __pending[id]={resolve,reject};__queue.push({id,config});
- })});
+   __pending[id]={resolve,reject};__queue.push({id,operation,config});
+ });
+ const api=Object.freeze({request: config => call('request',config), findDocuments: config => call('find_documents',config), createDocuments: documents => call('create_documents',{documents})});
  const data=JSON.parse(__payload);
  const AsyncFunction=Object.getPrototypeOf(async function(){}).constructor;
  new AsyncFunction('input','steps','api','"use strict";\\n'+__source)(data.input,data.steps,api).then(result=>{

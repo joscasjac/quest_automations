@@ -192,3 +192,26 @@ These are native adapter/storage contract tests, including the JavaScript subpro
 ## License and credits
 
 MIT. See [LICENSE](LICENSE). The original CRM editor's MIT notice is preserved in [LICENSE.crm](LICENSE.crm). The UI uses React, React Flow, CodeMirror, and Prettier. This project is independent of n8n and Frappe.
+
+## Native document operations in Run Code
+
+Code actions can query and create ERPNext documents without HTTP or API keys:
+
+```javascript
+const leads = await api.findDocuments({
+  doctype: "CRM Lead", filters: {email: input.email},
+  fields: ["name", "email"], limit: 100
+});
+return leads;
+```
+
+Use `await api.createDocuments([{doctype: "CRM Task", title: "Follow up"}])` to
+create up to 200 documents and return their names. Normal insert permissions and
+validation apply; a failed batch rolls back its earlier inserts. Search accepts
+plain field names and a limit of 1–1000, rejects password fields, and fails at the
+limit so truncated results cannot be mistaken for missing CRM records. Child-table
+searches require `parent` and check read access to each parent record.
+
+These methods share the five-call budget with `api.request`. They run under the
+workflow publishing user on the current site. Preview performs no native reads or
+writes, and code cannot switch user, ignore permissions, or call arbitrary Python.

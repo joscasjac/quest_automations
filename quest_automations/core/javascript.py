@@ -28,8 +28,15 @@ def execute_code(code, context, run_id='preview', step_id='code'):
      if count>5:raise DefinitionError('At most 5 API requests per code action')
      reply={'id':call['id']}
      try:
-      if context.get('_preview'):raise DefinitionError('API calls are not sent in preview. Use a live run to execute this request.')
+      if context.get('_preview'):raise DefinitionError('Document operations and API calls are not executed in preview. Use a live run to execute this action.')
       config=call['config']
+      operation=call.get('operation','request')
+      if operation in ('find_documents','create_documents'):
+       from ..native_actions import find_documents,create_documents
+       reply['result']=(find_documents if operation=='find_documents' else create_documents)(config)
+       process.stdin.write(json.dumps(reply)+'\n');process.stdin.flush()
+       continue
+      if operation!='request':raise DefinitionError('Unsupported code operation')
       validate({'schemaVersion':1,'name':'Code API request','trigger':{'kind':'manual'},'steps':[{'id':'request','kind':'outgoing_webhook','config':config}]})
       from .engine import execute_action
       reply['result']=execute_action('outgoing_webhook',config,run_id,step_id+':'+str(count))
