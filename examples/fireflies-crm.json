@@ -1,0 +1,19 @@
+{
+  "schemaVersion": 2,
+  "name": "Fireflies \u2192 CRM: external meetings",
+  "triggers": [
+    {
+      "id": "hourly",
+      "kind": "schedule",
+      "intervalMinutes": 60
+    }
+  ],
+  "steps": [
+    {
+      "kind": "erpnext",
+      "operation": "fireflies_sync",
+      "label": "Match attendees, create leads, notes and tasks",
+      "configJson": "{}"
+    }
+  ]
+}

@@ -1,0 +1,51 @@
+{
+  "doctype": "DocType",
+  "name": "Fireflies Meeting Sync",
+  "module": "Quest Automations",
+  "issingle": 0,
+  "engine": "InnoDB",
+  "fields": [
+    {
+      "fieldname": "meeting_id",
+      "fieldtype": "Data",
+      "label": "Fireflies meeting ID",
+      "read_only": 1
+    },
+    {
+      "fieldname": "meeting_title",
+      "fieldtype": "Data",
+      "label": "Meeting title",
+      "read_only": 1
+    },
+    {
+      "fieldname": "status",
+      "fieldtype": "Select",
+      "label": "Status",
+      "options": "Synced\nSkipped internal",
+      "read_only": 1
+    },
+    {
+      "fieldname": "result_json",
+      "fieldtype": "Long Text",
+      "label": "Created CRM records",
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 0
+    }
+  ],
+  "track_changes": 0,
+  "autoname": "prompt",
+  "field_order": [
+    "meeting_id",
+    "meeting_title",
+    "status",
+    "result_json"
+  ]
+}

@@ -1,0 +1,75 @@
+{
+  "doctype": "DocType",
+  "name": "Fireflies CRM Settings",
+  "module": "Quest Automations",
+  "issingle": 1,
+  "engine": "InnoDB",
+  "fields": [
+    {
+      "fieldname": "enabled",
+      "fieldtype": "Check",
+      "label": "Enabled",
+      "default": "0"
+    },
+    {
+      "fieldname": "api_key",
+      "fieldtype": "Password",
+      "label": "Fireflies API Key"
+    },
+    {
+      "fieldname": "internal_domains",
+      "fieldtype": "Small Text",
+      "label": "Internal email domains (one per line)"
+    },
+    {
+      "fieldname": "task_owner",
+      "fieldtype": "Link",
+      "label": "Task and new lead owner",
+      "options": "User"
+    },
+    {
+      "fieldname": "lead_status",
+      "fieldtype": "Link",
+      "label": "New lead status",
+      "options": "CRM Lead Status"
+    },
+    {
+      "fieldname": "start_after",
+      "fieldtype": "Data",
+      "label": "Import meetings created after (ISO timestamp with timezone)"
+    },
+    {
+      "fieldname": "last_scan_end",
+      "fieldtype": "Data",
+      "label": "Last completed scan",
+      "read_only": 1
+    },
+    {
+      "fieldname": "scan_window",
+      "fieldtype": "Long Text",
+      "label": "Pagination state",
+      "hidden": 1,
+      "read_only": 1
+    }
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1,
+      "delete": 0
+    }
+  ],
+  "track_changes": 0,
+  "field_order": [
+    "enabled",
+    "api_key",
+    "internal_domains",
+    "task_owner",
+    "lead_status",
+    "start_after",
+    "last_scan_end",
+    "scan_window"
+  ]
+}

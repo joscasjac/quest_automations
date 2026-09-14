@@ -5,6 +5,9 @@ from .transport import erp_request, request
 
 
 def execute_action(kind, config, run_id, step_id):
+    if kind == 'fireflies_sync':
+        from ..fireflies import sync
+        return sync(config)
     if kind == 'outgoing_webhook':
         from .http_action import execute
         return execute(config,run_id,step_id)

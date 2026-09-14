@@ -6,7 +6,7 @@ from copy import deepcopy
 import re
 
 EVENTS = ('after_insert', 'on_update', 'on_submit', 'on_cancel', 'on_update_after_submit')
-ACTIONS = ('get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
+ACTIONS = ('fireflies_sync', 'get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
 OPERATORS = ('equals', 'not_equals', 'greater_than', 'less_than', 'contains', 'is_set')
 NAME = re.compile(r'^[a-zA-Z][a-zA-Z0-9_-]{0,63}$')
 BLOCKED = {'__proto__', 'prototype', 'constructor', '__class__', '__dict__'}
@@ -108,6 +108,8 @@ def validate(definition):
                 require(auth.get('in','header') in ('header','query'),'Choose header or query for the API key')
                 require(isinstance(auth.get('name'),str) and bool(auth['name']),'Provide an API key name')
                 require(auth['name'].lower() not in ('host','content-length','connection','transfer-encoding'),'Reserved API key header')
+        if kind == 'fireflies_sync':
+            require(not config, 'Fireflies sync uses Fireflies CRM Settings; action config must be empty')
         if kind == 'delay':
             seconds = config.get('seconds')
             require(type(seconds) is int and 1 <= seconds <= 2592000, 'Delay must be 1–2592000 seconds')

@@ -2,7 +2,7 @@ import type { Infer, GenericId } from 'convex/values';
 import type {workflowTrigger,workflowStep} from './validators';
 export type Id<T extends string> = GenericId<T>;
 export type Trigger = (Infer<typeof workflowTrigger> | {kind:'incoming_webhook';name?:string} | {kind:'document_event';doctype:string;event:string}) & {id?:string;condition?:{field:string;operator:'is'|'is_not'|'contains'|'does_not_contain'|'is_empty'|'is_not_empty';value:string;match?:'all'|'any';conditions?:Array<{field:string;operator:'is'|'is_not'|'contains'|'does_not_contain'|'is_empty'|'is_not_empty';value:string}>}};
-type ErpStepFields = {label:string;operation?:'get_document'|'create_document'|'update_document'|'apply_workflow'|'condition';configJson:string};
+type ErpStepFields = {label:string;operation?:'fireflies_sync'|'get_document'|'create_document'|'update_document'|'apply_workflow'|'condition';configJson:string};
 export type ErpStep = (ErpStepFields & {kind:'erpnext'}) | (ErpStepFields & {kind:'outgoing_webhook'}) | (ErpStepFields & {kind:'get_document'}) | (ErpStepFields & {kind:'api_request'});
 export type CodeStep={kind:'custom_code';label:string;code:string};
 type NativeStep = Infer<typeof workflowStep>;

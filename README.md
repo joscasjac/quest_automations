@@ -192,3 +192,37 @@ These are native adapter/storage contract tests, including the JavaScript subpro
 ## License and credits
 
 MIT. See [LICENSE](LICENSE). The original CRM editor's MIT notice is preserved in [LICENSE.crm](LICENSE.crm). The UI uses React, React Flow, CodeMirror, and Prettier. This project is independent of n8n and Frappe.
+
+## Fireflies meetings to CRM
+
+Deploy and migrate this version, then open **Fireflies CRM Settings** in Desk.
+A System Manager supplies the existing Fireflies API key (encrypted Password field),
+internal email domains (one per line), default task/lead owner, new lead status,
+and an ISO timestamp with timezone for the import cutoff. Enable the settings.
+Import `examples/fireflies-crm.json`, validate, preview, and publish as a System Manager.
+The example polls once per hour, using one Fireflies API request per run (24/day).
+The Fireflies Free API quota is 50 requests/day; other API clients share this quota.
+
+For external attendees with valid email addresses, the action matches Contacts or
+CRM Leads by email, creates missing leads, and adds FCRM Notes and CRM Tasks.
+A contact with exactly one linked deal uses that deal; otherwise the note links
+to the contact. Ambiguous duplicate Contacts/Leads stop the run for manual repair.
+Enabled System Users and configured domains/subdomains are internal. External
+organizers are included. Tasks use the configured owner; deadlines are left blank.
+Bullet action items become individual tasks; unstructured prose becomes one review task.
+No messages are sent and no deal stages are inferred.
+
+Each meeting has an atomic receipt: a failed write rolls back that meeting, while
+a repeat meeting ID creates nothing twice. Summaries and attendee email addresses
+must be available from Fireflies. The scan overlaps seven days to retry delayed
+summaries. It requests at most 50 meetings per hourly run, continuing additional
+pages in later runs, so large backlogs increase latency. The cutoff excludes older
+meetings; there is no automatic historical backfill. Review run history for API,
+quota, permission, or duplicate-record failures. Keep only one sync workflow active.
+Settings and receipt documents are restricted to System Managers; all CRM inserts
+retain the publisher's normal Frappe permissions and validations.
+
+Local tests cover matching, deduplication, rollback/retry, missing summaries,
+HTML escaping, pagination state and API errors using a Frappe stub. A live
+installation smoke test and a real completed meeting are required for end-to-end
+verification. Never put the API key in workflow JSON, examples, or Git.
