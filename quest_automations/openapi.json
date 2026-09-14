@@ -96,12 +96,23 @@
               "enum": [
                 "1"
               ]
-            }
+            },
+            "deprecated": true,
+            "description": "Legacy test-only URL. New integrations use the same token URL and the editor Listen control."
           },
           {
             "name": "X-Automation-Secret",
             "in": "header",
-            "required": true,
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Legacy authentication; not required when token is included in the URL."
+          },
+          {
+            "name": "token",
+            "in": "query",
+            "description": "Per-trigger secret included in the generated URL. Required unless using the legacy authentication header.",
             "schema": {
               "type": "string"
             }

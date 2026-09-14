@@ -27,7 +27,7 @@ Creating a workflow does not publish it. Review-before-publish is a supported wo
 | Visual conditions | Route work through If/Else branches, with all/any matching, waits, and Go To steps. |
 | ERPNext actions | Find, create, or update documents and apply ERPNext workflow actions. Child-table rows are edited through their parent document. |
 | API requests | Configure None, Basic, Bearer, or API Key authentication; headers; query parameters; content type; and JSON, form, or raw bodies. Save responses for later field mapping. |
-| Incoming webhooks | Adding a trigger automatically generates its URL. Capture a test event and use its fields in later actions. Production and test endpoints use separate secrets. |
+| Incoming webhooks | Adding a trigger automatically generates its URL. Capture a test event and use its fields in later actions. One private URL handles both test capture and live events; no custom header is required. |
 | Send email | Use the site's outgoing Email Accounts, sender selection, recipients, Cc/Bcc, rich text, custom values, preview text, and ERPNext File attachments. |
 | Run Code | Write JavaScript with CodeMirror: automatic brackets, indentation, highlighting, completion, folding, search, undo/redo, and Prettier formatting. Call external APIs with `await api.request(...)`. |
 | Shared API | Agents and other clients create and edit the same definitions that the visual editor renders. |
@@ -154,7 +154,7 @@ The [OpenAPI document](quest_automations/openapi.json) describes the dispatch an
 
 ## Webhooks and field mapping
 
-Incoming webhook URLs use `/api/method/quest_automations.api.webhook?workflow_id=...&trigger_id=...`. Authenticate with **`X-Automation-Secret`**, not the user's ERPNext API token. Test capture adds `test=1` and uses its own secret. Click **Listen for test event**, send JSON within five minutes, then select its fields from Custom values. Test capture does not execute actions.
+Incoming webhook URLs use `/api/method/quest_automations.api.webhook?workflow_id=...&trigger_id=...&token=...`. The URL includes a per-trigger secret; keep it private. No custom header is required. **The same URL handles testing and live events.** Click **Listen for test event** and send JSON within five minutes to capture the next payload without executing actions, even on an active workflow. After capture or expiration, active workflows process subsequent events normally; drafts and paused workflows cannot execute live actions. Existing header-authenticated URLs and legacy test URLs continue working, but the editor only shows the unified URL. Deleting/recreating a trigger invalidates its previous URL.
 
 Reference incoming data as `{{trigger.field_name}}` and earlier action output as `{{steps.step_0.body.field_name}}`. In JavaScript, use `input` and `steps`. The visual picker discovers DocType fields and captured sample fields for you.
 

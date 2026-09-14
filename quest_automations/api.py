@@ -12,9 +12,8 @@ from .native import erp_doctypes,erp_metadata,erp_email_accounts,erp_files
 def has_access():return frappe.session.user!='Guest' and 'System Manager' in frappe.get_roles()
 def require_access():
     if not has_access():frappe.throw('System Manager access is required',frappe.PermissionError)
-def endpoint(workflow_id,trigger_id,test=False):
-    query={'workflow_id':workflow_id,'trigger_id':trigger_id}
-    if test:query['test']='1'
+def endpoint(workflow_id,trigger_id,token):
+    query={'workflow_id':workflow_id,'trigger_id':trigger_id,'token':token}
     return frappe.utils.get_url()+'/api/method/quest_automations.api.webhook?'+urlencode(query)
 
 @frappe.whitelist(methods=['GET','POST'])
@@ -51,7 +50,8 @@ def dispatch(path='',method='GET',body=None):
                     row=store.workflow(identifier);t=select_trigger(row['draft'],trigger_id=trigger_id)
                     if t['kind']=='document_event':return {'native':True,'triggerId':t['id'],'authentication':'Native ERPNext document event; no webhook registration required'}
                     if t['kind']!='incoming_webhook':raise DefinitionError('Choose an incoming webhook trigger')
-                    url=endpoint(identifier,t['id']);return {'triggerId':t['id'],'url':url,'path':url,'testUrl':endpoint(identifier,t['id'],True),'secret':store.hook_secret(identifier,t['id']),'testSecret':store.hook_secret(identifier,'test:'+t['id']),'authentication':'X-Automation-Secret: <secret>','publicUrlConfigured':True}
+                    secret=store.hook_secret(identifier,t['id']);url=endpoint(identifier,t['id'],secret)
+                    return {'triggerId':t['id'],'url':url,'path':url,'testUrl':url,'secret':secret,'testSecret':secret,'authentication':'Secret included in the URL; no custom header required. Keep this URL private.','publicUrlConfigured':True}
             if method=='POST':
                 if operation in ('delete','delete-trigger'):
                     lock=frappe.cache.lock('quest_automations_worker:'+frappe.local.site,timeout=60,blocking_timeout=1)
@@ -81,17 +81,21 @@ def dispatch(path='',method='GET',body=None):
         frappe.db.rollback();frappe.local.response.http_status_code=409 if 'Revision conflict' in str(e) else 400;return {'error':str(e)}
 
 @frappe.whitelist(allow_guest=True,methods=['POST'])
-def webhook(workflow_id,trigger_id,test=None,**kwargs):
+def webhook(workflow_id,trigger_id,token=None,test=None,**kwargs):
     store=Store()
     try:
-        secret=store.hook_secret(workflow_id,('test:' if str(test)=='1' else '')+trigger_id)
-        supplied=frappe.get_request_header('X-Automation-Secret') or ''
+        # Keep already-configured header-based integrations working. New URLs carry
+        # the same per-trigger credential for both capture and live execution.
+        legacy_test=not token and str(test)=='1'
+        secret=store.hook_secret(workflow_id,('test:' if legacy_test else '')+trigger_id)
+        supplied=token or frappe.get_request_header('X-Automation-Secret') or ''
         if not hmac.compare_digest(secret,supplied):frappe.local.response.http_status_code=401;return {'error':'Invalid webhook secret'}
         raw=frappe.request.get_data()
         if len(raw)>1024*1024:raise DefinitionError('Webhook exceeds 1 MB')
         payload=json.loads(raw)
         if not isinstance(payload,dict):raise DefinitionError('Webhook payload must be an object')
-        if str(test)=='1':return store.capture(workflow_id,trigger_id,payload)
+        if legacy_test or store.sample(workflow_id,trigger_id)['listening']:
+            return store.capture(workflow_id,trigger_id,payload)
         key=frappe.get_request_header('X-Event-ID') or hashlib.sha256(raw).hexdigest()
         if len(key)>200:raise DefinitionError('Event ID exceeds 200 characters')
         result=store.enqueue(workflow_id,payload,'incoming:'+key,'incoming_webhook',trigger_id)
