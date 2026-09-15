@@ -1,0 +1,548 @@
+{
+  "schemaVersion": 2,
+  "name": "Fathom \u2192 CRM | External meeting follow-up",
+  "triggers": [
+    {
+      "id": "fathom_meeting",
+      "kind": "incoming_webhook"
+    }
+  ],
+  "steps": [
+    {
+      "kind": "begin_transaction",
+      "label": "Save the complete meeting import together"
+    },
+    {
+      "kind": "if_else",
+      "label": "Skip internal-only meeting",
+      "branches": [
+        {
+          "name": "Skip internal-only meeting",
+          "field": "trigger.calendar_invitees_domains_type",
+          "operator": "is",
+          "value": "only_internal",
+          "conditions": [],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "Skip internal-only meeting",
+              "message": "Skip internal-only meeting",
+              "outcome": "skip"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "if_else",
+      "label": "Missing Fathom recording ID",
+      "branches": [
+        {
+          "name": "Missing Fathom recording ID",
+          "field": "trigger.recording_id",
+          "operator": "is_empty",
+          "value": "",
+          "conditions": [],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "Missing Fathom recording ID",
+              "message": "Missing Fathom recording ID",
+              "outcome": "error"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "find_documents",
+      "label": "Find this meeting in CRM notes",
+      "doctype": "FCRM Note",
+      "filters": [
+        {
+          "field": "title",
+          "operator": "=",
+          "value": "Fathom: {{trigger.recording_id}}"
+        }
+      ],
+      "fields": [
+        "name"
+      ],
+      "limit": 1000
+    },
+    {
+      "kind": "if_else",
+      "label": "Meeting already imported",
+      "branches": [
+        {
+          "name": "Meeting already imported",
+          "field": "steps.step_3.count",
+          "operator": "is_not",
+          "value": "0",
+          "conditions": [],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "Meeting already imported",
+              "message": "Meeting already imported",
+              "outcome": "skip"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "find_documents",
+      "label": "Find internal CRM users",
+      "doctype": "User",
+      "filters": [
+        {
+          "field": "enabled",
+          "operator": "=",
+          "value": 1
+        },
+        {
+          "field": "user_type",
+          "operator": "=",
+          "value": "System User"
+        }
+      ],
+      "fields": [
+        "name",
+        "email"
+      ],
+      "limit": 1000
+    },
+    {
+      "kind": "filter_list",
+      "label": "Keep external attendees with unique valid emails",
+      "list": "{{trigger.calendar_invitees}}",
+      "match": "all",
+      "uniqueBy": "email",
+      "conditions": [
+        {
+          "field": "email",
+          "operator": "is_email"
+        },
+        {
+          "field": "email",
+          "operator": "email_domain_is_not",
+          "value": "example.com"
+        },
+        {
+          "field": "email",
+          "operator": "not_in_list",
+          "value": "{{steps.step_5.records}}",
+          "listField": "email"
+        }
+      ]
+    },
+    {
+      "kind": "if_else",
+      "label": "No external attendees",
+      "branches": [
+        {
+          "name": "No external attendees",
+          "field": "steps.step_6.count",
+          "operator": "is",
+          "value": "0",
+          "conditions": [],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "No external attendees",
+              "message": "No external attendees",
+              "outcome": "skip"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "map_fields",
+      "label": "Prepare meeting summary and recording link",
+      "mappings": [
+        {
+          "name": "meetingTitle",
+          "value": "{{trigger.title}}",
+          "fallback": "{{trigger.meeting_title}}",
+          "format": "html"
+        },
+        {
+          "name": "summary",
+          "value": "{{trigger.default_summary.markdown_formatted}}",
+          "fallback": "",
+          "format": "html"
+        },
+        {
+          "name": "recordingUrl",
+          "value": "{{trigger.url}}",
+          "fallback": "",
+          "format": "html"
+        },
+        {
+          "name": "actions",
+          "value": "{{trigger.action_items}}",
+          "fallback": []
+        }
+      ]
+    },
+    {
+      "kind": "if_else",
+      "label": "Meeting content is not ready",
+      "branches": [
+        {
+          "name": "Meeting content is not ready",
+          "field": "variables.summary",
+          "operator": "is_empty",
+          "value": "",
+          "conditions": [
+            {
+              "field": "variables.actions",
+              "operator": "is_empty",
+              "value": ""
+            }
+          ],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "Meeting content is not ready",
+              "message": "Meeting content is not ready",
+              "outcome": "error"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "for_each",
+      "label": "For each external attendee",
+      "list": "{{steps.step_6.items}}",
+      "itemName": "attendee",
+      "maxItems": 50,
+      "collect": {
+        "doctype": "{{variables.referenceType}}",
+        "name": "{{variables.referenceName}}"
+      }
+    },
+    {
+      "kind": "map_fields",
+      "label": "Prepare attendee name and email",
+      "mappings": [
+        {
+          "name": "email",
+          "value": "{{items.attendee.email}}",
+          "format": "lowercase"
+        },
+        {
+          "name": "firstName",
+          "value": "{{items.attendee.name}}",
+          "fallback": "{{items.attendee.email}}",
+          "format": "first_word"
+        },
+        {
+          "name": "lastName",
+          "value": "{{items.attendee.name}}",
+          "fallback": "",
+          "format": "remaining_words"
+        }
+      ]
+    },
+    {
+      "kind": "find_documents",
+      "label": "Find existing contact by email",
+      "doctype": "Contact Email",
+      "filters": [
+        {
+          "field": "parenttype",
+          "operator": "=",
+          "value": "Contact"
+        },
+        {
+          "field": "email_id",
+          "operator": "=",
+          "value": "{{variables.email}}"
+        }
+      ],
+      "fields": [
+        "parent",
+        "email_id"
+      ],
+      "limit": 1000,
+      "parent": "Contact"
+    },
+    {
+      "kind": "find_documents",
+      "label": "Find existing lead by email",
+      "doctype": "CRM Lead",
+      "filters": [
+        {
+          "field": "email",
+          "operator": "=",
+          "value": "{{variables.email}}"
+        }
+      ],
+      "fields": [
+        "name",
+        "email"
+      ],
+      "limit": 1000
+    },
+    {
+      "kind": "if_else",
+      "label": "Multiple contacts match this email",
+      "branches": [
+        {
+          "name": "Multiple contacts match this email",
+          "field": "steps.step_12.count",
+          "operator": "is_not",
+          "value": "0",
+          "conditions": [
+            {
+              "field": "steps.step_12.count",
+              "operator": "is_not",
+              "value": "1"
+            }
+          ],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "Multiple contacts match this email",
+              "message": "Multiple contacts match this email",
+              "outcome": "error"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "if_else",
+      "label": "Multiple leads match this email",
+      "branches": [
+        {
+          "name": "Multiple leads match this email",
+          "field": "steps.step_13.count",
+          "operator": "is_not",
+          "value": "0",
+          "conditions": [
+            {
+              "field": "steps.step_13.count",
+              "operator": "is_not",
+              "value": "1"
+            }
+          ],
+          "match": "all",
+          "steps": [
+            {
+              "kind": "stop",
+              "label": "Multiple leads match this email",
+              "message": "Multiple leads match this email",
+              "outcome": "error"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Continue",
+      "elseSteps": []
+    },
+    {
+      "kind": "if_else",
+      "label": "Use contact, use lead, or create a new lead",
+      "branches": [
+        {
+          "name": "Existing contact",
+          "field": "steps.step_12.count",
+          "operator": "is",
+          "value": "1",
+          "steps": [
+            {
+              "kind": "map_fields",
+              "label": "Link the contact",
+              "mappings": [
+                {
+                  "name": "referenceType",
+                  "value": "Contact"
+                },
+                {
+                  "name": "referenceName",
+                  "value": "{{steps.step_12.records.0.parent}}"
+                }
+              ]
+            }
+          ]
+        },
+        {
+          "name": "Existing lead",
+          "field": "steps.step_13.count",
+          "operator": "is",
+          "value": "1",
+          "steps": [
+            {
+              "kind": "map_fields",
+              "label": "Link the lead",
+              "mappings": [
+                {
+                  "name": "referenceType",
+                  "value": "CRM Lead"
+                },
+                {
+                  "name": "referenceName",
+                  "value": "{{steps.step_13.records.0.name}}"
+                }
+              ]
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Create new lead",
+      "elseSteps": [
+        {
+          "kind": "erpnext",
+          "label": "Create new CRM lead",
+          "operation": "create_document",
+          "configJson": "{\"doctype\": \"CRM Lead\", \"fields\": {\"first_name\": \"{{variables.firstName}}\", \"last_name\": \"{{variables.lastName}}\", \"email\": \"{{variables.email}}\", \"status\": \"New\", \"lead_owner\": \"owner@example.com\"}}"
+        },
+        {
+          "kind": "map_fields",
+          "label": "Link the new lead",
+          "mappings": [
+            {
+              "name": "referenceType",
+              "value": "CRM Lead"
+            },
+            {
+              "name": "referenceName",
+              "value": "{{steps.step_16_branch_2_0.name}}"
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "kind": "find_documents",
+      "label": "Check note for this CRM record",
+      "doctype": "FCRM Note",
+      "filters": [
+        {
+          "field": "title",
+          "operator": "=",
+          "value": "Fathom: {{trigger.recording_id}}"
+        },
+        {
+          "field": "reference_doctype",
+          "operator": "=",
+          "value": "{{variables.referenceType}}"
+        },
+        {
+          "field": "reference_docname",
+          "operator": "=",
+          "value": "{{variables.referenceName}}"
+        }
+      ],
+      "fields": [
+        "name"
+      ],
+      "limit": 1000
+    },
+    {
+      "kind": "if_else",
+      "label": "Add one note per linked CRM record",
+      "branches": [
+        {
+          "name": "No note yet",
+          "field": "steps.step_17.count",
+          "operator": "is",
+          "value": "0",
+          "steps": [
+            {
+              "kind": "erpnext",
+              "label": "Add meeting summary and recording",
+              "operation": "create_document",
+              "configJson": "{\"doctype\": \"FCRM Note\", \"fields\": {\"title\": \"Fathom: {{trigger.recording_id}}\", \"content\": \"<h3>{{variables.meetingTitle}}</h3><p>Recording: {{variables.recordingUrl}}</p><pre>{{variables.summary}}</pre>\", \"reference_doctype\": \"{{variables.referenceType}}\", \"reference_docname\": \"{{variables.referenceName}}\"}}"
+            }
+          ]
+        }
+      ],
+      "elseLabel": "Already linked",
+      "elseSteps": []
+    },
+    {
+      "kind": "end_loop",
+      "label": "Finish attendee notes and collect CRM links"
+    },
+    {
+      "kind": "filter_list",
+      "label": "Keep unfinished, unique action items",
+      "list": "{{variables.actions}}",
+      "match": "all",
+      "uniqueBy": "description",
+      "conditions": [
+        {
+          "field": "description",
+          "operator": "is_not_empty"
+        },
+        {
+          "field": "completed",
+          "operator": "is_not",
+          "value": true
+        }
+      ]
+    },
+    {
+      "kind": "for_each",
+      "label": "For each unfinished action item",
+      "list": "{{steps.step_20.items}}",
+      "itemName": "action",
+      "maxItems": 50,
+      "collect": {}
+    },
+    {
+      "kind": "map_fields",
+      "label": "Prepare task title and safe description",
+      "mappings": [
+        {
+          "name": "taskTitle",
+          "value": "{{items.action.description}}",
+          "format": "short_title"
+        },
+        {
+          "name": "taskDescription",
+          "value": "{{items.action.description}}",
+          "format": "html"
+        }
+      ]
+    },
+    {
+      "kind": "erpnext",
+      "label": "Create linked follow-up task for Joseph",
+      "operation": "create_document",
+      "configJson": "{\"doctype\": \"CRM Task\", \"fields\": {\"title\": \"{{variables.taskTitle}}\", \"description\": \"<pre>{{variables.taskDescription}}</pre><p>Meeting: {{variables.meetingTitle}}</p><p>Recording: {{variables.recordingUrl}}</p>\", \"status\": \"Todo\", \"priority\": \"Medium\", \"assigned_to\": \"owner@example.com\", \"reference_doctype\": \"{{steps.step_10.items.0.doctype}}\", \"reference_docname\": \"{{steps.step_10.items.0.name}}\"}}"
+    },
+    {
+      "kind": "end_loop",
+      "label": "Finish action items"
+    },
+    {
+      "kind": "commit_transaction",
+      "label": "Commit leads, notes and tasks together"
+    }
+  ]
+}

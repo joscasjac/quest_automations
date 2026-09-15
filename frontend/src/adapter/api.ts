@@ -29,7 +29,7 @@ async function query(name:string,args:any){
  if(name==='list')return (await request('workflows')).map(workflow);
  if(name==='get')return workflow(await request('workflows/'+args.definitionId));
  if(name==='versions')return (await request(`workflows/${args.definitionId}/versions`)).map((v:any)=>version(v.definition,v.id,v.number,v.created));
- const status=(s:string)=>s==='waiting'?'running':s==='needs_attention'?'failed':s==='filtered_out'?'succeeded':s;
+ const status=(s:string)=>s==='rolled_back'?'canceled':s==='waiting'?'running':s==='needs_attention'?'failed':s==='filtered_out'?'succeeded':s;
  return (await request(`workflows/${args.definitionId}/runs`)).map((r:any)=>({_id:r.id,status:status(r.status),triggerKind:r.trigger_id??'manual',createdAt:r.created*1000,error:r.error,steps:r.logs.map((l:any,i:number)=>({_id:r.id+':'+i,position:i+1,label:l.label??l.id,status:status(l.status),error:l.error,output:JSON.stringify(r.outputs[l.id]??l.output??'')}))}));
 }
 export function useQuery<T>(reference:Ref<T>,args?:any):T|undefined{

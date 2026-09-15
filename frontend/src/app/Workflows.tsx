@@ -1,3 +1,4 @@
+import {VisualFields, isVisualStep, visualDefault} from '../adapter/VisualFields';
 import {WorkflowDraftContext} from '../adapter/WorkflowDraft';
 import {EmailFields} from "../adapter/EmailFields";
 import {FieldSourcesProvider} from '../adapter/FieldSources';
@@ -284,6 +285,14 @@ const ACTION_LIBRARY: Array<{
   group: string;
   icon: WorkflowCatalogIcon;
 }> = [
+  {kind:'find_documents',title:'Find records',description:'Search readable CRM records using field filters.',group:'ERPNext',icon:'record'},
+  {kind:'filter_list',title:'Filter list',description:'Keep items matching your conditions.',group:'Flow',icon:'branch'},
+  {kind:'map_fields',title:'Map fields',description:'Choose values and formats for later actions.',group:'Flow',icon:'record'},
+  {kind:'for_each',title:'For each',description:'Repeat the following actions for each list item.',group:'Flow',icon:'go_to'},
+  {kind:'end_loop',title:'End repeat',description:'Collect results and continue after the last item.',group:'Flow',icon:'go_to'},
+  {kind:'stop',title:'Stop workflow',description:'Finish without changes or report an error.',group:'Flow',icon:'noop'},
+  {kind:'begin_transaction',title:'Begin transaction',description:'Save the CRM changes together when this workflow succeeds.',group:'ERPNext',icon:'record'},
+  {kind:'commit_transaction',title:'Commit transaction',description:'Complete the group of CRM changes.',group:'ERPNext',icon:'record'},
   {kind:"api_request",title:"API request",description:"Call an API with a URL, method, headers, and body.",group:"Webhooks",icon:"go_to"},
   {kind:"get_document",title:"Get document",description:"Fetch any ERPNext document and use its fields in later actions.",group:"ERPNext",icon:"record"},
   {kind:"custom_code",title:"Run Code",description:"Transform incoming data and return a result.",group:"Flow",icon:"log"},
@@ -362,6 +371,7 @@ const ACTION_LIBRARY: Array<{
 ];
 
 const BRANCH_ACTION_KINDS: ReadonlyArray<BranchActionKind> = [
+  "find_documents", "filter_list", "map_fields", "stop",
   "erpnext",
   "get_document",
   "api_request",
@@ -3520,6 +3530,7 @@ function StepFields({
   goToSourceIndex?: number;
   onChange: (step: DraftStep) => void;
 }) {
+  if (isVisualStep(step)) return <VisualFields step={step} onChange={onChange}/>;
   if (step.kind === "send_email") return <EmailFields step={step} onChange={onChange}/>;
   if (step.kind === "custom_code") return <CodeFields step={step} onChange={onChange}/>;
   if (step.kind === "erpnext" || step.kind === "outgoing_webhook" || step.kind === "get_document" || step.kind === "api_request") return <ErpStepFields step={step} onChange={onChange}/>;
@@ -4150,6 +4161,7 @@ function workflowTriggerList(workflow: Workflow | undefined): DraftTriggerList {
 }
 
 function createDefaultStep(kind: StepKind): DraftStep {
+  const visual=visualDefault(kind); if(visual)return visual;
   if(kind==="outgoing_webhook")return {kind,label:"Outgoing webhook",configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
   if(kind==="api_request")return {kind,label:"API request",configJson:JSON.stringify({url:"",method:"GET",headers:{}})};
   if(kind==="custom_code")return {kind,label:"Run Code",code:"return { documentName: input.name, processed: true };"};
@@ -4686,10 +4698,11 @@ function stepTitle(step: DraftStep) {
 }
 
 function stepSubtitle(step: DraftStep) {
+  if(isVisualStep(step))return step.label;
   if(step.kind==="api_request"){try{const c=JSON.parse(step.configJson);return (c.method||"GET")+" "+(c.url||"Configure request")}catch{return "Configure API request"}}
   if(step.kind==="custom_code")return "Transform data with JavaScript";
   if(step.kind==="get_document"){try{return "Get "+JSON.parse(step.configJson).doctype}catch{return "Get an ERPNext document"}}
-  if(step.kind==="erpnext")return step.operation?.replaceAll("_"," ")||"ERPNext action";
+  if(step.kind==="erpnext")return step.label||step.operation?.replaceAll("_"," ")||"ERPNext action";
   if(step.kind==="outgoing_webhook"){try{return JSON.parse(step.configJson).url||"Configure HTTP request"}catch{return "Configure HTTP request"}}
   if (step.kind === "noop") return step.label;
   if (step.kind === "log") return step.message;

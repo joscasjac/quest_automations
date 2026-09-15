@@ -38,6 +38,21 @@ export function FieldSourcesProvider({triggers,steps,selection,children}:{trigge
    let count=0;const walk=(value:any,path:string,label:string,depth:number)=>{if(depth>5||++count>300)return;if(depth>0)all.push({path,label,group:s.label+' response',description:Array.isArray(value)?'List':value===null?'Empty':typeof value});if(Array.isArray(value)){if(value.length)walk(value[0],path+'.0',label+'[0]',depth+1)}else if(value&&typeof value==='object')for(const [key,child] of Object.entries(value))if(/^[A-Za-z_][A-Za-z0-9_]*$/.test(key))walk(child,path+'.'+key,label?label+'.'+key:key,depth+1)};
    if(sample!==undefined)walk(sample,prefix+'.body','',0);
   });
+  const walkVisual=(s:any,prefix:string)=>{
+   const add=(path:string,label:string,group=s.label)=>all.push({path,label,group,description:'Available workflow data'});
+   if(s.kind==='find_documents'){add(prefix+'.records','Matching records');add(prefix+'.count','Number of matches');for(const field of s.fields)add(prefix+'.records.0.'+field,'First match · '+field)}
+   if(s.kind==='filter_list'||s.kind==='for_each'){add(prefix+'.items','Processed items');add(prefix+'.count','Number of items')}
+   if(s.kind==='for_each'){
+    add('items.'+s.itemName,'Current '+s.itemName,'Current repeat item');
+    // Fields referenced by the repeat body are useful even before a webhook sample exists.
+    const paths=JSON.stringify(steps).match(/items\.[A-Za-z0-9_.]+/g)??[];
+    for(const path of paths)if(path.startsWith('items.'+s.itemName+'.'))add(path,path.split('.').slice(2).join('.'),'Current repeat item');
+    for(const field of Object.keys(s.collect??{}))add(prefix+'.items.0.'+field,'First result · '+field);
+   }
+   if(s.kind==='map_fields')for(const m of s.mappings){add(prefix+'.'+m.name,m.name);add('variables.'+m.name,m.name,'Shared fields')}
+  };
+  steps.forEach((s,i)=>{walkVisual(s,'steps.step_'+i);if(s.kind==='if_else')[...s.branches,{steps:s.elseSteps}].forEach((b:any,n:number)=>(b.steps??[]).forEach((child:any,k:number)=>walkVisual(child,`steps.step_${i}_branch_${n}_${k}`)))});
+  for(const path of JSON.stringify(steps).match(/trigger\.[A-Za-z0-9_.]+/g)??[])all.push({path,label:path.slice(8),group:'Trigger',description:'Field used by this workflow'});
   steps.forEach((s,i)=>{if(s.kind==='custom_code')all.push({path:'steps.step_'+i,label:s.label+' result',group:'Previous actions',description:'Value returned by JavaScript'})});
   all.push({path:'workflow.name',label:'Workflow name',group:'Workflow',description:'Current workflow'},{path:'system.today',label:'Today',group:'System',description:'Current date'});
   return all.filter((o,i)=>{

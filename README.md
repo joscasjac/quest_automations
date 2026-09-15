@@ -215,3 +215,26 @@ searches require `parent` and check read access to each parent record.
 These methods share the five-call budget with `api.request`. They run under the
 workflow publishing user on the current site. Preview performs no native reads or
 writes, and code cannot switch user, ignore permissions, or call arbitrary Python.
+
+## Visual record and list actions
+
+Use **Find records**, **Filter list**, **Map fields**, **For each**, **End repeat**,
+and **Stop workflow** to build CRM integrations without Run Code. Search filters,
+return fields, mappings, formats and list conditions are editable in the sidebar.
+Mapped values appear under Shared fields. A repeat exposes its current item and
+can collect fields from each iteration for later actions. Repeats are bounded to
+200 items and three nesting levels; Go To is not allowed with repeats.
+
+Place **Begin transaction** first and **Commit transaction** last to save native
+CRM changes together. The runner defers checkpoints until completion and rolls
+back the run's database changes on an action failure. This mode excludes remote
+requests, emails, waits and Run Code. DocType hooks must not commit independently
+or perform irreversible external effects; database rollback cannot undo those.
+Search and creation still use the publishing user's normal Frappe permissions.
+A dry preview stops at Find records because live CRM results are unavailable.
+
+`examples/fathom-visual-workflow.json` is a configurable example using these
+blocks: external attendees, duplicate meeting detection, contact/lead matching,
+new leads, linked notes and unfinished tasks. Set the internal domain and task
+owner before publishing. It uses the existing incoming webhook trigger; it does
+not install a separate meeting integration or require ERPNext API keys.

@@ -5,8 +5,16 @@ export type Trigger = (Infer<typeof workflowTrigger> | {kind:'incoming_webhook';
 type ErpStepFields = {label:string;operation?:'get_document'|'create_document'|'update_document'|'apply_workflow'|'condition';configJson:string};
 export type ErpStep = (ErpStepFields & {kind:'erpnext'}) | (ErpStepFields & {kind:'outgoing_webhook'}) | (ErpStepFields & {kind:'get_document'}) | (ErpStepFields & {kind:'api_request'});
 export type CodeStep={kind:'custom_code';label:string;code:string};
+export type VisualStep = {label:string} & (
+ | {kind:'find_documents';doctype:string;parent?:string;filters:Array<{field:string;operator:string;value:unknown}>;fields:string[];limit:number}
+ | {kind:'filter_list';uniqueBy?:string;list:unknown;match:'all'|'any';conditions:Array<{field:string;operator:string;value?:unknown;listField?:string}>}
+ | {kind:'map_fields';mappings:Array<{name:string;value:unknown;fallback?:unknown;format?:string}>}
+ | {kind:'for_each';list:unknown;itemName:string;maxItems:number;collect:Record<string,unknown>}
+ | {kind:'end_loop'|'begin_transaction'|'commit_transaction'}
+ | {kind:'stop';outcome:'skip'|'error';message:string}
+);
 type NativeStep = Infer<typeof workflowStep>;
-export type Step = Exclude<NativeStep,{kind:"send_email"}> | (Extract<NativeStep,{kind:"send_email"}> & {sender?:string;senderName?:string;cc?:string;bcc?:string;preheader?:string;attachments?:string[]}) | ErpStep | CodeStep;
+export type Step = Exclude<NativeStep,{kind:"send_email"}> | (Extract<NativeStep,{kind:"send_email"}> & {sender?:string;senderName?:string;cc?:string;bcc?:string;preheader?:string;attachments?:string[]}) | ErpStep | CodeStep | VisualStep;
 // Branch actions retain the same editor capabilities, including the ERP additions.
 export type EditorStep = Exclude<Step,{kind:'if_else'}> | (Omit<Extract<Step,{kind:'if_else'}>,'branches'|'elseSteps'> & {branches:Array<{name:string;match?:'all'|'any';conditions?:Array<{field:string;operator:'is'|'is_not'|'contains'|'does_not_contain'|'is_empty'|'is_not_empty';value:string}>;field:string;operator:'is'|'is_not'|'contains'|'does_not_contain'|'is_empty'|'is_not_empty';value:string;steps?:Array<Exclude<Step,{kind:'if_else'}>>}>;elseSteps?:Array<Exclude<Step,{kind:'if_else'}>>});
 export type Version = {_id:Id<'workflowVersions'>;number:number;trigger:Trigger;triggers?:Trigger[];steps:EditorStep[];validationErrors:string[];createdAt:number};

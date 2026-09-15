@@ -1,6 +1,6 @@
 {
   "index.html": {
-    "file": "assets/index-D4ndokG2.js",
+    "file": "assets/index-Co5GMPFU.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
@@ -11,7 +11,7 @@
       "node_modules/prettier/plugins/html.mjs"
     ],
     "css": [
-      "assets/index-C2iEnfG7.css"
+      "assets/index-Dlv7GS1A.css"
     ],
     "assets": [
       "assets/mona-sans-vietnamese-wght-normal-DsUdksa4.woff2",
