@@ -7,6 +7,7 @@ from .store import Store
 from .core.definition import DefinitionError,validate,select_trigger,EVENTS
 from .core.engine import preview
 from .core.graph import KINDS
+from .core.visual_actions import CATALOG as VISUAL_CATALOG
 from .native import erp_doctypes,erp_metadata,erp_email_accounts,erp_files
 
 def has_access():return frappe.session.user!='Guest' and 'System Manager' in frappe.get_roles()
@@ -30,7 +31,7 @@ def dispatch(path='',method='GET',body=None):
         if route.startswith('api/v1/doctypes/'):return erp_metadata(unquote(route[len('api/v1/doctypes/'):]))
         if route=='api/v1/email-accounts':return {'items':erp_email_accounts(),'source':'live'}
         if route=='api/v1/files':return {'items':erp_files()}
-        if route=='api/v1/catalog':return {'schemaVersion':2,'graphActions':list(KINDS),'graphTriggers':['manual','incoming_webhook','document_event','schedule'],'documentEvents':EVENTS,'nativeCodeMethods':{'api.findDocuments':{'config':{'doctype':'DocType name','filters':{},'fields':['name'],'limit':100,'parent':'Required only for child tables'},'returns':'Array of readable records; fails if the limit is reached'},'api.createDocuments':{'argument':'Array of new document objects, each with doctype','returns':'Array of new names; batch rolls back on failure'}},'nativeCodePermissions':'Current publishing user; no API key; no operations during preview'}
+        if route=='api/v1/catalog':return {'schemaVersion':2,'graphActions':list(KINDS),'visualActions':VISUAL_CATALOG,'graphTriggers':['manual','incoming_webhook','document_event','schedule'],'documentEvents':EVENTS,'nativeCodeMethods':{'api.findDocuments':{'config':{'doctype':'DocType name','filters':{},'fields':['name'],'limit':100,'parent':'Required only for child tables'},'returns':'Array of readable records; fails if the limit is reached'},'api.createDocuments':{'argument':'Array of new document objects, each with doctype','returns':'Array of new names; batch rolls back on failure'}},'nativeCodePermissions':'Current publishing user; no API key; no operations during preview'}
         if route=='api/v1/openapi.json':return json.loads(Path(frappe.get_app_path('quest_automations','openapi.json')).read_text())
         if route=='api/v1/workflows':
             if method=='GET':return store.list()

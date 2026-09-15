@@ -11,8 +11,10 @@ from .transport import erp_request, erp_method, request
 
 ENTITIES={'company':'Customer','contact':'Contact','deal':'Opportunity','project':'Project','task':'Task','note':'Note'}
 FIELDS={'company':{'name':'customer_name','industry':'industry','description':'customer_details','domain':'website'},'contact':{'name':'first_name','email':'email_id','title':'designation'},'deal':{'name':'title','stage':'sales_stage','amountMinor':'opportunity_amount'},'project':{'name':'project_name','status':'status','description':'notes'},'task':{'title':'subject','status':'status','priority':'priority','description':'description','dueDate':'exp_end_date'}}
+from .visual_actions import KINDS as VISUAL_KINDS, validate_step
+
 OPS=('is','is_not','contains','does_not_contain','is_empty','is_not_empty')
-KINDS=('noop','log','create_note','create_task','update_record','send_notification','send_email','wait','go_to','if_else','erpnext','outgoing_webhook','get_document','custom_code','api_request')
+KINDS=('noop','log','create_note','create_task','update_record','send_notification','send_email','wait','go_to','if_else','erpnext','outgoing_webhook','get_document','custom_code','api_request') + VISUAL_KINDS
 PATTERN=re.compile(r'{{\s*([A-Za-z][A-Za-z0-9_.]*)\s*}}')
 
 
@@ -46,7 +48,10 @@ def validate_graph(definition):
         count+=1;require(count<=500,'Workflow exceeds 500 actions including branches')
         require(isinstance(step,dict) and step.get('kind') in KINDS,'Unsupported graph action')
         text_field(step,'label');kind=step['kind']
-        if kind=='if_else':
+        if kind in VISUAL_KINDS:
+            require(not nested or kind not in ('for_each','end_loop','begin_transaction','commit_transaction'),'Place repeat and transaction boundaries on the main flow')
+            validate_step(step)
+        elif kind=='if_else':
             require(not nested,'Nested If/Else is not supported by the original editor')
             require(isinstance(step.get('branches'),list) and 1<=len(step['branches'])<=10,'Provide 1–10 branches')
             text_field(step,'elseLabel')
@@ -77,6 +82,18 @@ def validate_graph(definition):
                 require(field not in step or isinstance(step[field],str),f'{field} must be text')
             require(isinstance(step.get('attachments',[]),list) and all(isinstance(v,str) for v in step.get('attachments',[])), 'Attachments must be ERPNext File names')
     for step in steps:check(step)
+    compile_graph(definition)
+    atomic=any(s['kind'] in ('begin_transaction','commit_transaction') for s in steps)
+    if atomic:
+        require(steps[0]['kind']=='begin_transaction' and steps[-1]['kind']=='commit_transaction','Start and end the flow with matching transaction blocks')
+        require(sum(s['kind'] in ('begin_transaction','commit_transaction') for s in steps)==2,'Use one transaction around the workflow')
+        def safe(step):
+            require(step['kind'] not in ('api_request','outgoing_webhook','custom_code','send_email','send_notification','wait','go_to','create_task'),'Transactions only support native document and visual actions')
+            if step['kind']=='erpnext':require(step.get('operation') in ('get_document','create_document','update_document','condition'),'Unsupported transaction operation')
+            for b in step.get('branches',[]):
+                for child in b.get('steps',[]):safe(child)
+            for child in step.get('elseSteps',[]):safe(child)
+        for step in steps:safe(step)
     return deepcopy(definition)
 
 
@@ -94,7 +111,7 @@ def validate_condition(condition):
 
 def context_for(run):
     payload=run['input'];now=datetime.now(timezone.utc)
-    context={'trigger':payload,'steps':run['outputs'],'workflow':{'name':run['definition']['name']},'system':{'today':now.date().isoformat()},'current_day_of_week':now.strftime('%A')}
+    context={'items':run.setdefault('items',{}),'variables':run.setdefault('variables',{}),'trigger':payload,'steps':run['outputs'],'workflow':{'name':run['definition']['name']},'system':{'today':now.date().isoformat()},'current_day_of_week':now.strftime('%A')}
     # Legacy merge fields resolve from explicitly supplied entities, never invented CRM records.
     for entity in ('contact','company','deal','task','owner','project'):
         if isinstance(payload.get(entity),dict):context[entity]=payload[entity]
@@ -156,10 +173,24 @@ def compile_graph(definition):
             for end in ends:code[end]['step']['target']=len(code)
     for instruction in code:
         if instruction['step']['kind']=='go_to':instruction['target']=top[instruction['step']['targetStepIndex']]
+    require(not any(i['step']['kind']=='for_each' for i in code) or not any(i['step']['kind']=='go_to' for i in code),'Go To cannot cross repeat boundaries; use conditions inside repeats')
+    loops=[]
+    for pos,instruction in enumerate(code):
+        kind=instruction['step']['kind']
+        if kind=='for_each':
+            require(len(loops)<3,'Use at most three nested repeats')
+            require(not any(code[p]['step']['itemName']==instruction['step']['itemName'] for p in loops),'Nested repeats need different current item names');loops.append(pos)
+        elif kind=='end_loop':
+            require(bool(loops),'End repeat has no matching For each block')
+            start=loops.pop();instruction['start']=start;code[start]['end']=pos
+    require(not loops,'Every For each block needs an End repeat block')
     return code
 
 
 def execute_native(step,context,run_id,step_id):
+    if step['kind'] in VISUAL_KINDS:
+        from .visual_actions import execute
+        return execute(step,context)
     if step['kind']=='custom_code':
         from .javascript import execute_code
         return execute_code(step['code'],context,run_id,step_id)
@@ -209,7 +240,7 @@ def execute_native(step,context,run_id,step_id):
     raise DefinitionError('Unsupported action')
 
 
-def process(run,store=None,executor=execute_native,preview=False):
+def _process(run,store=None,executor=execute_native,preview=False):
     code=compile_graph(run['definition']);visited={l['id'] for l in run['logs'] if l.get('goto')}
     while run['cursor']<len(code):
         instruction=code[run['cursor']];step=instruction['step'];kind=step['kind'];key=instruction['id'];context=context_for(run);context['_preview']=preview
@@ -217,7 +248,30 @@ def process(run,store=None,executor=execute_native,preview=False):
         log={'id':key,'label':step['label'],'at':time.time(),'status':'succeeded'}
         try:
             require(len(run['logs'])<1000,'Workflow exceeded the execution limit')
-            if kind=='go_to':
+            if kind=='stop':
+                require(step.get('outcome','skip')!='error',render(step.get('message') or step['label'],context))
+                run['cursor']=len(code);log['output']=step.get('message') or step['label']
+            elif kind=='for_each':
+                state=run.setdefault('loops',{}).get(key)
+                if state is None:
+                    rows=render(step['list'],context)
+                    require(isinstance(rows,list) and len(rows)<=step.get('maxItems',50),'Repeat input exceeds its item limit or is not a list')
+                    state={'rows':rows,'index':0,'collected':[]};run['loops'][key]=state
+                if not state['rows']:
+                    run['outputs'][key]={'items':[],'count':0};run['cursor']=instruction['end']+1;run['loops'].pop(key)
+                else:
+                    for child in code[run['cursor']+1:instruction['end']]:run['outputs'].pop(child['id'],None)
+                    run['items'][step['itemName']]={**state['rows'][state['index']],'index':state['index']} if isinstance(state['rows'][state['index']],dict) else {'value':state['rows'][state['index']],'index':state['index']}
+                    run['cursor']+=1
+                log['output']='Repeat '+str(len(state['rows']))+' items'
+            elif kind=='end_loop':
+                start=instruction['start'];opening=code[start];state=run['loops'][opening['id']]
+                state['collected'].append(render(opening['step'].get('collect',{}),context));state['index']+=1
+                if state['index']<len(state['rows']):run['cursor']=start
+                else:
+                    run['outputs'][opening['id']]={'items':state['collected'],'count':len(state['collected'])};run['items'].pop(opening['step']['itemName'],None);run['loops'].pop(opening['id']);run['cursor']+=1
+                log['output']='Completed item '+str(state['index'])
+            elif kind=='go_to':
                 require(key not in visited,'Go To loop detected; this connection has already been followed')
                 visited.add(key);log['goto']=True;log['output']='Go To action '+str(step['targetStepIndex']+1);run['cursor']=instruction['target']
             elif kind=='if_else':
@@ -233,7 +287,8 @@ def process(run,store=None,executor=execute_native,preview=False):
                 if not preview:
                     log['status']='waiting';run['logs'].append(log);store.checkpoint(run,'waiting',step['durationMinutes']*60);return
             else:
-                if preview and kind not in ('noop','log','custom_code'):
+                if preview and kind not in ('noop','log','custom_code','filter_list','map_fields','begin_transaction','commit_transaction'):
+                    require(kind!='find_documents','Preview stops at Find records: live CRM results are unavailable in a dry run')
                     # Validate field resolution, but never fabricate external outputs.
                     if kind in ('erpnext','outgoing_webhook','get_document','api_request'):render({k:v for k,v in json.loads(step['configJson']).items() if k not in ('responseSample','bodyDraft')},context)
                     else:render(step,context)
@@ -249,6 +304,26 @@ def process(run,store=None,executor=execute_native,preview=False):
             return
     run['status']='succeeded'
     if store:store.checkpoint(run,'succeeded')
+
+
+def process(run,store=None,executor=execute_native,preview=False):
+    atomic=run['definition']['steps'][0]['kind']=='begin_transaction'
+    if not atomic or preview:
+        return _process(run,store,executor,preview)
+    import frappe
+    savepoint='automation_visual_transaction'
+    frappe.db.savepoint(savepoint)
+    try:
+        _process(run,None,executor,False)
+        if run['status']!='succeeded':
+            frappe.db.rollback(save_point=savepoint)
+            run['outputs']={};run['cursor']=0;run['items']={};run['loops']={};run['variables']={}
+            for log in run['logs']:
+                if log['status']=='succeeded':log['status']='rolled_back'
+        if store:store.checkpoint(run,run['status'],error=run.get('error'))
+    except Exception:
+        frappe.db.rollback(save_point=savepoint)
+        raise
 
 
 def preview_graph(definition,payload):

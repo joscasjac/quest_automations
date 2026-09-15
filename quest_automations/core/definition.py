@@ -136,7 +136,7 @@ def reference_parts(path):
     require(isinstance(path, str) and 0 < len(path) < 512, 'Invalid reference')
     parts = path.split('.')
     require(all(p and p not in BLOCKED for p in parts), 'Unsafe or empty reference segment')
-    require(parts[0] in ('trigger', 'steps'), 'References must start with trigger or steps')
+    require(parts[0] in ('trigger', 'steps', 'items', 'variables'), 'References must start with trigger, steps, items or variables')
     require(parts[0] != 'steps' or len(parts) >= 3, 'Step references require a step ID and output path')
     return parts
 
