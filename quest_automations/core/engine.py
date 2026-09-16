@@ -5,6 +5,15 @@ from .transport import erp_request, request
 
 
 def execute_action(kind, config, run_id, step_id):
+    if kind.startswith('pulse_'):
+        from .definition import PULSE_ACTIONS
+        if kind not in PULSE_ACTIONS:
+            raise DefinitionError('Unsupported Pulse action')
+        try:
+            from pulse.api.automation import execute
+        except ImportError as exc:
+            raise DefinitionError('Install or update Pulse on this site to use Pulse actions') from exc
+        return execute(kind.removeprefix('pulse_'), config)
     if kind == 'outgoing_webhook':
         from .http_action import execute
         return execute(config,run_id,step_id)

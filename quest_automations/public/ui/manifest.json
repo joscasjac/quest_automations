@@ -1,14 +1,50 @@
 {
+  "../../../quest-automations/frontend/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2": {
+    "file": "assets/mona-sans-latin-ext-wght-normal-BqSk0Z3x.woff2",
+    "src": "../../../quest-automations/frontend/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2"
+  },
+  "../../../quest-automations/frontend/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2": {
+    "file": "assets/mona-sans-latin-wght-normal-Pz49MTQZ.woff2",
+    "src": "../../../quest-automations/frontend/node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2"
+  },
+  "../../../quest-automations/frontend/node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2": {
+    "file": "assets/mona-sans-vietnamese-wght-normal-DsUdksa4.woff2",
+    "src": "../../../quest-automations/frontend/node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2"
+  },
+  "../../../quest-automations/frontend/node_modules/prettier/plugins/babel.mjs": {
+    "file": "assets/babel-Dw5Eu3O9.js",
+    "name": "babel",
+    "src": "../../../quest-automations/frontend/node_modules/prettier/plugins/babel.mjs",
+    "isDynamicEntry": true
+  },
+  "../../../quest-automations/frontend/node_modules/prettier/plugins/estree.mjs": {
+    "file": "assets/estree-C8kMrFB9.js",
+    "name": "estree",
+    "src": "../../../quest-automations/frontend/node_modules/prettier/plugins/estree.mjs",
+    "isDynamicEntry": true
+  },
+  "../../../quest-automations/frontend/node_modules/prettier/plugins/html.mjs": {
+    "file": "assets/html-D_KpGVuL.js",
+    "name": "html",
+    "src": "../../../quest-automations/frontend/node_modules/prettier/plugins/html.mjs",
+    "isDynamicEntry": true
+  },
+  "../../../quest-automations/frontend/node_modules/prettier/standalone.mjs": {
+    "file": "assets/standalone-CqKwLAfv.js",
+    "name": "standalone",
+    "src": "../../../quest-automations/frontend/node_modules/prettier/standalone.mjs",
+    "isDynamicEntry": true
+  },
   "index.html": {
-    "file": "assets/index-D4ndokG2.js",
+    "file": "assets/index-CndrHXaJ.js",
     "name": "index",
     "src": "index.html",
     "isEntry": true,
     "dynamicImports": [
-      "node_modules/prettier/standalone.mjs",
-      "node_modules/prettier/plugins/babel.mjs",
-      "node_modules/prettier/plugins/estree.mjs",
-      "node_modules/prettier/plugins/html.mjs"
+      "../../../quest-automations/frontend/node_modules/prettier/standalone.mjs",
+      "../../../quest-automations/frontend/node_modules/prettier/plugins/babel.mjs",
+      "../../../quest-automations/frontend/node_modules/prettier/plugins/estree.mjs",
+      "../../../quest-automations/frontend/node_modules/prettier/plugins/html.mjs"
     ],
     "css": [
       "assets/index-C2iEnfG7.css"
@@ -18,41 +54,5 @@
       "assets/mona-sans-latin-ext-wght-normal-BqSk0Z3x.woff2",
       "assets/mona-sans-latin-wght-normal-Pz49MTQZ.woff2"
     ]
-  },
-  "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2": {
-    "file": "assets/mona-sans-latin-ext-wght-normal-BqSk0Z3x.woff2",
-    "src": "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-ext-wght-normal.woff2"
-  },
-  "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2": {
-    "file": "assets/mona-sans-latin-wght-normal-Pz49MTQZ.woff2",
-    "src": "node_modules/@fontsource-variable/mona-sans/files/mona-sans-latin-wght-normal.woff2"
-  },
-  "node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2": {
-    "file": "assets/mona-sans-vietnamese-wght-normal-DsUdksa4.woff2",
-    "src": "node_modules/@fontsource-variable/mona-sans/files/mona-sans-vietnamese-wght-normal.woff2"
-  },
-  "node_modules/prettier/plugins/babel.mjs": {
-    "file": "assets/babel-Dw5Eu3O9.js",
-    "name": "babel",
-    "src": "node_modules/prettier/plugins/babel.mjs",
-    "isDynamicEntry": true
-  },
-  "node_modules/prettier/plugins/estree.mjs": {
-    "file": "assets/estree-C8kMrFB9.js",
-    "name": "estree",
-    "src": "node_modules/prettier/plugins/estree.mjs",
-    "isDynamicEntry": true
-  },
-  "node_modules/prettier/plugins/html.mjs": {
-    "file": "assets/html-D_KpGVuL.js",
-    "name": "html",
-    "src": "node_modules/prettier/plugins/html.mjs",
-    "isDynamicEntry": true
-  },
-  "node_modules/prettier/standalone.mjs": {
-    "file": "assets/standalone-CqKwLAfv.js",
-    "name": "standalone",
-    "src": "node_modules/prettier/standalone.mjs",
-    "isDynamicEntry": true
   }
 }
