@@ -77,13 +77,20 @@ subject, body (plain text), and evidence (short list of record references suppor
 This is a draft for human review. You cannot send email, approve, access tools or change CRM records.'''
     body = {'model': model, 'instructions': instructions,
             'input': [{'role': 'user', 'content': json.dumps(context, ensure_ascii=False)}],
-            'store': False, 'stream': True, 'tools': []}
+            'store': False, 'stream': True, 'tools': [],
+            'text': {'format': {'type': 'json_schema', 'name': 'cancellation_followup', 'strict': True,
+                'schema': {'type': 'object', 'additionalProperties': False,
+                    'properties': {'recommendation': {'type': 'string', 'enum': ['reschedule', 'clarify', 'commercial_proposal', 'no_follow_up']},
+                        'rationale': {'type': 'string'}, 'subject': {'type': 'string'}, 'body': {'type': 'string'},
+                        'evidence': {'type': 'array', 'items': {'type': 'string'}}},
+                    'required': ['recommendation', 'rationale', 'subject', 'body', 'evidence']}}}}
     try:
         with requests.post(RESOURCE + '/responses', headers={'Authorization': 'Bearer ' + bundle['access_token']},
                            json=body, stream=True, timeout=(15, 120), allow_redirects=False) as response:
             if response.status_code != 200:
                 raise ConnectionError('Draft generation failed (HTTP %s). Review ChatGPT connection and usage.' % response.status_code)
             total = 0
+            text_deltas = []
             for line in response.iter_lines():
                 total += len(line)
                 if total > 2 * 1024 * 1024:
@@ -98,10 +105,15 @@ This is a draft for human review. You cannot send email, approve, access tools o
                     raise ConnectionError('ChatGPT returned an unreadable stream event. Nothing was sent.') from None
                 if event.get('type') in ('response.failed', 'response.incomplete', 'error'):
                     raise ConnectionError('ChatGPT did not complete the draft. Check account usage and retry.')
+                if event.get('type') == 'response.output_text.delta':
+                    text_deltas.append(event.get('delta', ''))
                 if event.get('type') == 'response.completed':
                     output = event.get('response', {}).get('output', [])
                     text = ''.join(c.get('text', '') for item in output if item.get('type') == 'message'
                                    for c in item.get('content', []) if c.get('type') == 'output_text')
+                    text = text or ''.join(text_deltas)
+                    if not text.strip():
+                        raise ConnectionError('ChatGPT completed without draft text. Nothing was sent.')
                     return parse_draft(text)
     except requests.RequestException:
         raise ConnectionError('Draft generation connection was interrupted. Nothing was sent.') from None

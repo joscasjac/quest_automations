@@ -77,6 +77,7 @@ class StreamTests(unittest.TestCase):
             self.assertEqual(post.call_args.kwargs['json']['input'],
                 [{'role': 'user', 'content': json.dumps({'cancellation_reason': 'quoted data'})}])
             self.assertNotIn('max_output_tokens', post.call_args.kwargs['json'])
+            self.assertTrue(post.call_args.kwargs['json']['text']['format']['strict'])
             return result
 
     def test_partial_and_limit_failure_never_count_as_completed(self):
@@ -95,6 +96,16 @@ class StreamTests(unittest.TestCase):
             self.assertEqual(chatgpt.parse_draft(fence + json.dumps(draft) + '\n```'), draft)
         with self.assertRaises(chatgpt.ConnectionError):
             chatgpt.parse_draft('Here is a draft: ' + json.dumps(draft))
+
+    def test_completed_can_use_streamed_text_when_terminal_output_is_empty(self):
+        draft = {'recommendation': 'clarify', 'rationale': 'Scope is unclear.', 'subject': 'Question', 'body': 'What is useful?', 'evidence': []}
+        text = json.dumps(draft)
+        events = [{'type': 'response.output_text.delta', 'delta': text[:20]},
+                  {'type': 'response.output_text.delta', 'delta': text[20:]},
+                  {'type': 'response.completed', 'response': {'output': []}}]
+        self.assertEqual(self.run_stream(events), draft)
+        with self.assertRaisesRegex(chatgpt.ConnectionError, 'without draft text'):
+            self.run_stream([{'type': 'response.completed', 'response': {'output': []}}])
 
 class ApprovalTests(unittest.TestCase):
     def setUp(self):
