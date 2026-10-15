@@ -7,7 +7,7 @@ frappe.ui.form.on('Quest Meeting Followup', {
         const { message: draft } = await frappe.call({ method: 'quest_automations.meeting_followups.review', args: { name: frm.doc.name }, type: 'POST' });
         if (!draft.can_send) return frappe.msgprint(__('This draft is not available for sending.'));
         const escape = frappe.utils.escape_html;
-        frappe.confirm(`<p><b>To:</b> ${escape(draft.recipient)}</p><p><b>From:</b> notifications@noreply.questmediahub.com</p><p><b>Subject:</b> ${escape(draft.subject)}</p><div style="white-space:pre-wrap;max-height:360px;overflow:auto">${escape(draft.body)}</div><p>Approve sending this exact email?</p>`, async () => {
+        frappe.confirm(`<p><b>To:</b> ${escape(draft.recipient)}</p><p><b>From:</b> ${escape(draft.sender)}</p><p><b>Subject:</b> ${escape(draft.subject)}</p><div style="white-space:pre-wrap;max-height:360px;overflow:auto">${escape(draft.body)}</div><p>Approve sending this exact email?</p>`, async () => {
           await frappe.call({ method: 'quest_automations.meeting_followups.approve_and_send', args: { name: frm.doc.name, expected_hash: draft.hash }, type: 'POST', freeze: true });
           await frm.reload_doc();
           frappe.show_alert(__('Approved email queued for delivery.'));

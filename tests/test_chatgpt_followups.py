@@ -128,6 +128,12 @@ class StreamTests(unittest.TestCase):
             chatgpt.validate_draft({**draft, 'rationale': ''})
 
 class ApprovalTests(unittest.TestCase):
+    def test_sender_is_part_of_the_approved_preview(self):
+        self.assertEqual(followups.review('followup')['sender'], 'joseph@questmediahub.com')
+        original = followups.draft_hash(self.doc)
+        with patch.object(followups, 'SENDER', 'notifications@noreply.questmediahub.com'):
+            self.assertNotEqual(followups.draft_hash(self.doc), original)
+
     def setUp(self):
         self.doc = types.SimpleNamespace(name='followup', recipient='prospect@example.com', subject='Question', body='Hello',
             recommendation='clarify', status='Needs review', task=None, event='event-one', sent_communication=None,

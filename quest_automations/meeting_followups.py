@@ -7,7 +7,8 @@ from .chatgpt_connection import OWNER, require_owner, credentials
 from .core import chatgpt
 
 DOCTYPE = 'Quest Meeting Followup'
-SENDER = 'notifications@noreply.questmediahub.com'
+SENDER = 'joseph@questmediahub.com'
+REVIEW_SENDER = 'notifications@noreply.questmediahub.com'
 
 def save_internal(doc):
     from .protected_changes import internal_change
@@ -104,7 +105,7 @@ def generate_draft(name):
             message += '<p><b>To:</b> ' + html.escape(address) + '<br><b>Subject:</b> ' + html.escape(doc.subject) + '</p>'
             message += '<div style="white-space:pre-wrap">' + html.escape(doc.body) + '</div>'
             message += '<p><a href="' + html.escape(url, quote=True) + '">Review draft and approve sending</a></p><p>Opening this link does not send the email.</p>'
-            frappe.sendmail(recipients=[OWNER], sender=SENDER, subject='Review cancellation follow-up: ' + event.subject[:90],
+            frappe.sendmail(recipients=[OWNER], sender=REVIEW_SENDER, subject='Review cancellation follow-up: ' + event.subject[:90],
                 message=message, reference_doctype=DOCTYPE, reference_name=name, delayed=True)
             doc.notification_queued = 1
             save_internal(doc)
@@ -118,14 +119,14 @@ def generate_draft(name):
             # No raw provider errors or CRM context in logs or error snapshots.
 
 def draft_hash(doc):
-    return hashlib.sha256(json.dumps([doc.recipient, doc.subject, doc.body, doc.recommendation], ensure_ascii=False).encode()).hexdigest()
+    return hashlib.sha256(json.dumps([SENDER, doc.recipient, doc.subject, doc.body, doc.recommendation], ensure_ascii=False).encode()).hexdigest()
 
 @frappe.whitelist(methods=['POST'])
 def review(name):
     require_owner()
     doc = frappe.get_doc(DOCTYPE, name)
     doc.check_permission('read')
-    return {'recipient': doc.recipient, 'subject': doc.subject, 'body': doc.body, 'hash': draft_hash(doc),
+    return {'sender': SENDER, 'recipient': doc.recipient, 'subject': doc.subject, 'body': doc.body, 'hash': draft_hash(doc),
             'can_send': doc.status == 'Needs review' and doc.recommendation != 'no_follow_up'}
 
 @frappe.whitelist(methods=['POST'])
@@ -149,7 +150,7 @@ def approve_and_send(name, expected_hash):
     if address != doc.recipient:
         frappe.throw('The CRM email changed. Review the recipient before approving.')
     if not frappe.db.exists('Email Account', {'email_id': SENDER, 'enable_outgoing': 1}):
-        frappe.throw('The notifications email account must be enabled before sending.')
+        frappe.throw('The Joseph email account must be enabled before sending.')
     body = '<div style="white-space:pre-wrap">' + html.escape(doc.body) + '</div>'
     communication = frappe.get_doc({'doctype': 'Communication', 'communication_type': 'Communication',
         'communication_medium': 'Email', 'sent_or_received': 'Sent', 'subject': doc.subject,
