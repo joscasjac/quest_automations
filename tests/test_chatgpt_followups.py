@@ -27,6 +27,18 @@ from quest_automations.quest_automations.doctype.quest_meeting_followup.quest_me
 from quest_automations.quest_automations.doctype.quest_chatgpt_connection.quest_chatgpt_connection import QuestChatGPTConnection
 
 class ProtectedStateTests(unittest.TestCase):
+    def test_numeric_task_link_preserves_identity_during_draft_edit(self):
+        old_values = {'task': 50, 'status': 'Needs review'}
+        new_values = {'task': '50', 'status': 'Needs review'}
+        previous = types.SimpleNamespace(get=lambda field: old_values.get(field), status='Needs review')
+        doc = types.SimpleNamespace(get_doc_before_save=lambda: previous, is_new=lambda: False,
+            meta=types.SimpleNamespace(fields=[types.SimpleNamespace(fieldname='task', label='Review task', fieldtype='Link')]),
+            get=lambda field: new_values.get(field), subject='Updated subject', body='Updated body')
+        QuestMeetingFollowup.validate(doc)
+        new_values['task'] = '51'
+        with self.assertRaises(PermissionError):
+            QuestMeetingFollowup.validate(doc)
+
     def test_json_flags_cannot_authorize_connection_changes(self):
         forged = types.SimpleNamespace(flags=types.SimpleNamespace(connection_change=True))
         with self.assertRaises(PermissionError):

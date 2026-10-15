@@ -21,7 +21,14 @@ class QuestMeetingFollowup(Document):
             editable = {'subject', 'body', 'modified', 'modified_by', '_user_tags', '_comments', '_assign', '_liked_by'}
             for field in self.meta.fields:
                 if field.fieldtype not in ('Section Break', 'Column Break', 'Tab Break', 'HTML', 'Button') and field.fieldname not in editable:
-                    if self.get(field.fieldname) != previous.get(field.fieldname):
+                    current_value = self.get(field.fieldname)
+                    previous_value = previous.get(field.fieldname)
+                    # Link names may be numeric in the database but strings in
+                    # the form payload. Compare identity without changing it.
+                    if field.fieldtype == 'Link':
+                        current_value = '' if current_value is None else str(current_value)
+                        previous_value = '' if previous_value is None else str(previous_value)
+                    if current_value != previous_value:
                         frappe.throw('Use the follow-up actions to change ' + field.label + '.')
             if previous.status != 'Needs review' and (self.subject != previous.subject or self.body != previous.body):
                 frappe.throw('Only drafts awaiting review can be edited.')
