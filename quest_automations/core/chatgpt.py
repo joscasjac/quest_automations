@@ -75,8 +75,9 @@ contact them. Mention uncertainty in the internal rationale. Write a concise, na
 Return only a JSON object with recommendation (reschedule, clarify, commercial_proposal, no_follow_up), rationale,
 subject, body (plain text), and evidence (short list of record references supporting the draft).
 This is a draft for human review. You cannot send email, approve, access tools or change CRM records.'''
-    body = {'model': model, 'instructions': instructions, 'input': json.dumps(context, ensure_ascii=False),
-            'store': False, 'stream': True, 'tools': [], 'max_output_tokens': 2500}
+    body = {'model': model, 'instructions': instructions,
+            'input': [{'role': 'user', 'content': json.dumps(context, ensure_ascii=False)}],
+            'store': False, 'stream': True, 'tools': []}
     try:
         with requests.post(RESOURCE + '/responses', headers={'Authorization': 'Bearer ' + bundle['access_token']},
                            json=body, stream=True, timeout=(15, 120), allow_redirects=False) as response:

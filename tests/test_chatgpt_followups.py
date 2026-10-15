@@ -74,6 +74,9 @@ class StreamTests(unittest.TestCase):
             self.assertFalse(post.call_args.kwargs['json']['store'])
             self.assertTrue(post.call_args.kwargs['json']['stream'])
             self.assertEqual(post.call_args.kwargs['json']['model'], 'chosen-model')
+            self.assertEqual(post.call_args.kwargs['json']['input'],
+                [{'role': 'user', 'content': json.dumps({'cancellation_reason': 'quoted data'})}])
+            self.assertNotIn('max_output_tokens', post.call_args.kwargs['json'])
             return result
 
     def test_partial_and_limit_failure_never_count_as_completed(self):
