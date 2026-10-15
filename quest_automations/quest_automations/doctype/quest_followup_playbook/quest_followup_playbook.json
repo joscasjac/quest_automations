@@ -1,0 +1,54 @@
+{
+  "doctype": "DocType",
+  "name": "Quest Followup Playbook",
+  "module": "Quest Automations",
+  "issingle": 1,
+  "track_changes": 1,
+  "fields": [
+    {
+      "fieldname": "drafting",
+      "fieldtype": "Section Break",
+      "label": "Drafting instructions"
+    },
+    {
+      "fieldname": "instructions",
+      "fieldtype": "Long Text",
+      "label": "How to write follow-ups",
+      "reqd": 1,
+      "description": "Tone, decision guidance and business context. Approval and safety checks stay enforced in code."
+    },
+    {
+      "fieldname": "booking_url",
+      "fieldtype": "Data",
+      "label": "Booking page",
+      "reqd": 1
+    },
+    {
+      "fieldname": "signature",
+      "fieldtype": "Small Text",
+      "label": "Email signature",
+      "reqd": 1
+    },
+    {
+      "fieldname": "review_intro",
+      "fieldtype": "Small Text",
+      "label": "Review notification introduction",
+      "reqd": 1
+    }
+  ],
+  "field_order": [
+    "drafting",
+    "instructions",
+    "booking_url",
+    "signature",
+    "review_intro"
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1
+    }
+  ]
+}

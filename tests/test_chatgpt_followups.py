@@ -179,3 +179,43 @@ class ApprovalTests(unittest.TestCase):
 
 if __name__ == '__main__':
     unittest.main()
+
+class LivePlaybookTests(unittest.TestCase):
+    def test_policy_is_validated_and_revisions_are_reproducible(self):
+        from quest_automations import followup_playbook as policy
+        first = policy.snapshot(policy.DEFAULTS)
+        self.assertEqual(first, policy.snapshot(dict(reversed(list(policy.DEFAULTS.items())))))
+        self.assertNotEqual(first['revision'], policy.snapshot({**policy.DEFAULTS, 'signature':'Regards, Joseph'})['revision'])
+        for update in [{'booking_url':'javascript:alert(1)'}, {'booking_url':'https://user:password@example.com'}, {'instructions':''}, {'instructions':'x'*8001}, {'sender':'other@example.com'}, {'signature':None}]:
+            with self.subTest(update=update), self.assertRaises(ValueError):
+                policy.validate({**policy.DEFAULTS, **update})
+
+    def test_live_reads_are_not_cached_and_preview_never_sends(self):
+        from quest_automations import followup_playbook as policy
+        live = dict(policy.DEFAULTS)
+        with patch.object(frappe, 'get_single', create=True, return_value=types.SimpleNamespace(get=lambda key:live[key])):
+            first=policy.current()
+            live['instructions']='Use a friendly, brief tone.'
+            self.assertNotEqual(first['revision'], policy.current()['revision'])
+        frappe.sendmail.reset_mock()
+        with patch.object(policy, 'credentials', return_value=({'access_token':'test'},'model')):
+            with patch.object(policy.chatgpt, 'generate', return_value={'body':'Preview'}) as generate:
+                result=policy.preview(live,'An invented customer wants another time.')
+                self.assertFalse(result['sent'])
+                self.assertEqual(generate.call_args.kwargs['guidance'],live['instructions'])
+                self.assertEqual(generate.call_args.args[2]['booking_page'],live['booking_url'])
+        frappe.sendmail.assert_not_called()
+        with patch.object(frappe.session,'user','another@example.com'), self.assertRaises(PermissionError):
+            policy.preview(live,'Scenario')
+
+    def test_migrations_preserve_live_scripts_and_saved_policy(self):
+        from quest_automations import live_setup
+        custom_field_module=types.ModuleType('frappe.custom.doctype.custom_field.custom_field')
+        custom_field_module.create_custom_fields=Mock()
+        with patch.dict(sys.modules,{'frappe.custom.doctype.custom_field.custom_field':custom_field_module}), patch.object(frappe,'get_single',create=True,return_value=types.SimpleNamespace(get=lambda key:'Live customized value')):
+            frappe.db.exists.return_value=True
+            frappe.db.set_single_value.reset_mock()
+            frappe.get_doc.reset_mock()
+            live_setup.seed()
+            frappe.db.set_single_value.assert_not_called()
+            frappe.get_doc.assert_not_called()

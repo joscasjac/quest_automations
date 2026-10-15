@@ -85,11 +85,15 @@ def generate_draft(name):
             if address != doc.recipient:
                 frappe.throw('CRM email changed. Review the cancellation record before generating a draft.')
             context = context_for(doc, event, person)
-            draft = chatgpt.generate(bundle, model, context)
+            from .followup_playbook import current
+            policy = current()
+            context.update(booking_page=policy['booking_url'], signature=policy['signature'])
+            draft = chatgpt.generate(bundle, model, context, guidance=policy['instructions'])
             doc.reload()
             meeting_current(doc)
             if doc.status not in ('Waiting for ChatGPT', 'Draft failed'):
                 return
+            doc.playbook_snapshot = json.dumps(policy, ensure_ascii=False)
             doc.model = model
             doc.recommendation = draft['recommendation']
             doc.rationale = draft['rationale']
@@ -100,7 +104,7 @@ def generate_draft(name):
             doc.last_error = ''
             save_internal(doc)
             url = frappe.utils.get_url('/app/quest-meeting-followup/' + name)
-            message = '<p>A meeting was cancelled. A follow-up task and AI recommendation are ready.</p>'
+            message = '<p>' + html.escape(policy['review_intro']) + '</p>'
             message += '<p><b>Recommended next step:</b> ' + html.escape(draft['recommendation']) + '</p><p>' + html.escape(draft['rationale']) + '</p>'
             message += '<p><b>To:</b> ' + html.escape(address) + '<br><b>Subject:</b> ' + html.escape(doc.subject) + '</p>'
             message += '<div style="white-space:pre-wrap">' + html.escape(doc.body) + '</div>'

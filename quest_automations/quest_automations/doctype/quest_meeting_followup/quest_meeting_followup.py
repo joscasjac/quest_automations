@@ -15,6 +15,7 @@ class QuestMeetingFollowup(Document):
             self.recipient, _ = recipient_for(event)
             self.status = 'Waiting for ChatGPT'
             self.subject = self.body = self.rationale = self.evidence = self.recommendation = self.model = ''
+            self.playbook_snapshot = ''
             self.notification_queued = 0
             self.sent_communication = self.approved_by = self.approved_at = self.task = None
         elif not is_internal_change() and previous:

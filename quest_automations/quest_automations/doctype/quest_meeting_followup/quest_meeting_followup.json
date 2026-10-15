@@ -119,6 +119,12 @@
       "label": "Approved at",
       "fieldtype": "Datetime",
       "read_only": 1
+    },
+    {
+      "fieldname": "playbook_snapshot",
+      "fieldtype": "Long Text",
+      "label": "Draft playbook snapshot",
+      "read_only": 1
     }
   ],
   "field_order": [
@@ -138,7 +144,8 @@
     "notification_queued",
     "sent_communication",
     "approved_by",
-    "approved_at"
+    "approved_at",
+    "playbook_snapshot"
   ],
   "permissions": [
     {
