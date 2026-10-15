@@ -1,0 +1,156 @@
+{
+  "doctype": "DocType",
+  "name": "Quest Meeting Followup",
+  "module": "Quest Automations",
+  "engine": "InnoDB",
+  "issingle": 0,
+  "track_changes": 0,
+  "fields": [
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Waiting for ChatGPT\nDraft failed\nNeeds review\nNo follow-up\nQueued\nDismissed",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "event",
+      "label": "Meeting",
+      "fieldtype": "Link",
+      "options": "Event",
+      "reqd": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "booking_uid",
+      "label": "Cal.com booking UID",
+      "fieldtype": "Data",
+      "reqd": 1,
+      "unique": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "cancellation_reason",
+      "label": "Cancellation reason",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "recipient",
+      "label": "To",
+      "fieldtype": "Data",
+      "options": "Email",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "recommendation",
+      "label": "Recommended next step",
+      "fieldtype": "Select",
+      "options": "\nreschedule\nclarify\ncommercial_proposal\nno_follow_up",
+      "read_only": 1
+    },
+    {
+      "fieldname": "rationale",
+      "label": "Why this follow-up",
+      "fieldtype": "Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "subject",
+      "label": "Subject",
+      "fieldtype": "Data",
+      "length": 140,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "body",
+      "label": "Email draft",
+      "fieldtype": "Long Text"
+    },
+    {
+      "fieldname": "evidence",
+      "label": "Supporting CRM records",
+      "fieldtype": "Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "model",
+      "label": "AI model",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "task",
+      "label": "Review task",
+      "fieldtype": "Link",
+      "options": "CRM Task",
+      "read_only": 1
+    },
+    {
+      "fieldname": "last_error",
+      "label": "Draft notice",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notification_queued",
+      "label": "Review email queued",
+      "fieldtype": "Check",
+      "read_only": 1
+    },
+    {
+      "fieldname": "sent_communication",
+      "label": "Approved email",
+      "fieldtype": "Link",
+      "options": "Communication",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_by",
+      "label": "Approved by",
+      "fieldtype": "Link",
+      "options": "User",
+      "read_only": 1
+    },
+    {
+      "fieldname": "approved_at",
+      "label": "Approved at",
+      "fieldtype": "Datetime",
+      "read_only": 1
+    }
+  ],
+  "field_order": [
+    "status",
+    "event",
+    "booking_uid",
+    "cancellation_reason",
+    "recipient",
+    "recommendation",
+    "rationale",
+    "subject",
+    "body",
+    "evidence",
+    "model",
+    "task",
+    "last_error",
+    "notification_queued",
+    "sent_communication",
+    "approved_by",
+    "approved_at"
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC",
+  "autoname": "hash",
+  "title_field": "subject",
+  "search_fields": "booking_uid,recipient"
+}

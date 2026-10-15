@@ -1,0 +1,82 @@
+{
+  "doctype": "DocType",
+  "name": "Quest ChatGPT Connection",
+  "module": "Quest Automations",
+  "engine": "InnoDB",
+  "issingle": 1,
+  "track_changes": 0,
+  "fields": [
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Disconnected\nConnected",
+      "read_only": 1
+    },
+    {
+      "fieldname": "account_email",
+      "label": "ChatGPT account",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "model",
+      "label": "Model",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "host_id",
+      "label": "Host ID",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "client_id",
+      "label": "Registration ID",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "account_subject",
+      "label": "Verified account ID",
+      "fieldtype": "Data",
+      "hidden": 1,
+      "read_only": 1
+    },
+    {
+      "fieldname": "credential_bundle",
+      "label": "Protected credentials",
+      "fieldtype": "Password",
+      "hidden": 1,
+      "read_only": 1,
+      "no_copy": 1
+    },
+    {
+      "fieldname": "last_error",
+      "label": "Connection notice",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    }
+  ],
+  "field_order": [
+    "status",
+    "account_email",
+    "model",
+    "host_id",
+    "client_id",
+    "account_subject",
+    "credential_bundle",
+    "last_error"
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 0
+    }
+  ],
+  "sort_field": "modified",
+  "sort_order": "DESC"
+}
