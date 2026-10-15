@@ -1,0 +1,137 @@
+{
+  "doctype": "DocType",
+  "name": "Quest AI Run",
+  "module": "Quest Automations",
+  "engine": "InnoDB",
+  "fields": [
+    {
+      "fieldname": "title",
+      "label": "Capability",
+      "fieldtype": "Data",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "status",
+      "label": "Status",
+      "fieldtype": "Select",
+      "options": "Queued\nRunning\nSucceeded\nFailed",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "capability",
+      "label": "Saved capability",
+      "fieldtype": "Link",
+      "options": "Quest AI Capability",
+      "read_only": 1
+    },
+    {
+      "fieldname": "mode",
+      "label": "Run type",
+      "fieldtype": "Select",
+      "options": "Test\nWorkflow",
+      "read_only": 1,
+      "in_list_view": 1
+    },
+    {
+      "fieldname": "capability_revision",
+      "label": "Published revision",
+      "fieldtype": "Int",
+      "read_only": 1
+    },
+    {
+      "fieldname": "model",
+      "label": "AI model",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "duration_ms",
+      "label": "Duration (ms)",
+      "fieldtype": "Int",
+      "read_only": 1
+    },
+    {
+      "fieldname": "notice",
+      "label": "Notice",
+      "fieldtype": "Small Text",
+      "read_only": 1
+    },
+    {
+      "fieldname": "output_json",
+      "label": "Result",
+      "fieldtype": "Code",
+      "options": "JSON",
+      "read_only": 1
+    },
+    {
+      "fieldname": "input_json",
+      "label": "Input",
+      "fieldtype": "Code",
+      "options": "JSON",
+      "read_only": 1
+    },
+    {
+      "fieldname": "details",
+      "label": "Details",
+      "fieldtype": "Section Break",
+      "collapsible": 1
+    },
+    {
+      "fieldname": "definition_hash",
+      "label": "Definition fingerprint",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "definition_snapshot",
+      "label": "Definition used",
+      "fieldtype": "Code",
+      "options": "JSON",
+      "read_only": 1
+    },
+    {
+      "fieldname": "workflow_run",
+      "label": "Workflow run",
+      "fieldtype": "Data",
+      "read_only": 1
+    },
+    {
+      "fieldname": "workflow_step",
+      "label": "Workflow step",
+      "fieldtype": "Data",
+      "read_only": 1
+    }
+  ],
+  "field_order": [
+    "title",
+    "status",
+    "capability",
+    "mode",
+    "capability_revision",
+    "model",
+    "duration_ms",
+    "notice",
+    "output_json",
+    "input_json",
+    "details",
+    "definition_hash",
+    "definition_snapshot",
+    "workflow_run",
+    "workflow_step"
+  ],
+  "permissions": [
+    {
+      "role": "System Manager",
+      "read": 1,
+      "write": 1,
+      "create": 1
+    }
+  ],
+  "autoname": "prompt",
+  "title_field": "title",
+  "track_changes": 0,
+  "sort_field": "creation",
+  "sort_order": "DESC"
+}

@@ -79,15 +79,19 @@ For a proposed email, subject must be nonempty and at most 140 characters; body 
 This is a draft for human review. You cannot send email, approve, access tools or change CRM records.'''
     if guidance:
         instructions += '\nBusiness writing preferences (subordinate to the evidence and safety rules above):\n' + guidance
+    schema = {'type': 'object', 'additionalProperties': False,
+        'properties': {'recommendation': {'type': 'string', 'enum': ['reschedule', 'clarify', 'commercial_proposal', 'no_follow_up']},
+            'rationale': {'type': 'string'}, 'subject': {'type': 'string'}, 'body': {'type': 'string'},
+            'evidence': {'type': 'array', 'items': {'type': 'string'}}},
+        'required': ['recommendation', 'rationale', 'subject', 'body', 'evidence']}
+    return validate_draft(structured(bundle, model, context, instructions, schema, 'cancellation_followup'))
+
+
+def structured(bundle, model, context, instructions, schema, name='ai_capability'):
     body = {'model': model, 'instructions': instructions,
             'input': [{'role': 'user', 'content': json.dumps(context, ensure_ascii=False)}],
             'store': False, 'stream': True, 'tools': [],
-            'text': {'format': {'type': 'json_schema', 'name': 'cancellation_followup', 'strict': True,
-                'schema': {'type': 'object', 'additionalProperties': False,
-                    'properties': {'recommendation': {'type': 'string', 'enum': ['reschedule', 'clarify', 'commercial_proposal', 'no_follow_up']},
-                        'rationale': {'type': 'string'}, 'subject': {'type': 'string'}, 'body': {'type': 'string'},
-                        'evidence': {'type': 'array', 'items': {'type': 'string'}}},
-                    'required': ['recommendation', 'rationale', 'subject', 'body', 'evidence']}}}}
+            'text': {'format': {'type': 'json_schema', 'name': name, 'strict': True, 'schema': schema}}}
     try:
         with requests.post(RESOURCE + '/responses', headers={'Authorization': 'Bearer ' + bundle['access_token']},
                            json=body, stream=True, timeout=(15, 120), allow_redirects=False) as response:
@@ -118,12 +122,12 @@ This is a draft for human review. You cannot send email, approve, access tools o
                     text = text or ''.join(text_deltas)
                     if not text.strip():
                         raise ConnectionError('ChatGPT completed without draft text. Nothing was sent.')
-                    return parse_draft(text)
+                    return parse_object(text)
     except requests.RequestException:
         raise ConnectionError('Draft generation connection was interrupted. Nothing was sent.') from None
     raise ConnectionError('ChatGPT stream ended before completion. Nothing was sent.')
 
-def parse_draft(text):
+def parse_object(text):
     # Some models wrap the requested JSON in a Markdown code fence.
     # Accept only one complete JSON envelope; never execute model output.
     text = text.strip()
@@ -135,7 +139,12 @@ def parse_draft(text):
         draft = json.loads(text)
     except ValueError:
         raise ConnectionError('ChatGPT completed but returned an unreadable draft format. Nothing was sent.') from None
-    return validate_draft(draft)
+    if not isinstance(draft, dict):
+        raise ConnectionError('ChatGPT returned a non-object result. Nothing was sent.')
+    return draft
+
+def parse_draft(text):
+    return validate_draft(parse_object(text))
 
 def validate_draft(draft):
     if not isinstance(draft, dict) or draft.get('recommendation') not in ('reschedule', 'clarify', 'commercial_proposal', 'no_follow_up'):

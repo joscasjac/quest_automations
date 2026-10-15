@@ -12,7 +12,7 @@ from .transport import erp_request, erp_method, request
 ENTITIES={'company':'Customer','contact':'Contact','deal':'Opportunity','project':'Project','task':'Task','note':'Note'}
 FIELDS={'company':{'name':'customer_name','industry':'industry','description':'customer_details','domain':'website'},'contact':{'name':'first_name','email':'email_id','title':'designation'},'deal':{'name':'title','stage':'sales_stage','amountMinor':'opportunity_amount'},'project':{'name':'project_name','status':'status','description':'notes'},'task':{'title':'subject','status':'status','priority':'priority','description':'description','dueDate':'exp_end_date'}}
 OPS=('is','is_not','contains','does_not_contain','is_empty','is_not_empty')
-KINDS=('noop','log','create_note','create_task','update_record','send_notification','send_email','wait','go_to','if_else','erpnext','outgoing_webhook','get_document','custom_code','api_request')
+KINDS=('run_ai_capability','noop','log','create_note','create_task','update_record','send_notification','send_email','wait','go_to','if_else','erpnext','outgoing_webhook','get_document','custom_code','api_request')
 PATTERN=re.compile(r'{{\s*([A-Za-z][A-Za-z0-9_.]*)\s*}}')
 
 
@@ -58,9 +58,9 @@ def validate_graph(definition):
         elif kind=='wait':require(type(step.get('durationMinutes')) in (int,float) and 1/60<=step['durationMinutes']<=525600,'Wait must be 1–525600 minutes')
         elif kind=='custom_code':
             require(isinstance(step.get('code'),str) and 0<len(step['code'])<=20000,'Provide JavaScript code up to 20,000 characters')
-        elif kind in ('erpnext','outgoing_webhook','get_document','api_request'):
+        elif kind in ('erpnext','outgoing_webhook','get_document','api_request','run_ai_capability'):
             config=json.loads(step.get('configJson','{}'));config.pop('responseSample',None);config.pop('bodyDraft',None)
-            operation='outgoing_webhook' if kind=='api_request' else kind if kind in ('outgoing_webhook','get_document') else step.get('operation')
+            operation='outgoing_webhook' if kind=='api_request' else kind if kind in ('outgoing_webhook','get_document','run_ai_capability') else step.get('operation')
             # Structural validation uses synthetic earlier-step references as allowed IDs.
             refs=set(re.findall(r'steps\.([A-Za-z][A-Za-z0-9_-]*)\.',step['configJson']))
             prefix=[{'id':r,'kind':'delay','config':{'seconds':1}} for r in refs if r!='validate_action']
@@ -77,6 +77,19 @@ def validate_graph(definition):
                 require(field not in step or isinstance(step[field],str),f'{field} must be text')
             require(isinstance(step.get('attachments',[]),list) and all(isinstance(v,str) for v in step.get('attachments',[])), 'Attachments must be ERPNext File names')
     for step in steps:check(step)
+    def flatten(items):
+        for item in items:
+            yield item
+            if item['kind'] == 'if_else':
+                for branch in item['branches']:
+                    yield from flatten(branch.get('steps', []))
+                yield from flatten(item.get('elseSteps', []))
+    all_steps = list(flatten(steps))
+    if any(s['kind'] == 'run_ai_capability' or s['kind'] == 'erpnext' and s.get('operation') == 'run_ai_capability' for s in all_steps):
+        for step in all_steps:
+            if step['kind'] == 'send_email':
+                require(step.get('to') == 'joseph@questmediahub.com' and not step.get('cc') and not step.get('bcc'),
+                        'AI capability workflows may email Joseph internally only. Route customer drafts through human review.')
     return deepcopy(definition)
 
 
@@ -165,11 +178,11 @@ def execute_native(step,context,run_id,step_id):
         return execute_code(step['code'],context,run_id,step_id)
     kind=step['kind'];raw_config=step.get('configJson');step=render({k:v for k,v in step.items() if k!='configJson'},context)
     if kind in ('noop','log'):return {'message':step.get('message','No operation')}
-    if kind in ('erpnext','outgoing_webhook','get_document','api_request'):
+    if kind in ('erpnext','outgoing_webhook','get_document','api_request','run_ai_capability'):
         from .engine import execute_action
         # Render individual parsed values so quotes and arrays stay valid JSON.
         config=render({k:v for k,v in json.loads(raw_config).items() if k not in ('responseSample','bodyDraft')},context)
-        return execute_action('outgoing_webhook' if kind=='api_request' else kind if kind in ('outgoing_webhook','get_document') else step['operation'],config,run_id,step_id)
+        return execute_action('outgoing_webhook' if kind=='api_request' else kind if kind in ('outgoing_webhook','get_document','run_ai_capability') else step['operation'],config,run_id,step_id)
     if kind=='create_note':
         content=step.get('body','')
         for key,entity in [('companyId','Customer'),('contactId','Contact'),('dealId','Opportunity')]:
@@ -235,7 +248,7 @@ def process(run,store=None,executor=execute_native,preview=False):
             else:
                 if preview and kind not in ('noop','log','custom_code'):
                     # Validate field resolution, but never fabricate external outputs.
-                    if kind in ('erpnext','outgoing_webhook','get_document','api_request'):render({k:v for k,v in json.loads(step['configJson']).items() if k not in ('responseSample','bodyDraft')},context)
+                    if kind in ('erpnext','outgoing_webhook','get_document','api_request','run_ai_capability'):render({k:v for k,v in json.loads(step['configJson']).items() if k not in ('responseSample','bodyDraft')},context)
                     else:render(step,context)
                     log['output']='Preview: would execute '+kind
                 else:run['outputs'][key]=executor(step,context,run['id'],key)

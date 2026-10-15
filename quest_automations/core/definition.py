@@ -18,7 +18,7 @@ PULSE_ACTIONS = {
     'pulse_add_dependency': ('task', 'depends_on'),
     'pulse_create_module': ('project', 'title'),
 }
-ACTIONS = tuple(PULSE_ACTIONS) + ('get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
+ACTIONS = ('run_ai_capability',) + tuple(PULSE_ACTIONS) + ('get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
 OPERATORS = ('equals', 'not_equals', 'greater_than', 'less_than', 'contains', 'is_set')
 NAME = re.compile(r'^[a-zA-Z][a-zA-Z0-9_-]{0,63}$')
 BLOCKED = {'__proto__', 'prototype', 'constructor', '__class__', '__dict__'}
@@ -120,6 +120,13 @@ def validate(definition):
                 require(auth.get('in','header') in ('header','query'),'Choose header or query for the API key')
                 require(isinstance(auth.get('name'),str) and bool(auth['name']),'Provide an API key name')
                 require(auth['name'].lower() not in ('host','content-length','connection','transfer-encoding'),'Reserved API key header')
+        if kind == 'run_ai_capability':
+            require(not set(config) - {'capability', 'input', 'revision'}, 'AI action accepts capability, input and optional revision only')
+            from .ai_contract import KEY
+            require(isinstance(config.get('capability'), str) and KEY.fullmatch(config['capability']), 'Choose a capability key')
+            require(isinstance(config.get('input'), dict), 'AI input must be a mapped object')
+            if 'revision' in config:
+                require(type(config['revision']) is int and config['revision'] >= 1, 'Pinned AI revision must be a positive integer')
         if kind in PULSE_ACTIONS:
             for field in PULSE_ACTIONS[kind]:
                 if field == 'fields':

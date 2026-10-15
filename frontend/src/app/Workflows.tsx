@@ -284,6 +284,7 @@ const ACTION_LIBRARY: Array<{
   group: string;
   icon: WorkflowCatalogIcon;
 }> = [
+  {kind:"run_ai_capability",title:"Run AI Capability",description:"Run a published AI capability with mapped inputs and a structured result.",group:"AI",icon:"log"},
   {kind:"api_request",title:"API request",description:"Call an API with a URL, method, headers, and body.",group:"Webhooks",icon:"go_to"},
   {kind:"get_document",title:"Get document",description:"Fetch any ERPNext document and use its fields in later actions.",group:"ERPNext",icon:"record"},
   {kind:"custom_code",title:"Run Code",description:"Transform incoming data and return a result.",group:"Flow",icon:"log"},
@@ -363,6 +364,7 @@ const ACTION_LIBRARY: Array<{
 
 const BRANCH_ACTION_KINDS: ReadonlyArray<BranchActionKind> = [
   "erpnext",
+  "run_ai_capability",
   "get_document",
   "api_request",
   "custom_code",
@@ -3522,7 +3524,7 @@ function StepFields({
 }) {
   if (step.kind === "send_email") return <EmailFields step={step} onChange={onChange}/>;
   if (step.kind === "custom_code") return <CodeFields step={step} onChange={onChange}/>;
-  if (step.kind === "erpnext" || step.kind === "outgoing_webhook" || step.kind === "get_document" || step.kind === "api_request") return <ErpStepFields step={step} onChange={onChange}/>;
+  if (step.kind === "run_ai_capability" || step.kind === "erpnext" || step.kind === "outgoing_webhook" || step.kind === "get_document" || step.kind === "api_request") return <ErpStepFields step={step} onChange={onChange}/>;
   if (step.kind === "noop") return null;
   if (step.kind === "wait") {
     const waitUnit = waitUnitForMinutes(step.durationMinutes);
@@ -4150,6 +4152,7 @@ function workflowTriggerList(workflow: Workflow | undefined): DraftTriggerList {
 }
 
 function createDefaultStep(kind: StepKind): DraftStep {
+  if(kind==="run_ai_capability")return {kind,label:"Run AI Capability",configJson:JSON.stringify({capability:"meeting-summary",input:{notes:{$ref:"trigger.notes"}}})};
   if(kind==="outgoing_webhook")return {kind,label:"Outgoing webhook",configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
   if(kind==="api_request")return {kind,label:"API request",configJson:JSON.stringify({url:"",method:"GET",headers:{}})};
   if(kind==="custom_code")return {kind,label:"Run Code",code:"return { documentName: input.name, processed: true };"};
@@ -4686,6 +4689,7 @@ function stepTitle(step: DraftStep) {
 }
 
 function stepSubtitle(step: DraftStep) {
+  if(step.kind==="run_ai_capability"){try{return JSON.parse(step.configJson).capability||"Choose an AI capability"}catch{return "Choose an AI capability"}}
   if(step.kind==="api_request"){try{const c=JSON.parse(step.configJson);return (c.method||"GET")+" "+(c.url||"Configure request")}catch{return "Configure API request"}}
   if(step.kind==="custom_code")return "Transform data with JavaScript";
   if(step.kind==="get_document"){try{return "Get "+JSON.parse(step.configJson).doctype}catch{return "Get an ERPNext document"}}

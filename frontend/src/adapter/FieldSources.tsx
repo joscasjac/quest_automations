@@ -12,6 +12,10 @@ export function FieldSourcesProvider({triggers,steps,selection,children}:{trigge
  useEffect(()=>{let active=true;const receive=(event:Event)=>{const d=(event as CustomEvent).detail;setSamples(previous=>({...previous,[d.triggerId]:d.sample}))};window.addEventListener('webhook-sample',receive);const load=()=>{if(workflowId)for(const id of JSON.parse(triggerIds))request(`workflows/${workflowId}/webhook-sample?triggerId=${encodeURIComponent(id)}`).then(s=>{if(active&&s.sample)setSamples(previous=>JSON.stringify(previous[id])===JSON.stringify(s.sample)?previous:{...previous,[id]:s.sample})}).catch(()=>{})};load();const timer=setInterval(load,3000);return()=>{active=false;clearInterval(timer);window.removeEventListener('webhook-sample',receive)}},[workflowId,triggerIds]);
  const [apiRuns,setApiRuns]=useState<any[]>([]);
  useEffect(()=>{let alive=true;let previous='';const load=()=>{if(workflowId)request(`workflows/${workflowId}/runs`).then(runs=>{const encoded=JSON.stringify(runs);if(alive&&encoded!==previous){previous=encoded;setApiRuns(runs)}}).catch(()=>{})};load();const timer=setInterval(load,3000);return()=>{alive=false;clearInterval(timer)}},[workflowId]);
+ const [aiCatalog,setAiCatalog]=useState<any[]>([]);
+ const capabilityKeys=(items:any[]):string[]=>items.flatMap(s=>{if(s.kind==='if_else')return capabilityKeys([...s.branches.flatMap((b:any)=>b.steps??[]),...(s.elseSteps??[])]);if(s.kind==='run_ai_capability'||s.kind==='erpnext'&&s.operation==='run_ai_capability'){try{return [JSON.parse(s.configJson).capability??'']}catch{return []}}return []});
+ const aiKeys=JSON.stringify(capabilityKeys(steps));
+ useEffect(()=>{let active=true;const load=()=>request('ai-capabilities').then(data=>{if(active)setAiCatalog(data.items)}).catch(()=>{});load();window.addEventListener('ai-capabilities-changed',load);return()=>{active=false;window.removeEventListener('ai-capabilities-changed',load)}},[aiKeys]);
  const [loaded,setLoaded]=useState<Record<string,any>>({});
  const sources=useMemo(()=>{
   const out:Array<{type:string;prefix:string;group:string}>=[];
@@ -38,6 +42,8 @@ export function FieldSourcesProvider({triggers,steps,selection,children}:{trigge
    let count=0;const walk=(value:any,path:string,label:string,depth:number)=>{if(depth>5||++count>300)return;if(depth>0)all.push({path,label,group:s.label+' response',description:Array.isArray(value)?'List':value===null?'Empty':typeof value});if(Array.isArray(value)){if(value.length)walk(value[0],path+'.0',label+'[0]',depth+1)}else if(value&&typeof value==='object')for(const [key,child] of Object.entries(value))if(/^[A-Za-z_][A-Za-z0-9_]*$/.test(key))walk(child,path+'.'+key,label?label+'.'+key:key,depth+1)};
    if(sample!==undefined)walk(sample,prefix+'.body','',0);
   });
+  const addAi=(s:any,prefix:string)=>{if(s.kind!=='run_ai_capability'&&!(s.kind==='erpnext'&&s.operation==='run_ai_capability'))return;let config:any;try{config=JSON.parse(s.configJson)}catch{return}const capability=aiCatalog.find(item=>item.key===config.capability);all.push({path:prefix+'.data',label:s.label+' result',group:s.label,description:'Validated AI result'});const walk=(schema:any,path:string,label:string,depth:number)=>{if(depth>5)return;if(depth>0)all.push({path,label,group:s.label+' result',description:schema.type});if(schema.type==='object')for(const [key,child] of Object.entries(schema.properties))walk(child,path+'.'+key,label?label+'.'+key:key,depth+1);if(schema.type==='array')walk(schema.items,path+'.0',label+'[0]',depth+1)};if(capability)walk(capability.output_schema,prefix+'.data','',0)};
+  steps.forEach((s,i)=>{addAi(s,'steps.step_'+i);if(s.kind==='if_else')[...s.branches,{steps:s.elseSteps}].forEach((b:any,n:number)=>(b.steps??[]).forEach((child:any,k:number)=>addAi(child,`steps.step_${i}_branch_${n}_${k}`)))});
   steps.forEach((s,i)=>{if(s.kind==='custom_code')all.push({path:'steps.step_'+i,label:s.label+' result',group:'Previous actions',description:'Value returned by JavaScript'})});
   all.push({path:'workflow.name',label:'Workflow name',group:'Workflow',description:'Current workflow'},{path:'system.today',label:'Today',group:'System',description:'Current date'});
   return all.filter((o,i)=>{
@@ -48,6 +54,6 @@ export function FieldSourcesProvider({triggers,steps,selection,children}:{trigge
     if(selection.type==='branchStep')return Number(match[1])<selection.stepIndex||(Number(match[1])===selection.stepIndex&&Number(match[2])===(selection.branch.type==='else'?steps[selection.stepIndex].branches.length:selection.branch.index)&&Number(match[3])<selection.actionIndex);
     return false;
   });
- },[sources,loaded,steps,selection,samples,triggerIds,apiRuns]);
+ },[sources,loaded,steps,selection,samples,triggerIds,apiRuns,aiCatalog]);
  return <FieldSources.Provider value={options}>{children}</FieldSources.Provider>
 }

@@ -5,6 +5,9 @@ from .transport import erp_request, request
 
 
 def execute_action(kind, config, run_id, step_id):
+    if kind == 'run_ai_capability':
+        from ..ai_capabilities import execute
+        return execute(config, run_id, step_id)
     if kind.startswith('pulse_'):
         from .definition import PULSE_ACTIONS
         if kind not in PULSE_ACTIONS:
