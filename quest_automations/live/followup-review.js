@@ -8,7 +8,7 @@ frappe.ui.form.on('Quest Meeting Followup', {
     const e = value => frappe.utils.escape_html(String(value || ''));
     const d = frm.doc;
     const editable = d.status === 'Needs review';
-    const labels = {reschedule:'Invite them to reschedule',clarify:'Ask a clarifying question',commercial_proposal:'Propose the next project step',no_follow_up:'Respect their request — no email'};
+    const labels = {reschedule:'Invite them to reschedule',clarify:'Ask a clarifying question',commercial_proposal:'Propose the next project step',no_follow_up:'No email recommended'};
     const state = {
       'Needs review':['Ready for your review','Check the context and adjust the email. You choose when it sends.'],
       'Queued':['Approved and queued','You approved this message. It has been queued for delivery; this does not confirm inbox delivery.'],
@@ -26,14 +26,14 @@ frappe.ui.form.on('Quest Meeting Followup', {
       .q-review .q-top{padding-bottom:24px;border-bottom:1px solid var(--q-line)}.q-review .q-state{display:inline-block;font-size:12px;font-weight:600;padding:5px 9px;border-radius:6px;background:var(--subtle-fg,#edf0f2);margin-bottom:14px}
       .q-review .q-layout{display:grid;grid-template-columns:minmax(0,1.8fr) minmax(250px,1fr);gap:32px;margin-top:28px}.q-review .q-context{border-left:1px solid var(--q-line);padding-left:28px}.q-review .q-field{margin-bottom:20px}.q-review label{display:block;font-size:13px;font-weight:600;margin-bottom:8px}.q-review input,.q-review textarea{width:100%;border:1px solid var(--q-line);background:var(--control-bg,#f8f9fa);color:inherit;border-radius:6px;padding:11px 12px;font:inherit}.q-review textarea{min-height:340px;line-height:1.65;resize:vertical}.q-review input:focus,.q-review textarea:focus{outline:2px solid var(--primary,#234db5);outline-offset:2px}.q-review input:disabled,.q-review textarea:disabled{opacity:1;background:var(--fg-color,#fff)}
       .q-review .q-envelope{display:grid;grid-template-columns:48px minmax(0,1fr);gap:9px 12px;padding-bottom:22px;margin-bottom:22px;border-bottom:1px solid var(--q-line);overflow-wrap:anywhere}.q-review .q-envelope dt{font-weight:500;color:var(--q-muted)}.q-review .q-envelope dd{margin:0}.q-review .q-actions{display:flex;flex-wrap:wrap;gap:10px;align-items:center;padding-top:6px}.q-review .btn{min-height:40px}.q-review .q-caption{font-size:12px;line-height:1.5;margin-top:12px;color:var(--q-muted)}.q-review .q-context section{margin-bottom:28px}.q-review .q-context blockquote{font-size:14px;line-height:1.6;padding:0;margin:0;white-space:pre-wrap;border:0}.q-review details{margin-top:22px;padding-top:18px;border-top:1px solid var(--q-line)}.q-review summary{cursor:pointer;font-weight:600;min-height:32px}.q-review .q-evidence{white-space:pre-wrap;font-size:13px;line-height:1.7;margin-top:12px;overflow-wrap:anywhere}.q-review .q-notice{padding:14px;background:var(--subtle-fg,#edf0f2);border-radius:6px;margin:16px 0}.q-review a{text-decoration:underline;text-underline-offset:3px}.q-review .q-debug{font-size:12px;line-height:1.8;overflow-wrap:anywhere}.q-review button:focus-visible,.q-review summary:focus-visible,.q-review a:focus-visible{outline:2px solid var(--primary,#234db5);outline-offset:3px}
-      @media(max-width:800px){.q-review .q-layout{grid-template-columns:1fr;gap:28px}.q-review .q-context{border-left:0;border-top:1px solid var(--q-line);padding:24px 0 0}.q-review h2{font-size:22px}.q-review textarea{min-height:360px}.q-review .q-actions .btn{flex:1}}
+      @media(max-width:800px){.q-review .q-layout{grid-template-columns:1fr;gap:28px}.q-review .q-context{border-left:0;border-top:1px solid var(--q-line);padding:24px 0 0}.q-review h2{font-size:22px}.q-review textarea{min-height:360px}.q-review .q-actions{display:grid;grid-template-columns:1fr 1fr;align-items:stretch}.q-review .q-actions .btn{min-height:44px;white-space:normal}.q-review .q-actions .btn:first-child{grid-column:1/-1}}
       </style>
       <div class="q-review">
         <header class="q-top"><span class="q-state">${e(d.status)}</span><h2>${e(state[0])}</h2><p class="q-muted">${e(state[1])}</p></header>
         ${d.last_error ? `<div class="q-notice" role="status">${e(d.last_error)}</div>`:''}
         <div class="q-layout"><main>
           <h3>Email to your contact</h3>
-          <dl class="q-envelope"><dt>From</dt><dd>joseph@questmediahub.com</dd><dt>To</dt><dd>${e(d.recipient)}</dd></dl>
+          <dl class="q-envelope"><dt>From</dt><dd>${d.sent_communication ? 'See the outgoing email record' : 'joseph@questmediahub.com'}</dd><dt>To</dt><dd>${e(d.recipient)}</dd></dl>
           <div class="q-field"><label for="q-review-subject">Subject</label><input id="q-review-subject" maxlength="140" value="${e(d.subject)}" ${editable?'':'disabled'}></div>
           <div class="q-field"><label for="q-review-body">Message</label><textarea id="q-review-body" maxlength="12000" ${editable?'':'disabled'}>${e(d.body)}</textarea></div>
           <div class="q-actions">
@@ -52,6 +52,9 @@ frappe.ui.form.on('Quest Meeting Followup', {
     const root = slot.$wrapper;
     root.find('.q-actions').appendTo(root.find('.q-top'));
     root.find('[data-save-state]').appendTo(root.find('.q-top'));
+    if (d.status === 'No follow-up' && !d.subject && !d.body) {
+      root.find('main').html('<h3>No email to send</h3><p>The AI recommends closing this follow-up. Read the reasoning and supporting records alongside, then choose Close without sending.</p>');
+    }
     const debug = root.find('.q-debug');
     if (d.playbook_snapshot) {
       try { debug.prepend($('<p>').text('Drafting policy: ' + JSON.parse(d.playbook_snapshot).revision)); } catch (_) { debug.prepend($('<p>').text('Drafting policy details unavailable')); }

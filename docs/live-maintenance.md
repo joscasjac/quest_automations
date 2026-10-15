@@ -17,7 +17,7 @@ The site database is the runtime source for site-specific UI and policy. Git con
 3. Save a validated playbook when ready. Native change history records changes. To roll back, copy the previous values from that history into the form and save. Existing drafts retain the policy snapshot used for generation.
 4. UI changes live in the native Client Script. Export the script after a verified change. To roll back, restore the previous script backup and refresh. Disable this script to recover the original native record form; server approval protections remain active.
 5. Review failures using the per-draft notice, model, policy revision, linked meeting and supporting evidence. **Prepare draft again** retries waiting/failed drafts only. Queued emails are never regenerated or resent by the retry action.
-6. Review & send saves edits and obtains a server-signed content hash for the confirmation. Only the separate Approve & send action queues the email. Senders, current cancellation/recipient checks and duplicate prevention are server-controlled.
+6. Review & send saves edits and obtains a server-generated content hash for the confirmation. Only the separate Approve & send action queues the email. Senders, current cancellation/recipient checks and duplicate prevention are server-controlled.
 
 Future tools should reuse this separation: live workflow + validated data-only playbook + site-specific Client Script, with small stable app methods for privileged operations. Adding a genuinely new server capability may still need deployment. This is not a promise that every code change can run without a release.
 

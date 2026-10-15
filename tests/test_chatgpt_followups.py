@@ -177,8 +177,6 @@ class ApprovalTests(unittest.TestCase):
             followups.approve_and_send('followup', followups.draft_hash(self.doc))
         frappe.sendmail.assert_not_called()
 
-if __name__ == '__main__':
-    unittest.main()
 
 class LivePlaybookTests(unittest.TestCase):
     def test_policy_is_validated_and_revisions_are_reproducible(self):
@@ -219,3 +217,31 @@ class LivePlaybookTests(unittest.TestCase):
             live_setup.seed()
             frappe.db.set_single_value.assert_not_called()
             frappe.get_doc.assert_not_called()
+
+    def test_generation_uses_live_policy_and_saves_its_snapshot(self):
+        from contextlib import nullcontext
+        from quest_automations import followup_playbook as policy
+        doc=types.SimpleNamespace(status='Waiting for ChatGPT',recipient='test@example.com',
+            reload=Mock(),save=Mock(),name='test')
+        event=types.SimpleNamespace(subject='Synthetic discovery')
+        draft={'recommendation':'reschedule','rationale':'They asked to rebook.',
+               'subject':'Choose another time','body':'Use the booking page.','evidence':['Event test']}
+        live=policy.snapshot({**policy.DEFAULTS,'instructions':'Use short sentences.'})
+        with patch.object(frappe,'set_user',create=True), patch.object(frappe,'cache',create=True,
+            new=types.SimpleNamespace(lock=lambda *args,**kwargs:nullcontext())), \
+            patch.object(frappe,'get_doc',return_value=doc), \
+            patch.object(followups,'credentials',return_value=({},'model')), \
+            patch.object(followups,'meeting_current',return_value=event), \
+            patch.object(followups,'recipient_for',return_value=(doc.recipient,None)), \
+            patch.object(followups,'context_for',return_value={}), \
+            patch.object(policy,'current',return_value=live), \
+            patch.object(followups.chatgpt,'generate',return_value=draft) as generate:
+            followups.generate_draft('test')
+            self.assertEqual(doc.status,'Needs review')
+            self.assertEqual(json.loads(doc.playbook_snapshot),live)
+            self.assertEqual(generate.call_args.kwargs['guidance'],'Use short sentences.')
+            self.assertEqual(generate.call_args.args[2]['booking_page'],live['booking_url'])
+            self.assertEqual(generate.call_args.args[2]['signature'],live['signature'])
+
+if __name__ == '__main__':
+    unittest.main()
