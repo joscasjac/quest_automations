@@ -11,6 +11,12 @@ import secrets
 import sys
 import time
 from urllib.parse import parse_qs, urlencode, urlsplit
+import certifi
+
+# PyJWT fetches signing keys with urllib. macOS Python installations may not
+# have a system CA path; use the same maintained roots as requests, with TLS
+# verification fully enabled. This only affects the local sign-in helper.
+os.environ['SSL_CERT_FILE'] = certifi.where()
 
 sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 from quest_automations.core import chatgpt
@@ -47,6 +53,7 @@ def main():
                 if not code or not client or client == 'dynamic_agent_client' or args.client_id and client != args.client_id:
                     result['error'] = 'ChatGPT returned an incomplete or mismatched registration.'
                 else:
+                    phase = 'code_exchange'
                     try:
                         tokens = chatgpt.request_json('POST', chatgpt.TOKEN_URL, data={
                             'grant_type': 'authorization_code', 'client_id': client, 'code': code,
@@ -54,7 +61,9 @@ def main():
                         bundle = {**tokens, 'client_id': client, 'ext_agent_host_id': args.host_id,
                             'nonce': nonce, 'scopes': tokens.get('scope', '').split(),
                             'expires_at': time.time() + int(tokens.get('expires_in', 3600))}
+                        phase = 'identity_validation'
                         bundle = chatgpt.validate_registration(bundle, args.host_id)
+                        phase = 'protected_file_write'
                         target = Path(args.output)
                         target.parent.mkdir(parents=True, exist_ok=True, mode=0o700)
                         # Refuse overwrite; use a fresh output per sign-in attempt.
@@ -62,7 +71,8 @@ def main():
                         with os.fdopen(fd, 'w') as stream:
                             json.dump(bundle, stream)
                         result['ok'] = True
-                    except Exception:
+                    except Exception as error:
+                        print('SIGN_IN_DIAGNOSTIC=' + phase + ':' + type(error).__name__, flush=True)
                         result['error'] = 'Sign-in could not be verified or saved. Start a fresh attempt; no credentials were printed.'
             content = ('ChatGPT connection ready. Return to ERPNext and import the protected registration file.' if result.get('ok') else result['error']).encode()
             self.send_response(200 if result.get('ok') else 400)
