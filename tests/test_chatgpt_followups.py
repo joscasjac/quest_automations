@@ -89,6 +89,13 @@ class StreamTests(unittest.TestCase):
         event = {'type': 'response.completed', 'response': {'output': [{'type': 'message', 'content': [{'type': 'output_text', 'text': json.dumps(draft)}]}]}}
         self.assertEqual(self.run_stream([event]), draft)
 
+    def test_completed_fenced_draft_is_validated(self):
+        draft = {'recommendation': 'clarify', 'rationale': 'Scope is unclear.', 'subject': 'A quick question', 'body': 'What would be most useful?', 'evidence': ['CRM Lead lead-one']}
+        for fence in ['```json\n', '```\n']:
+            self.assertEqual(chatgpt.parse_draft(fence + json.dumps(draft) + '\n```'), draft)
+        with self.assertRaises(chatgpt.ConnectionError):
+            chatgpt.parse_draft('Here is a draft: ' + json.dumps(draft))
+
 class ApprovalTests(unittest.TestCase):
     def setUp(self):
         self.doc = types.SimpleNamespace(name='followup', recipient='prospect@example.com', subject='Question', body='Hello',

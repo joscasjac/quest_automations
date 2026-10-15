@@ -92,17 +92,34 @@ This is a draft for human review. You cannot send email, approve, access tools o
                     continue
                 if line[6:] == b'[DONE]':
                     break
-                event = json.loads(line[6:])
+                try:
+                    event = json.loads(line[6:])
+                except ValueError:
+                    raise ConnectionError('ChatGPT returned an unreadable stream event. Nothing was sent.') from None
                 if event.get('type') in ('response.failed', 'response.incomplete', 'error'):
                     raise ConnectionError('ChatGPT did not complete the draft. Check account usage and retry.')
                 if event.get('type') == 'response.completed':
                     output = event.get('response', {}).get('output', [])
                     text = ''.join(c.get('text', '') for item in output if item.get('type') == 'message'
                                    for c in item.get('content', []) if c.get('type') == 'output_text')
-                    return validate_draft(json.loads(text))
-    except (requests.RequestException, ValueError):
-        raise ConnectionError('Draft generation was interrupted or unreadable. Nothing was sent.') from None
+                    return parse_draft(text)
+    except requests.RequestException:
+        raise ConnectionError('Draft generation connection was interrupted. Nothing was sent.') from None
     raise ConnectionError('ChatGPT stream ended before completion. Nothing was sent.')
+
+def parse_draft(text):
+    # Some models wrap the requested JSON in a Markdown code fence.
+    # Accept only one complete JSON envelope; never execute model output.
+    text = text.strip()
+    if text.startswith('```json\n') and text.endswith('\n```'):
+        text = text[8:-4]
+    elif text.startswith('```\n') and text.endswith('\n```'):
+        text = text[4:-4]
+    try:
+        draft = json.loads(text)
+    except ValueError:
+        raise ConnectionError('ChatGPT completed but returned an unreadable draft format. Nothing was sent.') from None
+    return validate_draft(draft)
 
 def validate_draft(draft):
     if not isinstance(draft, dict) or draft.get('recommendation') not in ('reschedule', 'clarify', 'commercial_proposal', 'no_follow_up'):
