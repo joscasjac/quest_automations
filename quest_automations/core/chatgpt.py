@@ -74,6 +74,8 @@ Never invent prices, deliverables, agreements, deadlines, meeting availability o
 contact them. Mention uncertainty in the internal rationale. Write a concise, natural email in the contact's language.
 Return only a JSON object with recommendation (reschedule, clarify, commercial_proposal, no_follow_up), rationale,
 subject, body (plain text), and evidence (short list of record references supporting the draft).
+For a proposed email, subject must be nonempty and at most 140 characters; body must be nonempty and at most
+12000 characters. For no_follow_up, subject and body may be empty. Rationale must always explain the decision.
 This is a draft for human review. You cannot send email, approve, access tools or change CRM records.'''
     body = {'model': model, 'instructions': instructions,
             'input': [{'role': 'user', 'content': json.dumps(context, ensure_ascii=False)}],
@@ -137,7 +139,8 @@ def validate_draft(draft):
     if not isinstance(draft, dict) or draft.get('recommendation') not in ('reschedule', 'clarify', 'commercial_proposal', 'no_follow_up'):
         raise ConnectionError('ChatGPT returned an invalid recommendation.')
     for key, maximum in [('rationale', 4000), ('subject', 140), ('body', 12000)]:
-        if not isinstance(draft.get(key), str) or not draft[key].strip() or len(draft[key]) > maximum:
+        required = key == 'rationale' or draft['recommendation'] != 'no_follow_up'
+        if not isinstance(draft.get(key), str) or required and not draft[key].strip() or len(draft[key]) > maximum:
             raise ConnectionError('ChatGPT returned an invalid ' + key + '.')
     if '\n' in draft['subject'] or '\r' in draft['subject']:
         raise ConnectionError('Invalid email subject.')

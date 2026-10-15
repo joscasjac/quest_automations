@@ -107,6 +107,14 @@ class StreamTests(unittest.TestCase):
         with self.assertRaisesRegex(chatgpt.ConnectionError, 'without draft text'):
             self.run_stream([{'type': 'response.completed', 'response': {'output': []}}])
 
+    def test_no_follow_up_can_omit_email_content_but_sendable_drafts_cannot(self):
+        draft = {'recommendation': 'no_follow_up', 'rationale': 'Synthetic booking; do not contact.', 'subject': '', 'body': '', 'evidence': ['Event test']}
+        self.assertEqual(chatgpt.validate_draft(draft), draft)
+        with self.assertRaises(chatgpt.ConnectionError):
+            chatgpt.validate_draft({**draft, 'recommendation': 'reschedule'})
+        with self.assertRaises(chatgpt.ConnectionError):
+            chatgpt.validate_draft({**draft, 'rationale': ''})
+
 class ApprovalTests(unittest.TestCase):
     def setUp(self):
         self.doc = types.SimpleNamespace(name='followup', recipient='prospect@example.com', subject='Question', body='Hello',
