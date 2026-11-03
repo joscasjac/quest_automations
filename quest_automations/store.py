@@ -108,7 +108,8 @@ class Store:
         if row['status']!='active' or not row['published']:raise DefinitionError('Workflow must be published and active')
         t=select_trigger(row['published'],expected_trigger,trigger_id,payload if expected_trigger=='document_event' else None) if expected_trigger or trigger_id else None
         if t:
-            from .core.graph import condition_matches,context_for
+            from .core.graph import condition_matches,context_for,document_fields_changed
+            if not document_fields_changed(t,payload):return {'id':None,'status':'filtered_out'}
             if t.get('condition') and not condition_matches(t['condition'],context_for({'input':payload,'outputs':{},'definition':row['published']})):return {'id':None,'status':'filtered_out'}
             if t['kind']=='record':
                 if not all(condition_matches(f,{'trigger':payload}) for f in t.get('filters',[])):return {'id':None,'status':'filtered_out'}

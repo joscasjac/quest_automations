@@ -34,6 +34,9 @@ def validate_graph(definition):
             from .definition import EVENTS
             text_field(trigger,'doctype');require(trigger.get('event') in EVENTS,'Unsupported document event')
             if trigger.get('condition'):validate_condition(trigger['condition'])
+            if 'changedFields' in trigger:
+                fields=trigger['changedFields']
+                require(isinstance(fields,list) and 1<=len(fields)<=20 and all(isinstance(field,str) and re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*',field) for field in fields),'Choose 1–20 changed field names')
         if kind=='record':
             require(trigger.get('entityType') in ENTITIES,'Unsupported record type')
             require(trigger.get('event') in ('created','updated','stage_changed','status_changed'),'Unsupported record event')
@@ -130,6 +133,18 @@ def render(value,context):
         return current
     if match:return lookup(match[1])
     return PATTERN.sub(lambda m:str(lookup(m[1])),value)
+
+
+def document_fields_changed(trigger, payload):
+    fields = trigger.get('changedFields')
+    if not fields:
+        return True
+    previous = payload.get('previous')
+    if not isinstance(previous, dict) or not previous.get('name'):
+        return False
+    def normalized(value):
+        return None if value is None or value == '' else value
+    return any(normalized(payload.get(field)) != normalized(previous.get(field)) for field in fields)
 
 
 def condition_matches(condition,context):

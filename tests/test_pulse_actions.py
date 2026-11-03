@@ -36,13 +36,21 @@ class PulseActionsTests(unittest.TestCase):
     def test_builder_catalog_and_dispatch_prefix_match_server_catalog(self):
         import json
         from pathlib import Path
-        source = (Path(__file__).parents[1] / 'frontend/src/adapter/ErpFields.tsx').read_text()
-        start = source.index('= ', source.index('const pulseActions:')) + 2
-        builder = json.JSONDecoder().raw_decode(source[start:])[0]
+        root = Path(__file__).parents[1]
+        builder = json.loads((root / 'frontend/src/adapter/pulseCatalog.json').read_text())
         self.assertEqual(set(builder), set(PULSE_ACTIONS))
         for action, required in PULSE_ACTIONS.items():
             self.assertTrue(action.startswith('pulse_'), action)
-            self.assertTrue(set(required).issubset(builder[action]['fields']), action)
+            self.assertEqual(list(required), builder[action]['required'], action)
+            self.assertFalse(set(required) & set(builder[action]['optional']), action)
+            self.assertEqual(set(required) | set(builder[action]['optional']), set(builder[action]['types']), action)
+        # Both visible action-picking surfaces consume this catalog, not only the
+        # backend ERP adapter's hidden operation dropdown.
+        picker = (root / 'frontend/src/app/Workflows.tsx').read_text()
+        self.assertIn('...PULSE_ACTION_LIBRARY', picker)
+        self.assertIn('if(isPulseOperation(kind))return createPulseStep(kind)', picker)
+        editor = (root / 'frontend/src/adapter/ErpFields.tsx').read_text()
+        self.assertIn('<PulseActionFields key={operation} operation={operation}', editor)
 
     def test_every_action_is_usable_in_current_graph_builder(self):
         import json

@@ -1,3 +1,4 @@
+import {pulseActions,pulseDefaultValue,pulseInitialConfig} from './pulseCatalog';
 import {MappedInput} from './Editors';
 import {ApiRows,ApiBody} from './ApiRows';
 import {WebhookCapture} from './WebhookCapture';
@@ -27,7 +28,7 @@ function ValueInput({label,value,onChange,field}:{label:string;value:any;onChang
  const sources=useSourceFields();
  const mapped=!!(value&&typeof value==='object'&&'$ref' in value)||typeof value==='string'&&value.includes('{{');
  const [mapping,setMapping]=useState(mapped);
- const displayed=value&&typeof value==='object'&&'$ref' in value?'{{'+value.$ref+'}}':String(value??'');
+ const displayed=value&&typeof value==='object'&&'$ref' in value?'{{'+value.$ref+'}}':String(field?.fieldtype==='Check'?(value===true?1:value===false?0:value??0):value??'');
  if(field?.fieldtype==='Table'||field?.fieldtype==='Table MultiSelect')return <Label name={label}><div className="space-y-3">{Array.isArray(value)&&value.map((row,i)=><div key={i} className="space-y-3 border-b border-edge pb-3"><div className="flex items-center justify-between text-sm"><span>Row {i+1}</span><Button variant="danger" onClick={()=>onChange(value.filter((_:any,n:number)=>n!==i))}>Remove row</Button></div><FieldForm doctype={field.options??''} values={row} onChange={v=>onChange(value.map((r:any,n:number)=>n===i?v:r))}/></div>)}<Button onClick={()=>onChange([...(Array.isArray(value)?value:[]),{}])}>Add row</Button></div></Label>;
  if(Array.isArray(value))return <Label name={label}><div className="space-y-3">{value.map((item,i)=><ValueInput key={i} label={'Item '+(i+1)} value={item} onChange={next=>onChange(value.map((v,n)=>n===i?next:v))}/>)}<Button onClick={()=>onChange([...value,''])}>Add item</Button></div></Label>;
  if(value&&typeof value==='object'&&!('$ref' in value))return <Label name={label}><ObjectFields values={value} onChange={onChange}/></Label>;
@@ -42,14 +43,14 @@ function ObjectFields({values,onChange}:{values:Record<string,any>;onChange:(v:R
 export function ErpTriggerFields({trigger,onChange}:{trigger:Trigger;onChange:(t:Trigger)=>void}){
  if(trigger.kind==='incoming_webhook')return <div className="space-y-3 text-sm text-neutral-400"><p>Starts when another app sends JSON. Its URL is generated automatically. Capture a test event to map incoming fields.</p><Label name="Webhook name"><Input aria-label="Webhook name" placeholder="For example, Website enquiries" value={trigger.name??''} onChange={e=>onChange({...trigger,name:e.target.value})}/></Label><WebhookCapture triggerId={trigger.id}/></div>;
  if(trigger.kind!=='document_event')return null;
- return <div className="space-y-4"><Choice label="Document type" value={trigger.doctype} options={documentTypes} onChange={doctype=>onChange({...trigger,doctype})}/><Label name="Start when the document is"><Select value={trigger.event} onChange={event=>onChange({...trigger,event})} options={events} ariaLabel="Document event"/></Label><TriggerFilters doctype={trigger.doctype} condition={trigger.condition} onChange={condition=>onChange({...trigger,condition})}/></div>
+ return <div className="space-y-4"><Choice label="Document type" value={trigger.doctype} options={documentTypes} onChange={doctype=>onChange({...trigger,doctype})}/><Label name="Start when the document is"><Select value={trigger.event} onChange={event=>onChange({...trigger,event})} options={events} ariaLabel="Document event"/></Label>{trigger.changedFields?.length?<p className="text-xs text-neutral-500">Runs only when these fields change: {trigger.changedFields.join(', ')}. Creating a record or editing other fields does not enroll it.</p>:null}<TriggerFilters doctype={trigger.doctype} condition={trigger.condition} onChange={condition=>onChange({...trigger,condition})}/></div>
 }
 export function ErpStepFields({step,onChange}:{step:ErpStep;onChange:(s:ErpStep)=>void}){
  let config:Record<string,any>;try{config=JSON.parse(step.configJson);if(!config||Array.isArray(config)||typeof config!=='object')throw Error()}catch{return <div role="alert" className="space-y-3"><p>This action has an unreadable configuration. Its content is preserved below so you can repair it.</p><MergeFieldTextarea value={step.configJson} onChange={configJson=>onChange({...step,configJson})} rows={8}/></div>}
  const update=(patch:Record<string,any>)=>onChange({...step,configJson:JSON.stringify({...config,...patch})});
  if(step.kind==='run_ai_capability')return <AiCapabilityFields config={config} raw={step.configJson} onChangeRaw={configJson=>onChange({...step,configJson})} onChange={value=>onChange({...step,configJson:JSON.stringify(value)})}/>;
  const operation=step.kind==='get_document'?'get_document':step.operation??'get_document';
- return <div className="space-y-5">{!['outgoing_webhook','api_request'].includes(step.kind)?<>{step.kind!=='get_document'&&<Label name="What should happen?"><Select ariaLabel="ERPNext action" value={operation} options={[...Object.entries(pulseActions).map(([value,entry])=>({value,label:entry.label})),{value:'get_document',label:'Find a document'},{value:'create_document',label:'Create a document'},{value:'update_document',label:'Update a document'},{value:'apply_workflow',label:'Apply an approval action'},...(operation==='condition'?[{value:'condition',label:'Check a condition'}]:[])]} onChange={value=>onChange({...step,operation:value as ErpStep['operation'],...(value.startsWith('pulse_')?{configJson:JSON.stringify(Object.fromEntries((pulseActions[value]?.fields??[]).map(f=>[f,(f==='fields'||f==='field_values')?{}:f==='rules'?[{fieldname:'',show_in_form:1,required_statuses:''}]:f==='tasks'?[]:f==='is_done'?false:''])))}:{})})}/></Label>}{operation?.startsWith('pulse_')?<><p className="text-xs text-neutral-500">Uses Pulse on this ERPNext site. Permissions and assignment rules apply. Use native record IDs.</p><ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/></>:operation==='condition'?<ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/>:<><Choice label="Document type" value={config.doctype??''} options={documentTypes} onChange={doctype=>update({doctype})}/>{operation!=='create_document'&&<ValueInput label="Which document?" value={config.name??''} onChange={name=>update({name})}/>}<p className="text-xs text-neutral-500">Use trigger data to use the document that started this workflow.</p>{(operation==='create_document'||operation==='update_document')&&<FieldForm required={operation==='create_document'} key={config.doctype} doctype={config.doctype??''} values={config.fields??{}} onChange={fields=>update({fields})}/ >}{operation==='apply_workflow'&&<ValueInput label="Approval action" value={config.action??''} onChange={action=>update({action})}/>}</>}</>:<ApiRequestFields config={config} onChange={update}/>}<details><summary className="cursor-pointer text-xs text-neutral-500">Advanced: view or edit JSON</summary><MergeFieldTextarea value={step.configJson} onChange={configJson=>onChange({...step,configJson})} rows={10}/></details></div>
+ return <div className="space-y-5">{!['outgoing_webhook','api_request'].includes(step.kind)?<>{step.kind!=='get_document'&&<Label name="What should happen?"><Select ariaLabel="ERPNext action" value={operation} options={[...Object.entries(pulseActions).map(([value,entry])=>({value,label:entry.label})),{value:'get_document',label:'Find a document'},{value:'create_document',label:'Create a document'},{value:'update_document',label:'Update a document'},{value:'apply_workflow',label:'Apply an approval action'},...(operation==='condition'?[{value:'condition',label:'Check a condition'}]:[])]} onChange={value=>onChange({...step,operation:value as ErpStep['operation'],...(value.startsWith('pulse_')?{configJson:JSON.stringify(pulseInitialConfig(value))}:{})})}/></Label>}{operation?.startsWith('pulse_')?<><p className="text-xs text-neutral-500">Uses Pulse on this ERPNext site. Permissions and assignment rules apply. Use native record IDs.</p><PulseActionFields key={operation} operation={operation} values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/></>:operation==='condition'?<ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/>:<><Choice label="Document type" value={config.doctype??''} options={documentTypes} onChange={doctype=>update({doctype})}/>{operation!=='create_document'&&<ValueInput label="Which document?" value={config.name??''} onChange={name=>update({name})}/>}<p className="text-xs text-neutral-500">Use trigger data to use the document that started this workflow.</p>{(operation==='create_document'||operation==='update_document')&&<FieldForm required={operation==='create_document'} key={config.doctype} doctype={config.doctype??''} values={config.fields??{}} onChange={fields=>update({fields})}/ >}{operation==='apply_workflow'&&<ValueInput label="Approval action" value={config.action??''} onChange={action=>update({action})}/>}</>}</>:<ApiRequestFields config={config} onChange={update}/>}<details><summary className="cursor-pointer text-xs text-neutral-500">Advanced: view or edit JSON</summary><MergeFieldTextarea value={step.configJson} onChange={configJson=>onChange({...step,configJson})} rows={10}/></details></div>
 }
 export function WorkflowConnections(){
  const {workflowId}=useParams();const [triggers,setTriggers]=useState<Trigger[]>([]);const [selected,setSelected]=useState('');const [hook,setHook]=useState<any>();const [error,setError]=useState('');const [sample,setSample]=useState(sessionStorage.getItem('automation-test-input')??'{}');
@@ -81,405 +82,7 @@ function ApiRequestFields({config,onChange}:{config:Record<string,any>;onChange:
  return <div className="space-y-5"><ValueInput label="Request URL" value={config.url??''} onChange={url=>onChange({url})}/><Label name="Method"><Select ariaLabel="HTTP method" value={config.method??'POST'} onChange={method=>onChange({method})} options={['GET','POST','PUT','PATCH','DELETE'].map(value=>({value,label:value}))}/></Label><section className="space-y-3 border-t border-edge pt-4"><Label name="Authorization"><Select ariaLabel="Authorization type" value={auth.type} options={[{value:'none',label:'None'},{value:'basic',label:'Basic Auth'},{value:'bearer',label:'Bearer Token'},{value:'api_key',label:'API Key'}]} onChange={type=>onChange({authorization:{type}})}/></Label>{auth.type==='bearer'&&<Label name="Token"><MappedInput label="Bearer token" secret value={auth.token??''} onChange={value=>setAuth({token:value})}/></Label>}{auth.type==='basic'&&<><Label name="Username"><MappedInput label="Authorization username" value={auth.username??''} onChange={value=>setAuth({username:value})}/></Label><Label name="Password"><MappedInput label="Authorization password" secret value={auth.password??''} onChange={value=>setAuth({password:value})}/></Label></>}{auth.type==='api_key'&&<><Label name="Send API key in"><Select ariaLabel="API key location" value={auth.in??'header'} options={[{value:'header',label:'Header'},{value:'query',label:'Query parameter'}]} onChange={location=>setAuth({in:location})}/></Label><Label name="Key name"><MappedInput label="API key name" value={auth.name??''} onChange={value=>setAuth({name:value})}/></Label><Label name="Key value"><MappedInput label="API key value" secret value={auth.value??''} onChange={value=>setAuth({value:value})}/></Label></>}{auth.type!=='none'&&<p className="text-xs leading-5 text-neutral-500">Use secret:VARIABLE_NAME to read a credential stored on the server.</p>}</section><section className="space-y-3 border-t border-edge pt-4"><h3 className="text-sm font-medium text-white">Query parameters</h3><ApiRows label="Query parameter" values={config.query??{}} onChange={(query,queryError)=>onChange({query,queryError})}/></section><section className="space-y-3 border-t border-edge pt-4"><h3 className="text-sm font-medium text-white">Headers</h3><ApiRows label="Header" values={config.headers??{}} onChange={(headers,headersError)=>onChange({headers,headersError})}/></section><section className="space-y-3 border-t border-edge pt-4"><Label name="Content type"><Select ariaLabel="Content type" value={contentType} options={[{value:'application/json',label:'application/json'},{value:'application/x-www-form-urlencoded',label:'application/x-www-form-urlencoded'},{value:'text/plain',label:'Plain text'},{value:'application/xml',label:'XML'}]} onChange={contentType=>{let body=config.body;if(['text/plain','application/xml'].includes(contentType)&&body!==undefined&&typeof body!=='string')body=JSON.stringify(body,null,2);if(contentType==='application/x-www-form-urlencoded'&&typeof body==='string'){try{const parsed=JSON.parse(body);body=parsed&&typeof parsed==='object'&&!Array.isArray(parsed)?parsed:{value:body}}catch{body={value:body}}}onChange({contentType,body,bodyDraft:undefined,bodyError:undefined})}}/></Label><ApiBody config={config} onChange={onChange}/></section><section className="space-y-3 border-t border-edge pt-4"><label className="flex items-center gap-2 text-sm font-medium text-white"><input type="checkbox" checked={config.saveResponse!==false} onChange={e=>onChange({saveResponse:e.target.checked})}/>Save response</label><p className="text-xs leading-5 text-neutral-500">{config.saveResponse!==false?'Use the response body and its fields in later actions. Fields are discovered after a successful live run, or from an example response below.':'Only the HTTP status will be kept. The response body will not be available to later actions.'}</p>{config.saveResponse!==false&&<details><summary className="cursor-pointer text-sm text-neutral-400">Add an example response</summary><p className="my-2 text-xs text-neutral-500">Paste an example JSON response to make its fields available before running the API.</p><textarea aria-label="Example API response" value={sample} className="min-h-36 w-full rounded-md border border-edge bg-ink p-3 font-mono text-xs text-white" placeholder={'{"customer": {"id": "123"}}'} onChange={e=>{setSample(e.target.value);try{const responseSample=e.target.value.trim()?JSON.parse(e.target.value):undefined;onChange({responseSample});setSampleError('')}catch{setSampleError('Enter valid JSON for the example response.')}}}/>{sampleError&&<p role="alert" className="text-xs text-red-400">{sampleError}</p>}</details>}</section></div>
 }
 
-const pulseActions:Record<string,{label:string;fields:string[]}>= {
-"pulse_get_task_creation_fields":{"label":"Pulse: get task creation fields","fields":["project"]},
-"pulse_describe_operations":{"label":"Pulse: describe operations","fields":[]},
-  "pulse_create_project": {
-    "label": "Pulse: create project",
-    "fields": [
-      "project_name"
-    ]
-  },
-  "pulse_create_task": {
-    "label": "Pulse: create task",
-    "fields": [
-      "project",
-      "subject"
-    ,"field_values"]
-  },
-  "pulse_get_task": {
-    "label": "Pulse: get task",
-    "fields": [
-      "task"
-    ]
-  },
-  "pulse_update_task": {
-    "label": "Pulse: update task",
-    "fields": [
-      "task",
-      "fields"
-    ]
-  },
-  "pulse_set_status": {
-    "label": "Pulse: set status",
-    "fields": [
-      "task",
-      "state"
-    ]
-  },
-  "pulse_assign_task": {
-    "label": "Pulse: assign task",
-    "fields": [
-      "task",
-      "user"
-    ]
-  },
-  "pulse_unassign_task": {
-    "label": "Pulse: unassign task",
-    "fields": [
-      "task",
-      "user"
-    ]
-  },
-  "pulse_add_comment": {
-    "label": "Pulse: add comment",
-    "fields": [
-      "task",
-      "text"
-    ]
-  },
-  "pulse_add_dependency": {
-    "label": "Pulse: add dependency",
-    "fields": [
-      "task",
-      "depends_on"
-    ]
-  },
-  "pulse_create_module": {
-    "label": "Pulse: create module",
-    "fields": [
-      "project",
-      "title"
-    ]
-  },
-  "pulse_find_tasks": {
-    "label": "Pulse: find tasks",
-    "fields": []
-  },
-  "pulse_get_project": {
-    "label": "Pulse: get project",
-    "fields": [
-      "project"
-    ]
-  },
-  "pulse_update_project": {
-    "label": "Pulse: update project",
-    "fields": [
-      "project",
-      "fields"
-    ]
-  },
-  "pulse_archive_task": {
-    "label": "Pulse: archive task",
-    "fields": [
-      "task"
-    ]
-  },
-  "pulse_restore_task": {
-    "label": "Pulse: restore task",
-    "fields": [
-      "task"
-    ]
-  },
-  "pulse_add_subtask": {
-    "label": "Pulse: add subtask",
-    "fields": [
-      "parent",
-      "subject"
-    ]
-  },
-  "pulse_remove_dependency": {
-    "label": "Pulse: remove dependency",
-    "fields": [
-      "name"
-    ]
-  },
-  "pulse_add_checklist_item": {
-    "label": "Pulse: add checklist item",
-    "fields": [
-      "task",
-      "item"
-    ]
-  },
-  "pulse_set_checklist_item": {
-    "label": "Pulse: set checklist item",
-    "fields": [
-      "name",
-      "is_done"
-    ]
-  },
-  "pulse_bulk_update_tasks": {
-    "label": "Pulse: bulk update tasks",
-    "fields": [
-      "tasks",
-      "fields"
-    ]
-  },
-  "pulse_list_modules": {
-    "label": "Pulse: list modules",
-    "fields": [
-      "project"
-    ]
-  },
-  "pulse_get_module": {
-    "label": "Pulse: get module",
-    "fields": [
-      "name"
-    ]
-  },
-  "pulse_update_module": {
-    "label": "Pulse: update module",
-    "fields": [
-      "name",
-      "fields"
-    ]
-  },
-  "pulse_add_module_tasks": {
-    "label": "Pulse: add module tasks",
-    "fields": [
-      "name",
-      "tasks"
-    ]
-  },
-  "pulse_remove_module_tasks": {
-    "label": "Pulse: remove module tasks",
-    "fields": [
-      "name",
-      "tasks"
-    ]
-  },
-  "pulse_list_pages": {
-    "label": "Pulse: list pages",
-    "fields": []
-  },
-  "pulse_get_page": {
-    "label": "Pulse: get page",
-    "fields": [
-      "name"
-    ]
-  },
-  "pulse_create_page": {
-    "label": "Pulse: create page",
-    "fields": [
-      "project",
-      "title"
-    ]
-  },
-  "pulse_update_page": {
-    "label": "Pulse: update page",
-    "fields": [
-      "name",
-      "modified",
-      "fields"
-    ]
-  },
-  "pulse_add_page_comment": {
-    "label": "Pulse: add page comment",
-    "fields": [
-      "name",
-      "content"
-    ]
-  },
-  "pulse_list_requests": {
-    "label": "Pulse: list requests",
-    "fields": []
-  },
-  "pulse_get_request": {
-    "label": "Pulse: get request",
-    "fields": [
-      "name"
-    ]
-  },
-  "pulse_create_request": {
-    "label": "Pulse: create request",
-    "fields": [
-      "project",
-      "title"
-    ]
-  },
-  "pulse_review_request": {
-    "label": "Pulse: review request",
-    "fields": [
-      "name",
-      "status"
-    ]
-  },
-  "pulse_accept_request": {
-    "label": "Pulse: accept request",
-    "fields": [
-      "name"
-    ]
-  },
-  "pulse_clone_project_template": {
-    "label": "Pulse: clone project template",
-    "fields": [
-      "template",
-      "project_name"
-    ]
-  },
-  "pulse_get_project_team": {
-    "label": "Pulse: get project team",
-    "fields": [
-      "project"
-    ]
-  },
-  "pulse_add_project_member": {
-    "label": "Pulse: add project member",
-    "fields": [
-      "project",
-      "user"
-    ]
-  },
-  "pulse_remove_project_member": {
-    "label": "Pulse: remove project member",
-    "fields": [
-      "project",
-      "user",
-      "replacement"
-    ]
-  },
-  "pulse_transfer_project_owner": {
-    "label": "Pulse: transfer project owner",
-    "fields": [
-      "project",
-      "user"
-    ]
-  },
-  "pulse_invite_project_member": {
-    "label": "Pulse: invite project member",
-    "fields": [
-      "project",
-      "email",
-      "first_name"
-    ]
-  },
-  "pulse_preview_offboarding": {
-    "label": "Pulse: preview offboarding",
-    "fields": [
-      "user",
-      "replacement"
-    ]
-  },
-  "pulse_offboard_user": {
-    "label": "Pulse: offboard user",
-    "fields": [
-      "user",
-      "replacement",
-      "preview_token"
-    ]
-  },
-  "pulse_create_delivery_handoff": {
-    "label": "Pulse: create delivery handoff",
-    "fields": [
-      "source_doctype",
-      "source_name",
-      "project_name",
-      "template"
-    ]
-  },
-  "pulse_get_delivery_handoff": {
-    "label": "Pulse: get delivery handoff",
-    "fields": [
-      "source_doctype",
-      "source_name"
-    ]
-  },
-  "pulse_share_task_external": {
-    "label": "Pulse: share task external",
-    "fields": [
-      "task",
-      "user"
-    ]
-  },
-  "pulse_revoke_task_external": {
-    "label": "Pulse: revoke task external",
-    "fields": [
-      "task",
-      "user"
-    ]
-  },
-  "pulse_reply_external": {
-    "label": "Pulse: reply external",
-    "fields": [
-      "task",
-      "content"
-    ]
-  },
-  "pulse_get_task_fields": {
-    "label": "Pulse: get task fields",
-    "fields": [
-      "task"
-    ]
-  },
-  "pulse_update_task_fields": {
-    "label": "Pulse: update task fields",
-    "fields": [
-      "task",
-      "fields"
-    ]
-  },
-  "pulse_get_project_field_config": {
-    "label": "Pulse: get project field config",
-    "fields": [
-      "project"
-    ]
-  },
-  "pulse_save_project_field_config": {
-    "label": "Pulse: save project field config",
-    "fields": [
-      "project",
-      "rules"
-    ]
-  },
-  "pulse_create_custom_task_field": {
-    "label": "Pulse: create custom task field",
-    "fields": [
-      "project",
-      "label"
-    ]
-  },
-  "pulse_get_task_approvals": {
-    "label": "Pulse: get task approvals",
-    "fields": [
-      "task"
-    ]
-  },
-  "pulse_request_task_approval": {
-    "label": "Pulse: request task approval",
-    "fields": [
-      "task",
-      "reviewer"
-    ]
-  },
-  "pulse_decide_task_approval": {
-    "label": "Pulse: decide task approval",
-    "fields": [
-      "name",
-      "decision",
-      "note"
-    ]
-  },
-  "pulse_preview_task_import": {
-    "label": "Pulse: preview task import",
-    "fields": [
-      "project",
-      "content"
-    ]
-  },
-  "pulse_import_tasks": {
-    "label": "Pulse: import tasks",
-    "fields": [
-      "project",
-      "content"
-    ]
-  },
-  "pulse_export_tasks": {
-    "label": "Pulse: export tasks",
-    "fields": [
-      "project"
-    ]
-  }
-};
+
 
 function AiCapabilityFields({config,raw,onChange,onChangeRaw}:{config:Record<string,any>;raw:string;onChange:(value:Record<string,any>)=>void;onChangeRaw:(value:string)=>void}) {
  const [catalog,setCatalog]=useState<any[]>([]);const [error,setError]=useState('');const [loading,setLoading]=useState(true);
@@ -494,4 +97,19 @@ function AiCapabilityFields({config,raw,onChange,onChangeRaw}:{config:Record<str
  <div className="flex flex-wrap gap-3 text-xs"><button type="button" onClick={load} className="text-neutral-400 underline" disabled={loading}>Refresh capabilities</button><a href="/desk/quest-ai-capability" target="_blank" rel="noopener" className="text-neutral-400 underline">Manage capabilities</a></div>
  {selected&&<><p className="text-xs leading-5 text-neutral-400">Uses the connected ChatGPT account. Map only the data this job needs. New published instructions apply to future runs.</p><section className="space-y-4 border-t border-edge pt-4"><h3 className="text-sm font-medium text-white">Inputs</h3>{Object.entries(selected.input_schema.properties).map(([key,raw])=>{const field=raw as any;const bool=field.type==='boolean';return <div key={key}><ValueInput label={key} value={bool&&typeof config.input?.[key]==='boolean'?Number(config.input[key]):config.input?.[key]} field={{fieldname:key,fieldtype:field.enum?'Select':bool?'Check':field.type==='integer'?'Int':field.type==='number'?'Float':'Data',options:field.enum?.join('\n')}} onChange={value=>onChange({...config,input:{...config.input,[key]:bool&&typeof value==='number'?Boolean(value):value}})}/>{field.description&&<p className="mt-1 text-xs text-neutral-400">{field.description}</p>}</div>})}</section><section className="space-y-2 border-t border-edge pt-4"><h3 className="text-sm font-medium text-white">Result fields</h3><p className="text-xs text-neutral-400">{Object.keys(selected.output_schema.properties).join(', ')}</p><p className="text-xs leading-5 text-neutral-400">Use the result in later actions through the data picker. This action produces data; it does not send email or change CRM records. Use Test draft on the capability to run AI without follow-on actions.</p></section></>}
  <details><summary className="cursor-pointer text-xs text-neutral-400">Advanced: inputs and optional revision pin</summary><MergeFieldTextarea value={raw} onChange={onChangeRaw} rows={10}/></details></div>
+}
+
+
+function PulseActionFields({operation,values,onChange}:{operation:string;values:Record<string,any>;onChange:(values:Record<string,any>)=>void}){
+ const [optional,setOptional]=useState('');const spec=pulseActions[operation];
+ if(!spec)return <p role="alert">This Pulse operation is unavailable in this editor version. Its JSON is preserved below.</p>;
+ const selected=[...new Set([...spec.required,...Object.keys(values)])];
+ return <div className="space-y-4">{selected.map(key=><section key={key} className="space-y-1.5"><PulseParameterInput operation={operation} name={key} label={key+(spec.required.includes(key)?' (required)':'')} value={values[key]??pulseDefaultValue(operation,key)} onChange={value=>onChange({...values,[key]:value})}/>{!spec.required.includes(key)&&<button type="button" className="text-xs text-red-400" onClick={()=>{const next={...values};delete next[key];onChange(next)}}>Remove {key}</button>}</section>)}{!selected.length&&<p className="text-sm text-neutral-400">This action requires no inputs.</p>}{spec.optional.some(key=>!(key in values))&&<Label name="Optional input"><div className="flex gap-2"><Select ariaLabel="Optional Pulse input" value={optional} options={[{value:'',label:'Choose an optional input…'},...spec.optional.filter(key=>!(key in values)).map(key=>({value:key,label:key}))]} onChange={setOptional}/><Button disabled={!spec.optional.includes(optional)||optional in values} onClick={()=>{if(!spec.optional.includes(optional)||optional in values)return;onChange({...values,[optional]:pulseDefaultValue(operation,optional)});setOptional('')}}>Add input</Button></div></Label>}<p className="text-xs text-neutral-500">Use native IDs for records. Objects contain field names and values; arrays contain IDs or rule objects. Advanced JSON supports structured inputs and data references.</p></div>
+}
+
+
+function PulseParameterInput({operation,name,label,value,onChange}:{operation:string;name:string;label:string;value:any;onChange:(value:any)=>void}){
+ if(name==='rules'&&Array.isArray(value))return <Label name={label}><div className="space-y-3">{value.map((row,index)=><section key={index} className="space-y-2 border-b border-edge pb-3"><ObjectFields values={row&&typeof row==='object'&&!Array.isArray(row)?row:{fieldname:'',show_in_form:1,required_statuses:''}} onChange={next=>onChange(value.map((item,n)=>n===index?next:item))}/><button type="button" className="text-xs text-red-400" onClick={()=>onChange(value.filter((_,n)=>n!==index))}>Remove rule {index+1}</button></section>)}<Button onClick={()=>onChange([...value,{fieldname:'',show_in_form:1,required_statuses:''}])}>Add field rule</Button></div></Label>;
+ const type=pulseActions[operation]?.types[name];
+ return <ValueInput label={label} value={value} field={type==='boolean'?{fieldname:name,fieldtype:'Check'}:type==='number'?{fieldname:name,fieldtype:'Float'}:undefined} onChange={onChange}/>;
 }

@@ -172,3 +172,15 @@ PULSE_EVENT_PRESETS = [{'value': 'pulse_event_task_created',
   'trigger': {'kind': 'document_event',
               'doctype': 'CRM Deal',
               'event': 'on_update'}}]
+
+# Frappe also invokes on_update on the first insert. Lifecycle presets use
+# explicit changed fields so creation and unrelated edits cannot look like reviews.
+for preset in PULSE_EVENT_PRESETS:
+    if preset['value'] == 'pulse_event_approval':
+        preset['trigger']['changedFields'] = ['decision']
+        preset['trigger']['condition'] = {
+            'field': 'decision', 'operator': 'is', 'value': 'Approved',
+            'match': 'any', 'conditions': [
+                {'field': 'decision', 'operator': 'is', 'value': 'Rejected'}]}
+    elif preset['value'] == 'pulse_event_request_review':
+        preset['trigger']['changedFields'] = ['status', 'reviewer', 'duplicate_of', 'review_note', 'accepted_task']

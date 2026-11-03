@@ -134,6 +134,20 @@ class StoreContractTests(unittest.TestCase):
         self.assertEqual(run['ancestry'],[])
 
 
+    def test_document_field_filter_runs_before_durable_enqueue(self):
+        definition=self.definition()
+        definition['triggers']=[{'id':'review','kind':'document_event','doctype':'Pulse Request','event':'on_update','changedFields':['status','reviewer']}]
+        row=self.store.save(definition);self.store.publish(row['id'],1)
+        payload={'doctype':'Pulse Request','name':'REQ-1','event':'on_update','status':'Incoming','reviewer':None}
+        self.assertEqual(self.store.enqueue(row['id'],payload,'insert','document_event','review')['status'],'filtered_out')
+        payload['previous']={'name':'REQ-1','status':'Incoming','reviewer':None}
+        payload['title']='Ordinary edit'
+        self.assertEqual(self.store.enqueue(row['id'],payload,'title','document_event','review')['status'],'filtered_out')
+        payload['status']='Deferred'
+        self.assertEqual(self.store.enqueue(row['id'],payload,'review','document_event','review')['status'],'queued')
+        self.assertEqual(len(self.store.runs(row['id'])),1)
+
+
 class DocumentEventChainTests(unittest.TestCase):
     def test_document_event_carries_internal_chain_separately_from_payload(self):
         from quest_automations import jobs
@@ -141,7 +155,7 @@ class DocumentEventChainTests(unittest.TestCase):
         doc.as_dict.return_value={'doctype':'Task','name':'TASK-1','modified':'now'}
         doc.meta.fields=[];doc.get_doc_before_save.return_value=None
         definition={'triggers':[{'id':'updated','kind':'document_event','doctype':'Task','event':'on_update'}]}
-        with patch.object(jobs,'names',return_value=['workflow']),patch.object(jobs,'load',return_value={'published':definition}),patch.object(frappe,'flags',types.SimpleNamespace(automation_ancestry=['upstream']),create=True),patch.object(frappe,'enqueue',create=True) as enqueue:
+        with patch.object(jobs,'frappe',frappe),patch.object(jobs,'names',return_value=['workflow']),patch.object(jobs,'load',return_value={'published':definition}),patch.object(frappe,'flags',types.SimpleNamespace(automation_ancestry=['upstream']),create=True),patch.object(frappe,'enqueue',create=True) as enqueue:
             jobs.document_event(doc,'on_update')
             self.assertEqual(enqueue.call_args.kwargs['ancestry'],['upstream'])
             self.assertNotIn('ancestry',enqueue.call_args.kwargs['payload'])
@@ -151,7 +165,7 @@ class DocumentEventChainTests(unittest.TestCase):
         trigger={'id':'updated','kind':'document_event','doctype':'Task','event':'on_update'}
         store=Mock();store.workflow.return_value={'published':{'triggers':[trigger]},'run_as':'publisher@example.com'}
         payload={'doctype':'Task','name':'TASK-1','modified':'now','event':'on_update'}
-        with patch.object(jobs,'names',return_value=['workflow']),patch.object(jobs,'Store',return_value=store),patch.object(jobs,'wake'),patch.object(jobs,'_visible_event',side_effect=lambda value:value),patch.object(frappe,'get_doc',return_value=Mock(),create=True),patch.object(frappe,'set_user',create=True) as set_user:
+        with patch.object(jobs,'frappe',frappe),patch.object(jobs,'names',return_value=['workflow']),patch.object(jobs,'Store',return_value=store),patch.object(jobs,'wake'),patch.object(jobs,'_visible_event',side_effect=lambda value:value),patch.object(frappe,'get_doc',return_value=Mock(),create=True),patch.object(frappe,'set_user',create=True) as set_user:
             jobs.receive_document(payload,ancestry=['upstream'])
             self.assertEqual(store.enqueue.call_args.kwargs['ancestry'],['upstream'])
             self.assertEqual(set_user.call_args.args,('manager@example.com',))
@@ -169,7 +183,7 @@ class EventPayloadPrivacyTests(unittest.TestCase):
             docs.append(doc);return doc
         payload={'doctype':'Task','name':'T-1','modified':'now','restricted':'hidden','secret':'never',
                  'event':'on_update','previous':{'doctype':'Task','name':'T-1','restricted':'old hidden','subject':'Before'}}
-        with patch.object(frappe,'get_doc',side_effect=document,create=True):
+        with patch.object(jobs,'frappe',frappe),patch.object(frappe,'get_doc',side_effect=document,create=True):
             result=jobs._visible_event(payload)
         self.assertNotIn('restricted',result);self.assertNotIn('secret',result)
         self.assertNotIn('restricted',result['previous'])

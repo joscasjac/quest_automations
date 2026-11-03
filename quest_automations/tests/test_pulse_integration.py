@@ -63,3 +63,21 @@ class TestPulseWorker(IntegrationTestCase):
         self.assertIn(result['status'],('failed','needs_attention'))
         self.assertEqual(result['logs'][-1]['status'],'failed')
         self.assertEqual(frappe.db.count('Task',{'project':self.project.name}),0)
+
+    def test_document_changed_fields_ignore_initial_and_ordinary_updates(self):
+        workflow=self.workflow([{'kind':'noop','label':'Review event'}],
+            {'id':'status','kind':'document_event','doctype':'Task','event':'on_update','changedFields':['status']})
+        task=frappe.get_doc({'doctype':'Task','project':self.project.name,'subject':'Changed-field worker'}).insert()
+        payload=task.as_dict();payload['event']='on_update'
+        jobs.receive_document(payload)
+        self.assertEqual(len(self.store.runs(workflow)),0)
+        before=task.as_dict();task.subject='Ordinary title edit';task.save()
+        payload=task.as_dict();payload.update(event='on_update',previous=before)
+        jobs.receive_document(payload)
+        self.assertEqual(len(self.store.runs(workflow)),0)
+        before=task.as_dict();task.workflow_state='Done';task.save()
+        payload=task.as_dict();payload.update(event='on_update',previous=before)
+        jobs.receive_document(payload)
+        self.assertEqual(len(self.store.runs(workflow)),1)
+        jobs.drain()
+        self.assertEqual(self.store.runs(workflow)[0]['status'],'succeeded')

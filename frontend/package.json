@@ -7,7 +7,9 @@
     "dev": "vite --configLoader runner --host 127.0.0.1",
     "build": "tsc --noEmit && vite build --configLoader runner",
     "start": "python3 server.py",
-    "test": "python3 -m unittest discover -s tests -v"
+    "test": "python3 -m unittest discover -s tests -v",
+    "test:catalog": "node --test tests/pulse-catalog.test.mjs",
+    "test:frontend": "node --test tests/*.test.mjs"
   },
   "dependencies": {
     "@codemirror/autocomplete": "^6.20.3",

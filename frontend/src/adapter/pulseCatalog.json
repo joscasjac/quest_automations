@@ -1,0 +1,811 @@
+{
+  "pulse_create_project": {
+    "label": "Pulse: create project",
+    "required": [
+      "project_name"
+    ],
+    "optional": [
+      "company",
+      "customer",
+      "expected_end_date",
+      "expected_start_date",
+      "pulse_project_key",
+      "sales_order"
+    ],
+    "types": {
+      "project_name": "string",
+      "company": "string",
+      "customer": "string",
+      "expected_end_date": "string",
+      "expected_start_date": "string",
+      "pulse_project_key": "string",
+      "sales_order": "string"
+    }
+  },
+  "pulse_create_task": {
+    "label": "Pulse: create task",
+    "required": [
+      "project",
+      "subject"
+    ],
+    "optional": [
+      "assignees",
+      "description",
+      "exp_end_date",
+      "exp_start_date",
+      "expected_time",
+      "field_values",
+      "module",
+      "parent_task",
+      "priority",
+      "pulse_labels",
+      "pulse_story_points",
+      "state",
+      "task_type"
+    ],
+    "types": {
+      "project": "string",
+      "subject": "string",
+      "assignees": "array",
+      "description": "string",
+      "exp_end_date": "string",
+      "exp_start_date": "string",
+      "expected_time": "number",
+      "field_values": "object",
+      "module": "string",
+      "parent_task": "string",
+      "priority": "string",
+      "pulse_labels": "array",
+      "pulse_story_points": "number",
+      "state": "string",
+      "task_type": "string"
+    }
+  },
+  "pulse_get_task": {
+    "label": "Pulse: get task",
+    "required": [
+      "task"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string"
+    }
+  },
+  "pulse_update_task": {
+    "label": "Pulse: update task",
+    "required": [
+      "task",
+      "fields"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "fields": "object"
+    }
+  },
+  "pulse_set_status": {
+    "label": "Pulse: set status",
+    "required": [
+      "task",
+      "state"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "state": "string"
+    }
+  },
+  "pulse_assign_task": {
+    "label": "Pulse: assign task",
+    "required": [
+      "task",
+      "user"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "user": "string"
+    }
+  },
+  "pulse_unassign_task": {
+    "label": "Pulse: unassign task",
+    "required": [
+      "task",
+      "user"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "user": "string"
+    }
+  },
+  "pulse_add_comment": {
+    "label": "Pulse: add comment",
+    "required": [
+      "task",
+      "text"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "text": "string"
+    }
+  },
+  "pulse_add_dependency": {
+    "label": "Pulse: add dependency",
+    "required": [
+      "task",
+      "depends_on"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "depends_on": "string"
+    }
+  },
+  "pulse_create_module": {
+    "label": "Pulse: create module",
+    "required": [
+      "project",
+      "title"
+    ],
+    "optional": [
+      "description",
+      "due_date",
+      "lead",
+      "start_date",
+      "status"
+    ],
+    "types": {
+      "project": "string",
+      "title": "string",
+      "description": "string",
+      "due_date": "string",
+      "lead": "string",
+      "start_date": "string",
+      "status": "string"
+    }
+  },
+  "pulse_find_tasks": {
+    "label": "Pulse: find tasks",
+    "required": [],
+    "optional": [
+      "exclude",
+      "limit",
+      "project",
+      "q"
+    ],
+    "types": {
+      "exclude": "array",
+      "limit": "number",
+      "project": "string",
+      "q": "string"
+    }
+  },
+  "pulse_get_project": {
+    "label": "Pulse: get project",
+    "required": [
+      "project"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string"
+    }
+  },
+  "pulse_update_project": {
+    "label": "Pulse: update project",
+    "required": [
+      "project",
+      "fields"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string",
+      "fields": "object"
+    }
+  },
+  "pulse_archive_task": {
+    "label": "Pulse: archive task",
+    "required": [
+      "task"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string"
+    }
+  },
+  "pulse_restore_task": {
+    "label": "Pulse: restore task",
+    "required": [
+      "task"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string"
+    }
+  },
+  "pulse_add_subtask": {
+    "label": "Pulse: add subtask",
+    "required": [
+      "parent",
+      "subject"
+    ],
+    "optional": [],
+    "types": {
+      "parent": "string",
+      "subject": "string"
+    }
+  },
+  "pulse_remove_dependency": {
+    "label": "Pulse: remove dependency",
+    "required": [
+      "name"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string"
+    }
+  },
+  "pulse_add_checklist_item": {
+    "label": "Pulse: add checklist item",
+    "required": [
+      "task",
+      "item"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "item": "string"
+    }
+  },
+  "pulse_set_checklist_item": {
+    "label": "Pulse: set checklist item",
+    "required": [
+      "name",
+      "is_done"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string",
+      "is_done": "boolean"
+    }
+  },
+  "pulse_bulk_update_tasks": {
+    "label": "Pulse: bulk update tasks",
+    "required": [
+      "tasks",
+      "fields"
+    ],
+    "optional": [
+      "assign",
+      "unassign"
+    ],
+    "types": {
+      "tasks": "array",
+      "fields": "object",
+      "assign": "array",
+      "unassign": "array"
+    }
+  },
+  "pulse_list_modules": {
+    "label": "Pulse: list modules",
+    "required": [
+      "project"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string"
+    }
+  },
+  "pulse_get_module": {
+    "label": "Pulse: get module",
+    "required": [
+      "name"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string"
+    }
+  },
+  "pulse_update_module": {
+    "label": "Pulse: update module",
+    "required": [
+      "name",
+      "fields"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string",
+      "fields": "object"
+    }
+  },
+  "pulse_add_module_tasks": {
+    "label": "Pulse: add module tasks",
+    "required": [
+      "name",
+      "tasks"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string",
+      "tasks": "array"
+    }
+  },
+  "pulse_remove_module_tasks": {
+    "label": "Pulse: remove module tasks",
+    "required": [
+      "name",
+      "tasks"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string",
+      "tasks": "array"
+    }
+  },
+  "pulse_list_pages": {
+    "label": "Pulse: list pages",
+    "required": [],
+    "optional": [
+      "project",
+      "query"
+    ],
+    "types": {
+      "project": "string",
+      "query": "string"
+    }
+  },
+  "pulse_get_page": {
+    "label": "Pulse: get page",
+    "required": [
+      "name"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string"
+    }
+  },
+  "pulse_create_page": {
+    "label": "Pulse: create page",
+    "required": [
+      "project",
+      "title"
+    ],
+    "optional": [
+      "content",
+      "tasks",
+      "template"
+    ],
+    "types": {
+      "project": "string",
+      "title": "string",
+      "content": "string",
+      "tasks": "array",
+      "template": "string"
+    }
+  },
+  "pulse_update_page": {
+    "label": "Pulse: update page",
+    "required": [
+      "name",
+      "modified",
+      "fields"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string",
+      "modified": "string",
+      "fields": "object"
+    }
+  },
+  "pulse_add_page_comment": {
+    "label": "Pulse: add page comment",
+    "required": [
+      "name",
+      "content"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string",
+      "content": "string"
+    }
+  },
+  "pulse_list_requests": {
+    "label": "Pulse: list requests",
+    "required": [],
+    "optional": [
+      "project",
+      "status"
+    ],
+    "types": {
+      "project": "string",
+      "status": "string"
+    }
+  },
+  "pulse_get_request": {
+    "label": "Pulse: get request",
+    "required": [
+      "name"
+    ],
+    "optional": [],
+    "types": {
+      "name": "string"
+    }
+  },
+  "pulse_create_request": {
+    "label": "Pulse: create request",
+    "required": [
+      "project",
+      "title"
+    ],
+    "optional": [
+      "description",
+      "reviewer"
+    ],
+    "types": {
+      "project": "string",
+      "title": "string",
+      "description": "string",
+      "reviewer": "string"
+    }
+  },
+  "pulse_review_request": {
+    "label": "Pulse: review request",
+    "required": [
+      "name",
+      "status"
+    ],
+    "optional": [
+      "duplicate_of",
+      "note",
+      "reviewer"
+    ],
+    "types": {
+      "name": "string",
+      "status": "string",
+      "duplicate_of": "string",
+      "note": "string",
+      "reviewer": "string"
+    }
+  },
+  "pulse_accept_request": {
+    "label": "Pulse: accept request",
+    "required": [
+      "name"
+    ],
+    "optional": [
+      "note",
+      "reviewer"
+    ],
+    "types": {
+      "name": "string",
+      "note": "string",
+      "reviewer": "string"
+    }
+  },
+  "pulse_clone_project_template": {
+    "label": "Pulse: clone project template",
+    "required": [
+      "template",
+      "project_name"
+    ],
+    "optional": [
+      "customer",
+      "sales_order"
+    ],
+    "types": {
+      "template": "string",
+      "project_name": "string",
+      "customer": "string",
+      "sales_order": "string"
+    }
+  },
+  "pulse_get_project_team": {
+    "label": "Pulse: get project team",
+    "required": [
+      "project"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string"
+    }
+  },
+  "pulse_add_project_member": {
+    "label": "Pulse: add project member",
+    "required": [
+      "project",
+      "user"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string",
+      "user": "string"
+    }
+  },
+  "pulse_remove_project_member": {
+    "label": "Pulse: remove project member",
+    "required": [
+      "project",
+      "user"
+    ],
+    "optional": [
+      "replacement"
+    ],
+    "types": {
+      "project": "string",
+      "user": "string",
+      "replacement": "string"
+    }
+  },
+  "pulse_transfer_project_owner": {
+    "label": "Pulse: transfer project owner",
+    "required": [
+      "project",
+      "user"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string",
+      "user": "string"
+    }
+  },
+  "pulse_invite_project_member": {
+    "label": "Pulse: invite project member",
+    "required": [
+      "project",
+      "email",
+      "first_name"
+    ],
+    "optional": [
+      "last_name"
+    ],
+    "types": {
+      "project": "string",
+      "email": "string",
+      "first_name": "string",
+      "last_name": "string"
+    }
+  },
+  "pulse_preview_offboarding": {
+    "label": "Pulse: preview offboarding",
+    "required": [
+      "user",
+      "replacement"
+    ],
+    "optional": [],
+    "types": {
+      "user": "string",
+      "replacement": "string"
+    }
+  },
+  "pulse_offboard_user": {
+    "label": "Pulse: offboard user",
+    "required": [
+      "user",
+      "replacement",
+      "preview_token"
+    ],
+    "optional": [],
+    "types": {
+      "user": "string",
+      "replacement": "string",
+      "preview_token": "string"
+    }
+  },
+  "pulse_create_delivery_handoff": {
+    "label": "Pulse: create delivery handoff",
+    "required": [
+      "source_doctype",
+      "source_name",
+      "project_name"
+    ],
+    "optional": [
+      "template"
+    ],
+    "types": {
+      "source_doctype": "string",
+      "source_name": "string",
+      "project_name": "string",
+      "template": "string"
+    }
+  },
+  "pulse_get_delivery_handoff": {
+    "label": "Pulse: get delivery handoff",
+    "required": [
+      "source_doctype",
+      "source_name"
+    ],
+    "optional": [],
+    "types": {
+      "source_doctype": "string",
+      "source_name": "string"
+    }
+  },
+  "pulse_share_task_external": {
+    "label": "Pulse: share task external",
+    "required": [
+      "task",
+      "user"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "user": "string"
+    }
+  },
+  "pulse_revoke_task_external": {
+    "label": "Pulse: revoke task external",
+    "required": [
+      "task",
+      "user"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "user": "string"
+    }
+  },
+  "pulse_reply_external": {
+    "label": "Pulse: reply external",
+    "required": [
+      "task",
+      "content"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "content": "string"
+    }
+  },
+  "pulse_get_task_fields": {
+    "label": "Pulse: get task fields",
+    "required": [
+      "task"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string"
+    }
+  },
+  "pulse_update_task_fields": {
+    "label": "Pulse: update task fields",
+    "required": [
+      "task",
+      "fields"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "fields": "object"
+    }
+  },
+  "pulse_get_project_field_config": {
+    "label": "Pulse: get project field config",
+    "required": [
+      "project"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string"
+    }
+  },
+  "pulse_save_project_field_config": {
+    "label": "Pulse: save project field config",
+    "required": [
+      "project",
+      "rules"
+    ],
+    "optional": [
+      "approval_statuses"
+    ],
+    "types": {
+      "project": "string",
+      "rules": "array",
+      "approval_statuses": "array"
+    }
+  },
+  "pulse_create_custom_task_field": {
+    "label": "Pulse: create custom task field",
+    "required": [
+      "project",
+      "label"
+    ],
+    "optional": [
+      "fieldtype",
+      "options"
+    ],
+    "types": {
+      "project": "string",
+      "label": "string",
+      "fieldtype": "string",
+      "options": "string"
+    }
+  },
+  "pulse_get_task_approvals": {
+    "label": "Pulse: get task approvals",
+    "required": [
+      "task"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string"
+    }
+  },
+  "pulse_request_task_approval": {
+    "label": "Pulse: request task approval",
+    "required": [
+      "task",
+      "reviewer"
+    ],
+    "optional": [],
+    "types": {
+      "task": "string",
+      "reviewer": "string"
+    }
+  },
+  "pulse_decide_task_approval": {
+    "label": "Pulse: decide task approval",
+    "required": [
+      "name",
+      "decision"
+    ],
+    "optional": [
+      "note"
+    ],
+    "types": {
+      "name": "string",
+      "decision": "string",
+      "note": "string"
+    }
+  },
+  "pulse_preview_task_import": {
+    "label": "Pulse: preview task import",
+    "required": [
+      "project",
+      "content"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string",
+      "content": "string"
+    }
+  },
+  "pulse_import_tasks": {
+    "label": "Pulse: import tasks",
+    "required": [
+      "project",
+      "content"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string",
+      "content": "string"
+    }
+  },
+  "pulse_export_tasks": {
+    "label": "Pulse: export tasks",
+    "required": [
+      "project"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string"
+    }
+  },
+  "pulse_describe_operations": {
+    "label": "Pulse: describe operations",
+    "required": [],
+    "optional": [],
+    "types": {}
+  },
+  "pulse_get_task_creation_fields": {
+    "label": "Pulse: get task creation fields",
+    "required": [
+      "project"
+    ],
+    "optional": [],
+    "types": {
+      "project": "string"
+    }
+  }
+}

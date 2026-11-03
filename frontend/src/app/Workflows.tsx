@@ -1,3 +1,5 @@
+import {PULSE_ACTION_LIBRARY,createPulseStep,isPulseOperation} from '../adapter/pulseCatalog';
+import type {PulseOperation} from '../adapter/pulseCatalog';
 import {WorkflowDraftContext} from '../adapter/WorkflowDraft';
 import {EmailFields} from "../adapter/EmailFields";
 import {FieldSourcesProvider} from '../adapter/FieldSources';
@@ -43,6 +45,7 @@ type RecordTrigger = Extract<DraftTrigger, { kind: "record" }>;
 type TriggerFilter = NonNullable<RecordTrigger["filters"]>[number];
 type DraftStep = WorkflowVersion["steps"][number];
 type StepKind = DraftStep["kind"];
+type ActionKind = StepKind | PulseOperation;
 type IfElseStep = Extract<DraftStep, { kind: "if_else" }>;
 type BranchActionStep = Exclude<DraftStep, IfElseStep>;
 type BranchActionKind = BranchActionStep["kind"];
@@ -158,7 +161,7 @@ type TriggerCatalogOption = CatalogOption<string> & {
   icon: WorkflowCatalogIcon;
   trigger: DraftTrigger;
 };
-type ActionCatalogOption = CatalogOption<StepKind> & {
+type ActionCatalogOption = CatalogOption<ActionKind> & {
   icon: WorkflowCatalogIcon;
 };
 
@@ -278,12 +281,13 @@ const IF_ELSE_OPERATOR_OPTIONS = [
 ];
 
 const ACTION_LIBRARY: Array<{
-  kind: StepKind;
+  kind: ActionKind;
   title: string;
   description: string;
   group: string;
   icon: WorkflowCatalogIcon;
 }> = [
+  ...PULSE_ACTION_LIBRARY,
   {kind:"run_ai_capability",title:"Run AI Capability",description:"Run a published AI capability with mapped inputs and a structured result.",group:"AI",icon:"log"},
   {kind:"api_request",title:"API request",description:"Call an API with a URL, method, headers, and body.",group:"Webhooks",icon:"go_to"},
   {kind:"get_document",title:"Get document",description:"Fetch any ERPNext document and use its fields in later actions.",group:"ERPNext",icon:"record"},
@@ -394,8 +398,8 @@ const TRIGGER_LIBRARY: Array<TriggerCatalogOption> = [
 {"value": "pulse_event_module_membership", "title": "Pulse module membership changed", "description": "Start from a permission-checked Pulse Activity Log event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Activity Log", "event": "after_insert", "condition": {"field": "activity_type", "operator": "is", "value": "Module Membership Changed"}}},
 {"value": "pulse_event_page", "title": "Pulse page updated", "description": "Start from a permission-checked Pulse Document event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Document", "event": "on_update"}},
 {"value": "pulse_event_request", "title": "Pulse request submitted", "description": "Start from a permission-checked Pulse Request event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Request", "event": "after_insert"}},
-{"value": "pulse_event_request_review", "title": "Pulse request reviewed", "description": "Start from a permission-checked Pulse Request event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Request", "event": "on_update"}},
-{"value": "pulse_event_approval", "title": "Pulse approval decision", "description": "Start from a permission-checked Pulse Task Approval event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Task Approval", "event": "on_update"}},
+{"value": "pulse_event_request_review", "title": "Pulse request reviewed", "description": "Start from a permission-checked Pulse Request event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Request", "event": "on_update", "changedFields": ["status", "reviewer", "duplicate_of", "review_note", "accepted_task"]}},
+{"value": "pulse_event_approval", "title": "Pulse approval decision", "description": "Start from a permission-checked Pulse Task Approval event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Task Approval", "event": "on_update", "changedFields": ["decision"], "condition": {"field": "decision", "operator": "is", "value": "Approved", "match": "any", "conditions": [{"field": "decision", "operator": "is", "value": "Rejected"}]}}},
 {"value": "pulse_event_handoff", "title": "Pulse delivery handoff", "description": "Start from a permission-checked Pulse Business Handoff event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse Business Handoff", "event": "after_insert"}},
 {"value": "pulse_event_external_discussion", "title": "Pulse external discussion", "description": "Start from a permission-checked Pulse External Comment event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse External Comment", "event": "after_insert"}},
 {"value": "pulse_event_order", "title": "Sales order submitted", "description": "Start from a permission-checked Sales Order event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Sales Order", "event": "on_submit"}},
@@ -688,7 +692,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     setFormError("");
   }, [creating]);
 
-  const insertStep = (afterIndex: number, kind: StepKind) => {
+  const insertStep = (afterIndex: number, kind: ActionKind) => {
     const nextStep = createDefaultStep(kind);
     const insertedIndex = afterIndex + 1;
     setDraftSteps((steps) => {
@@ -704,9 +708,9 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     setGotoPickerFor(kind === "go_to" ? { type: "step", index: insertedIndex } : null);
   };
 
-  const insertBranchStep = (target: NonNullable<BranchInsertTarget>, kind: StepKind) => {
-    if (!isBranchActionKind(kind)) return;
-    const nextStep = createDefaultStep(kind) as BranchActionStep;
+  const insertBranchStep = (target: NonNullable<BranchInsertTarget>, kind: ActionKind) => {
+    const nextStep = createDefaultStep(kind);
+    if (!isBranchActionStep(nextStep)) return;
     const insertedIndex = target.afterIndex + 1;
     setDraftSteps((steps) =>
       updateIfElseBranchSteps(steps, target.stepIndex, target.branch, (branchSteps) => {
@@ -2833,10 +2837,10 @@ function SidebarActionCatalog({
   onSelect,
 }: {
   excludeKinds?: Array<StepKind>;
-  onSelect: (kind: StepKind) => void;
+  onSelect: (kind: ActionKind) => void;
 }) {
   const actionOptions: Array<ActionCatalogOption> = ACTION_LIBRARY.filter(
-    (item) => !excludeKinds.includes(item.kind),
+    (item) => !excludeKinds.includes(isPulseOperation(item.kind)?"erpnext":item.kind),
   ).map((item) => ({
       value: item.kind,
       title: item.title,
@@ -2848,7 +2852,7 @@ function SidebarActionCatalog({
     <SidebarCatalogList
       searchLabel="Search Actions"
       options={actionOptions}
-      onSelect={(value) => onSelect(value as StepKind)}
+      onSelect={(value) => onSelect(value as ActionKind)}
     />
   );
 }
@@ -3147,10 +3151,10 @@ function BuilderInspector({
   formError: string;
   onTrigger: (index: number, value: DraftTriggerState) => void;
   onChooseTrigger: (trigger: DraftTrigger) => void;
-  onChooseStep: (afterIndex: number, kind: StepKind) => void;
+  onChooseStep: (afterIndex: number, kind: ActionKind) => void;
   onChooseBranchStep: (
     target: NonNullable<BranchInsertTarget>,
-    kind: StepKind,
+    kind: ActionKind,
   ) => void;
   onStep: (index: number, step: DraftStep) => void;
   onBranchStep: (
@@ -3473,14 +3477,14 @@ function StepEditor({
   onMove: (index: number, direction: -1 | 1) => void;
 }) {
   const actionOptions = ACTION_LIBRARY.filter(
-    (item) => !actionKinds || actionKinds.includes(item.kind),
+    (item) => !actionKinds || actionKinds.includes(isPulseOperation(item.kind)?"erpnext":item.kind),
   );
   return (
     <div className="h-full space-y-3 overflow-y-auto border-t border-edge pt-4">
       <Field label="Action">
         <Select
-          value={step.kind}
-          onChange={(value) => onChange(createDefaultStep(value as StepKind))}
+          value={step.kind==="erpnext"&&step.operation&&isPulseOperation(step.operation)?step.operation:step.kind}
+          onChange={(value) => onChange(createDefaultStep(value as ActionKind))}
           options={actionOptions.map((item) => ({
             value: item.kind,
             label: item.title,
@@ -4170,7 +4174,8 @@ function workflowTriggerList(workflow: Workflow | undefined): DraftTriggerList {
   return workflow.trigger ? [workflow.trigger] : [];
 }
 
-function createDefaultStep(kind: StepKind): DraftStep {
+function createDefaultStep(kind: ActionKind): DraftStep {
+  if(isPulseOperation(kind))return createPulseStep(kind);
   if(kind==="run_ai_capability")return {kind,label:"Run AI Capability",configJson:JSON.stringify({capability:"meeting-summary",input:{notes:{$ref:"trigger.notes"}}})};
   if(kind==="outgoing_webhook")return {kind,label:"Outgoing webhook",configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
   if(kind==="api_request")return {kind,label:"API request",configJson:JSON.stringify({url:"",method:"GET",headers:{}})};
@@ -4703,7 +4708,7 @@ function actionIcon(kind: StepKind): WorkflowCatalogIcon {
 }
 
 function stepTitle(step: DraftStep) {
-  const action = ACTION_LIBRARY.find((item) => item.kind === step.kind);
+  const action = ACTION_LIBRARY.find((item) => item.kind === (step.kind==="erpnext"&&step.operation&&isPulseOperation(step.operation)?step.operation:step.kind));
   return action?.title ?? step.kind;
 }
 
