@@ -49,7 +49,7 @@ export function ErpStepFields({step,onChange}:{step:ErpStep;onChange:(s:ErpStep)
  const update=(patch:Record<string,any>)=>onChange({...step,configJson:JSON.stringify({...config,...patch})});
  if(step.kind==='run_ai_capability')return <AiCapabilityFields config={config} raw={step.configJson} onChangeRaw={configJson=>onChange({...step,configJson})} onChange={value=>onChange({...step,configJson:JSON.stringify(value)})}/>;
  const operation=step.kind==='get_document'?'get_document':step.operation??'get_document';
- return <div className="space-y-5">{!['outgoing_webhook','api_request'].includes(step.kind)?<>{step.kind!=='get_document'&&<Label name="What should happen?"><Select ariaLabel="ERPNext action" value={operation} options={[...Object.entries(pulseActions).map(([value,entry])=>({value,label:entry.label})),{value:'get_document',label:'Find a document'},{value:'create_document',label:'Create a document'},{value:'update_document',label:'Update a document'},{value:'apply_workflow',label:'Apply an approval action'},...(operation==='condition'?[{value:'condition',label:'Check a condition'}]:[])]} onChange={value=>onChange({...step,operation:value as ErpStep['operation'],...(value.startsWith('pulse_')?{configJson:JSON.stringify(Object.fromEntries((pulseActions[value]?.fields??[]).map(f=>[f,f==='fields'?{}:''])))}:{})})}/></Label>}{operation?.startsWith('pulse_')?<><p className="text-xs text-neutral-500">Uses Pulse on this ERPNext site. Permissions and assignment rules apply. Use native record IDs.</p><ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/></>:operation==='condition'?<ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/>:<><Choice label="Document type" value={config.doctype??''} options={documentTypes} onChange={doctype=>update({doctype})}/>{operation!=='create_document'&&<ValueInput label="Which document?" value={config.name??''} onChange={name=>update({name})}/>}<p className="text-xs text-neutral-500">Use trigger data to use the document that started this workflow.</p>{(operation==='create_document'||operation==='update_document')&&<FieldForm required={operation==='create_document'} key={config.doctype} doctype={config.doctype??''} values={config.fields??{}} onChange={fields=>update({fields})}/ >}{operation==='apply_workflow'&&<ValueInput label="Approval action" value={config.action??''} onChange={action=>update({action})}/>}</>}</>:<ApiRequestFields config={config} onChange={update}/>}<details><summary className="cursor-pointer text-xs text-neutral-500">Advanced: view or edit JSON</summary><MergeFieldTextarea value={step.configJson} onChange={configJson=>onChange({...step,configJson})} rows={10}/></details></div>
+ return <div className="space-y-5">{!['outgoing_webhook','api_request'].includes(step.kind)?<>{step.kind!=='get_document'&&<Label name="What should happen?"><Select ariaLabel="ERPNext action" value={operation} options={[...Object.entries(pulseActions).map(([value,entry])=>({value,label:entry.label})),{value:'get_document',label:'Find a document'},{value:'create_document',label:'Create a document'},{value:'update_document',label:'Update a document'},{value:'apply_workflow',label:'Apply an approval action'},...(operation==='condition'?[{value:'condition',label:'Check a condition'}]:[])]} onChange={value=>onChange({...step,operation:value as ErpStep['operation'],...(value.startsWith('pulse_')?{configJson:JSON.stringify(Object.fromEntries((pulseActions[value]?.fields??[]).map(f=>[f,(f==='fields'||f==='field_values')?{}:f==='rules'?[{fieldname:'',show_in_form:1,required_statuses:''}]:f==='tasks'?[]:f==='is_done'?false:''])))}:{})})}/></Label>}{operation?.startsWith('pulse_')?<><p className="text-xs text-neutral-500">Uses Pulse on this ERPNext site. Permissions and assignment rules apply. Use native record IDs.</p><ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/></>:operation==='condition'?<ObjectFields values={config} onChange={v=>onChange({...step,configJson:JSON.stringify(v)})}/>:<><Choice label="Document type" value={config.doctype??''} options={documentTypes} onChange={doctype=>update({doctype})}/>{operation!=='create_document'&&<ValueInput label="Which document?" value={config.name??''} onChange={name=>update({name})}/>}<p className="text-xs text-neutral-500">Use trigger data to use the document that started this workflow.</p>{(operation==='create_document'||operation==='update_document')&&<FieldForm required={operation==='create_document'} key={config.doctype} doctype={config.doctype??''} values={config.fields??{}} onChange={fields=>update({fields})}/ >}{operation==='apply_workflow'&&<ValueInput label="Approval action" value={config.action??''} onChange={action=>update({action})}/>}</>}</>:<ApiRequestFields config={config} onChange={update}/>}<details><summary className="cursor-pointer text-xs text-neutral-500">Advanced: view or edit JSON</summary><MergeFieldTextarea value={step.configJson} onChange={configJson=>onChange({...step,configJson})} rows={10}/></details></div>
 }
 export function WorkflowConnections(){
  const {workflowId}=useParams();const [triggers,setTriggers]=useState<Trigger[]>([]);const [selected,setSelected]=useState('');const [hook,setHook]=useState<any>();const [error,setError]=useState('');const [sample,setSample]=useState(sessionStorage.getItem('automation-test-input')??'{}');
@@ -82,16 +82,403 @@ function ApiRequestFields({config,onChange}:{config:Record<string,any>;onChange:
 }
 
 const pulseActions:Record<string,{label:string;fields:string[]}>= {
-"pulse_create_project":{"label": "Pulse: create project", "fields": ["project_name"]},
-"pulse_create_task":{"label": "Pulse: create task", "fields": ["project", "subject", "description", "assignees", "exp_start_date", "exp_end_date"]},
-"pulse_get_task":{"label": "Pulse: get task", "fields": ["task"]},
-"pulse_update_task":{"label": "Pulse: update task", "fields": ["task", "fields"]},
-"pulse_set_status":{"label": "Pulse: set status", "fields": ["task", "state"]},
-"pulse_assign_task":{"label": "Pulse: assign task", "fields": ["task", "user"]},
-"pulse_unassign_task":{"label": "Pulse: unassign task", "fields": ["task", "user"]},
-"pulse_add_comment":{"label": "Pulse: add comment", "fields": ["task", "text"]},
-"pulse_add_dependency":{"label": "Pulse: add dependency", "fields": ["task", "depends_on"]},
-"pulse_create_module":{"label": "Pulse: create module", "fields": ["project", "title"]},
+"pulse_get_task_creation_fields":{"label":"Pulse: get task creation fields","fields":["project"]},
+"pulse_describe_operations":{"label":"Pulse: describe operations","fields":[]},
+  "pulse_create_project": {
+    "label": "Pulse: create project",
+    "fields": [
+      "project_name"
+    ]
+  },
+  "pulse_create_task": {
+    "label": "Pulse: create task",
+    "fields": [
+      "project",
+      "subject"
+    ,"field_values"]
+  },
+  "pulse_get_task": {
+    "label": "Pulse: get task",
+    "fields": [
+      "task"
+    ]
+  },
+  "pulse_update_task": {
+    "label": "Pulse: update task",
+    "fields": [
+      "task",
+      "fields"
+    ]
+  },
+  "pulse_set_status": {
+    "label": "Pulse: set status",
+    "fields": [
+      "task",
+      "state"
+    ]
+  },
+  "pulse_assign_task": {
+    "label": "Pulse: assign task",
+    "fields": [
+      "task",
+      "user"
+    ]
+  },
+  "pulse_unassign_task": {
+    "label": "Pulse: unassign task",
+    "fields": [
+      "task",
+      "user"
+    ]
+  },
+  "pulse_add_comment": {
+    "label": "Pulse: add comment",
+    "fields": [
+      "task",
+      "text"
+    ]
+  },
+  "pulse_add_dependency": {
+    "label": "Pulse: add dependency",
+    "fields": [
+      "task",
+      "depends_on"
+    ]
+  },
+  "pulse_create_module": {
+    "label": "Pulse: create module",
+    "fields": [
+      "project",
+      "title"
+    ]
+  },
+  "pulse_find_tasks": {
+    "label": "Pulse: find tasks",
+    "fields": []
+  },
+  "pulse_get_project": {
+    "label": "Pulse: get project",
+    "fields": [
+      "project"
+    ]
+  },
+  "pulse_update_project": {
+    "label": "Pulse: update project",
+    "fields": [
+      "project",
+      "fields"
+    ]
+  },
+  "pulse_archive_task": {
+    "label": "Pulse: archive task",
+    "fields": [
+      "task"
+    ]
+  },
+  "pulse_restore_task": {
+    "label": "Pulse: restore task",
+    "fields": [
+      "task"
+    ]
+  },
+  "pulse_add_subtask": {
+    "label": "Pulse: add subtask",
+    "fields": [
+      "parent",
+      "subject"
+    ]
+  },
+  "pulse_remove_dependency": {
+    "label": "Pulse: remove dependency",
+    "fields": [
+      "name"
+    ]
+  },
+  "pulse_add_checklist_item": {
+    "label": "Pulse: add checklist item",
+    "fields": [
+      "task",
+      "item"
+    ]
+  },
+  "pulse_set_checklist_item": {
+    "label": "Pulse: set checklist item",
+    "fields": [
+      "name",
+      "is_done"
+    ]
+  },
+  "pulse_bulk_update_tasks": {
+    "label": "Pulse: bulk update tasks",
+    "fields": [
+      "tasks",
+      "fields"
+    ]
+  },
+  "pulse_list_modules": {
+    "label": "Pulse: list modules",
+    "fields": [
+      "project"
+    ]
+  },
+  "pulse_get_module": {
+    "label": "Pulse: get module",
+    "fields": [
+      "name"
+    ]
+  },
+  "pulse_update_module": {
+    "label": "Pulse: update module",
+    "fields": [
+      "name",
+      "fields"
+    ]
+  },
+  "pulse_add_module_tasks": {
+    "label": "Pulse: add module tasks",
+    "fields": [
+      "name",
+      "tasks"
+    ]
+  },
+  "pulse_remove_module_tasks": {
+    "label": "Pulse: remove module tasks",
+    "fields": [
+      "name",
+      "tasks"
+    ]
+  },
+  "pulse_list_pages": {
+    "label": "Pulse: list pages",
+    "fields": []
+  },
+  "pulse_get_page": {
+    "label": "Pulse: get page",
+    "fields": [
+      "name"
+    ]
+  },
+  "pulse_create_page": {
+    "label": "Pulse: create page",
+    "fields": [
+      "project",
+      "title"
+    ]
+  },
+  "pulse_update_page": {
+    "label": "Pulse: update page",
+    "fields": [
+      "name",
+      "modified",
+      "fields"
+    ]
+  },
+  "pulse_add_page_comment": {
+    "label": "Pulse: add page comment",
+    "fields": [
+      "name",
+      "content"
+    ]
+  },
+  "pulse_list_requests": {
+    "label": "Pulse: list requests",
+    "fields": []
+  },
+  "pulse_get_request": {
+    "label": "Pulse: get request",
+    "fields": [
+      "name"
+    ]
+  },
+  "pulse_create_request": {
+    "label": "Pulse: create request",
+    "fields": [
+      "project",
+      "title"
+    ]
+  },
+  "pulse_review_request": {
+    "label": "Pulse: review request",
+    "fields": [
+      "name",
+      "status"
+    ]
+  },
+  "pulse_accept_request": {
+    "label": "Pulse: accept request",
+    "fields": [
+      "name"
+    ]
+  },
+  "pulse_clone_project_template": {
+    "label": "Pulse: clone project template",
+    "fields": [
+      "template",
+      "project_name"
+    ]
+  },
+  "pulse_get_project_team": {
+    "label": "Pulse: get project team",
+    "fields": [
+      "project"
+    ]
+  },
+  "pulse_add_project_member": {
+    "label": "Pulse: add project member",
+    "fields": [
+      "project",
+      "user"
+    ]
+  },
+  "pulse_remove_project_member": {
+    "label": "Pulse: remove project member",
+    "fields": [
+      "project",
+      "user",
+      "replacement"
+    ]
+  },
+  "pulse_transfer_project_owner": {
+    "label": "Pulse: transfer project owner",
+    "fields": [
+      "project",
+      "user"
+    ]
+  },
+  "pulse_invite_project_member": {
+    "label": "Pulse: invite project member",
+    "fields": [
+      "project",
+      "email",
+      "first_name"
+    ]
+  },
+  "pulse_preview_offboarding": {
+    "label": "Pulse: preview offboarding",
+    "fields": [
+      "user",
+      "replacement"
+    ]
+  },
+  "pulse_offboard_user": {
+    "label": "Pulse: offboard user",
+    "fields": [
+      "user",
+      "replacement",
+      "preview_token"
+    ]
+  },
+  "pulse_create_delivery_handoff": {
+    "label": "Pulse: create delivery handoff",
+    "fields": [
+      "source_doctype",
+      "source_name",
+      "project_name",
+      "template"
+    ]
+  },
+  "pulse_get_delivery_handoff": {
+    "label": "Pulse: get delivery handoff",
+    "fields": [
+      "source_doctype",
+      "source_name"
+    ]
+  },
+  "pulse_share_task_external": {
+    "label": "Pulse: share task external",
+    "fields": [
+      "task",
+      "user"
+    ]
+  },
+  "pulse_revoke_task_external": {
+    "label": "Pulse: revoke task external",
+    "fields": [
+      "task",
+      "user"
+    ]
+  },
+  "pulse_reply_external": {
+    "label": "Pulse: reply external",
+    "fields": [
+      "task",
+      "content"
+    ]
+  },
+  "pulse_get_task_fields": {
+    "label": "Pulse: get task fields",
+    "fields": [
+      "task"
+    ]
+  },
+  "pulse_update_task_fields": {
+    "label": "Pulse: update task fields",
+    "fields": [
+      "task",
+      "fields"
+    ]
+  },
+  "pulse_get_project_field_config": {
+    "label": "Pulse: get project field config",
+    "fields": [
+      "project"
+    ]
+  },
+  "pulse_save_project_field_config": {
+    "label": "Pulse: save project field config",
+    "fields": [
+      "project",
+      "rules"
+    ]
+  },
+  "pulse_create_custom_task_field": {
+    "label": "Pulse: create custom task field",
+    "fields": [
+      "project",
+      "label"
+    ]
+  },
+  "pulse_get_task_approvals": {
+    "label": "Pulse: get task approvals",
+    "fields": [
+      "task"
+    ]
+  },
+  "pulse_request_task_approval": {
+    "label": "Pulse: request task approval",
+    "fields": [
+      "task",
+      "reviewer"
+    ]
+  },
+  "pulse_decide_task_approval": {
+    "label": "Pulse: decide task approval",
+    "fields": [
+      "name",
+      "decision",
+      "note"
+    ]
+  },
+  "pulse_preview_task_import": {
+    "label": "Pulse: preview task import",
+    "fields": [
+      "project",
+      "content"
+    ]
+  },
+  "pulse_import_tasks": {
+    "label": "Pulse: import tasks",
+    "fields": [
+      "project",
+      "content"
+    ]
+  },
+  "pulse_export_tasks": {
+    "label": "Pulse: export tasks",
+    "fields": [
+      "project"
+    ]
+  }
 };
 
 function AiCapabilityFields({config,raw,onChange,onChangeRaw}:{config:Record<string,any>;raw:string;onChange:(value:Record<string,any>)=>void;onChangeRaw:(value:string)=>void}) {

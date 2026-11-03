@@ -6,18 +6,69 @@ from copy import deepcopy
 import re
 
 EVENTS = ('after_insert', 'on_update', 'on_submit', 'on_cancel', 'on_update_after_submit')
-PULSE_ACTIONS = {
-    'pulse_create_project': ('project_name',),
-    'pulse_create_task': ('project', 'subject'),
-    'pulse_get_task': ('task',),
-    'pulse_update_task': ('task', 'fields'),
-    'pulse_set_status': ('task', 'state'),
-    'pulse_assign_task': ('task', 'user'),
-    'pulse_unassign_task': ('task', 'user'),
-    'pulse_add_comment': ('task', 'text'),
-    'pulse_add_dependency': ('task', 'depends_on'),
-    'pulse_create_module': ('project', 'title'),
-}
+PULSE_ACTIONS = {'pulse_create_project': ('project_name',),
+ 'pulse_create_task': ('project', 'subject'),
+ 'pulse_get_task': ('task',),
+ 'pulse_update_task': ('task', 'fields'),
+ 'pulse_set_status': ('task', 'state'),
+ 'pulse_assign_task': ('task', 'user'),
+ 'pulse_unassign_task': ('task', 'user'),
+ 'pulse_add_comment': ('task', 'text'),
+ 'pulse_add_dependency': ('task', 'depends_on'),
+ 'pulse_create_module': ('project', 'title'),
+ 'pulse_find_tasks': (),
+ 'pulse_get_project': ('project',),
+ 'pulse_update_project': ('project', 'fields'),
+ 'pulse_archive_task': ('task',),
+ 'pulse_restore_task': ('task',),
+ 'pulse_add_subtask': ('parent', 'subject'),
+ 'pulse_remove_dependency': ('name',),
+ 'pulse_add_checklist_item': ('task', 'item'),
+ 'pulse_set_checklist_item': ('name', 'is_done'),
+ 'pulse_bulk_update_tasks': ('tasks', 'fields'),
+ 'pulse_list_modules': ('project',),
+ 'pulse_get_module': ('name',),
+ 'pulse_update_module': ('name', 'fields'),
+ 'pulse_add_module_tasks': ('name', 'tasks'),
+ 'pulse_remove_module_tasks': ('name', 'tasks'),
+ 'pulse_list_pages': (),
+ 'pulse_get_page': ('name',),
+ 'pulse_create_page': ('project', 'title'),
+ 'pulse_update_page': ('name', 'modified', 'fields'),
+ 'pulse_add_page_comment': ('name', 'content'),
+ 'pulse_list_requests': (),
+ 'pulse_get_request': ('name',),
+ 'pulse_create_request': ('project', 'title'),
+ 'pulse_review_request': ('name', 'status'),
+ 'pulse_accept_request': ('name',),
+ 'pulse_clone_project_template': ('template', 'project_name'),
+ 'pulse_get_project_team': ('project',),
+ 'pulse_add_project_member': ('project', 'user'),
+ 'pulse_remove_project_member': ('project', 'user'),
+ 'pulse_transfer_project_owner': ('project', 'user'),
+ 'pulse_invite_project_member': ('project', 'email', 'first_name'),
+ 'pulse_preview_offboarding': ('user', 'replacement'),
+ 'pulse_offboard_user': ('user', 'replacement', 'preview_token'),
+ 'pulse_create_delivery_handoff': ('source_doctype',
+                                   'source_name',
+                                   'project_name'),
+ 'pulse_get_delivery_handoff': ('source_doctype', 'source_name'),
+ 'pulse_share_task_external': ('task', 'user'),
+ 'pulse_revoke_task_external': ('task', 'user'),
+ 'pulse_reply_external': ('task', 'content'),
+ 'pulse_get_task_fields': ('task',),
+ 'pulse_update_task_fields': ('task', 'fields'),
+ 'pulse_get_project_field_config': ('project',),
+ 'pulse_save_project_field_config': ('project', 'rules'),
+ 'pulse_create_custom_task_field': ('project', 'label'),
+ 'pulse_get_task_approvals': ('task',),
+ 'pulse_request_task_approval': ('task', 'reviewer'),
+ 'pulse_decide_task_approval': ('name', 'decision'),
+ 'pulse_preview_task_import': ('project', 'content'),
+ 'pulse_import_tasks': ('project', 'content'),
+ 'pulse_export_tasks': ('project',)}
+PULSE_ACTIONS["pulse_describe_operations"] = ()
+PULSE_ACTIONS["pulse_get_task_creation_fields"] = ("project",)
 ACTIONS = ('run_ai_capability',) + tuple(PULSE_ACTIONS) + ('get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
 OPERATORS = ('equals', 'not_equals', 'greater_than', 'less_than', 'contains', 'is_set')
 NAME = re.compile(r'^[a-zA-Z][a-zA-Z0-9_-]{0,63}$')
@@ -131,6 +182,16 @@ def validate(definition):
             for field in PULSE_ACTIONS[kind]:
                 if field == 'fields':
                     require(isinstance(config.get(field), dict) and config[field], 'Provide task fields to update')
+                elif field == 'rules':
+                    value = config.get(field)
+                    require(isinstance(value, list) and all(isinstance(row, dict) for row in value) or (isinstance(value, dict) and set(value) == {'$ref'}), 'Provide field rules or a rules-list reference')
+                elif field == 'tasks':
+                    value = config.get(field)
+                    require((isinstance(value, list) and 0 < len(value) <= 500 and all(isinstance(v, str) and v.strip() for v in value))
+                            or (isinstance(value, dict) and set(value) == {'$ref'}), 'Provide task IDs or a task-list reference')
+                elif field == 'is_done':
+                    require(config.get(field) in (True, False, 0, 1, '0', '1') or
+                            (isinstance(config.get(field), dict) and set(config[field]) == {'$ref'}), 'Choose whether the checklist item is done')
                 else:
                     text_or_reference(config, field)
         if kind == 'delay':

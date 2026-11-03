@@ -9,7 +9,7 @@ def identity(*parts):return hashlib.sha256(encode(parts).encode()).hexdigest()
 def load(name,lock=False):
     if lock:frappe.db.sql('select name from `tabAutomation Record` where name=%s for update',(name,))
     if not frappe.db.exists(TYPE,name):raise KeyError('Record not found')
-    return json.loads(frappe.db.get_value(TYPE,name,'payload'))
+    return json.loads(frappe.db.get_value(TYPE,name,'payload',for_update=lock))
 def put(name,kind,value,parent=None):
     fields={'payload':encode(value),'kind':kind,'parent_record':parent,'status':value.get('status'),'due':value.get('due',0)}
     if frappe.db.exists(TYPE,name):frappe.db.set_value(TYPE,name,fields,update_modified=True)
@@ -100,7 +100,10 @@ class Store:
         epoch=row.get('webhook_epochs',{}).get(trigger_id.removeprefix('test:'),0) if trigger_id else 0
         signed=(trigger_id+':'+str(epoch)) if epoch else trigger_id
         return hmac.new(secret.encode(),signed.encode(),hashlib.sha256).hexdigest() if trigger_id else secret
-    def enqueue(self,identifier,payload,event_key,expected_trigger=None,trigger_id=None):
+    def enqueue(self,identifier,payload,event_key,expected_trigger=None,trigger_id=None,ancestry=None):
+        ancestry = list(ancestry or [])
+        if identifier in ancestry or len(ancestry) >= 16:
+            raise DefinitionError('Automation event loop prevented: workflow already ran in this chain or maximum chain depth reached')
         row=load(identifier,True)
         if row['status']!='active' or not row['published']:raise DefinitionError('Workflow must be published and active')
         t=select_trigger(row['published'],expected_trigger,trigger_id,payload if expected_trigger=='document_event' else None) if expected_trigger or trigger_id else None
@@ -114,8 +117,10 @@ class Store:
                     if field not in payload.get('previous',{}) or payload.get(field)==payload['previous'][field]:return {'id':None,'status':'filtered_out'}
             if t['id']!='legacy':event_key=t['id']+':'+event_key
         run_id=identity('run',identifier,event_key)
-        if frappe.db.exists(TYPE,run_id):return self.run(run_id)
-        run={'id':run_id,'workflow_id':identifier,'version':row['version'],'definition':row['published'],'input':payload,'outputs':{},'logs':[],'cursor':0,'status':'queued','due':time.time(),'created':time.time(),'event_key':event_key,'trigger_id':t['id'] if t else None,'run_as':row['run_as']}
+        existing = frappe.db.get_value(TYPE,run_id,'payload',for_update=True)
+        if existing:
+            return json.loads(existing)
+        run={'id':run_id,'workflow_id':identifier,'version':row['version'],'definition':row['published'],'input':payload,'outputs':{},'logs':[],'cursor':0,'status':'queued','due':time.time(),'created':time.time(),'event_key':event_key,'trigger_id':t['id'] if t else None,'run_as':row['run_as'],'ancestry':ancestry}
         put(run_id,'Run',run,identifier);return run
     def run(self,identifier):
         if frappe.db.get_value(TYPE,identifier,'kind')!='Run':raise KeyError('Run not found')

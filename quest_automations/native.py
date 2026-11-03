@@ -5,16 +5,20 @@ def json_value(value):return json.loads(frappe.as_json(value))
 from .core.definition import DefinitionError
 
 def erp_request(doctype,name=None,fields=None,action=None):
+    if fields is not None and (not isinstance(fields, dict) or
+        set(fields) & {'doctype','name','docstatus','workflow_state','flags','ignore_permissions','ignore_mandatory','owner','modified_by','creation','modified'}):
+        raise DefinitionError('Use supported document fields; framework flags and ownership metadata are not editable')
     if action:
         from frappe.model.workflow import apply_workflow
         doc=frappe.get_doc(doctype,name);doc.check_permission('read');doc.check_permission('write')
-        return json_value(apply_workflow(doc.as_dict(),action).as_dict())
+        result=apply_workflow(doc.as_dict(),action);result.apply_fieldlevel_read_permissions();return json_value(result.as_dict())
     if fields is None:
         doc=frappe.get_doc(doctype,name) if name else frappe.get_single(doctype)
-        doc.check_permission('read');return json_value(doc.as_dict())
+        doc.check_permission('read');doc.apply_fieldlevel_read_permissions();return json_value(doc.as_dict())
     if name is not None:
         doc=frappe.get_doc(doctype,name);doc.check_permission('write');doc.update(fields);doc.save()
     else:doc=frappe.get_doc({'doctype':doctype,**fields}).insert()
+    doc.apply_fieldlevel_read_permissions()
     return json_value(doc.as_dict())
 
 def erp_method(method,body):

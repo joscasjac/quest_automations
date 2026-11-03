@@ -18,9 +18,26 @@ def document_event(doc,method):
     if previous:
         payload['previous']={k:v for k,v in previous.as_dict().items() if k in payload and k!='previous'}
     payload['event']=method
-    frappe.enqueue('quest_automations.jobs.receive_document',payload=payload,queue='long',enqueue_after_commit=True)
+    frappe.enqueue('quest_automations.jobs.receive_document',payload=payload,ancestry=list(getattr(frappe.flags, 'automation_ancestry', None) or []),queue='long',enqueue_after_commit=True)
 
-def receive_document(payload):
+def _visible_event(payload):
+    """Filter the captured event under the publishing user's field permissions."""
+    def snapshot(value):
+        doc = frappe.get_doc({key: item for key, item in value.items() if key not in ('previous', 'event')})
+        doc.apply_fieldlevel_read_permissions()
+        result = doc.as_dict()
+        for field in doc.meta.fields:
+            if field.fieldtype == 'Password':
+                result.pop(field.fieldname, None)
+        return result
+    visible = snapshot(payload)
+    if payload.get('previous'):
+        visible['previous'] = snapshot(payload['previous'])
+    visible['event'] = payload['event']
+    return visible
+
+
+def receive_document(payload, ancestry=None):
     original=frappe.session.user;store=Store()
     try:
         for name in names('Workflow',{'status':'active'},limit=10000):
@@ -32,8 +49,10 @@ def receive_document(payload):
                 try:
                     frappe.get_doc(payload['doctype'],payload['name']).check_permission('read')
                     key=hashlib.sha256(str((payload['doctype'],payload['name'],payload['modified'],payload['event'])).encode()).hexdigest()
-                    store.enqueue(name,payload,'document:'+key,'document_event',trigger['id'])
-                except (frappe.PermissionError,DefinitionError):
+                    store.enqueue(name,_visible_event(payload),'document:'+key,'document_event',trigger['id'],ancestry=ancestry)
+                except DefinitionError as exc:
+                    frappe.log_error(title='Automation trigger rejected',message='Workflow '+name+': '+str(exc))
+                except frappe.PermissionError:
                     frappe.log_error(title='Automation trigger rejected',message='Check the publishing user permissions for workflow '+name)
                 finally:frappe.set_user(original)
         wake()
@@ -50,7 +69,9 @@ def drain():
         while time.monotonic()-started<600:
             store.enqueue_schedules();run=store.claim()
             if not run:frappe.db.commit();break
+            previous_ancestry = getattr(frappe.flags, 'automation_ancestry', None)
             try:
+                frappe.flags.automation_ancestry = [*run.get('ancestry', []), run['workflow_id']]
                 user=run.get('run_as')
                 if not user or not frappe.db.get_value('User',user,'enabled') or 'System Manager' not in frappe.get_roles(user):raise DefinitionError('The publishing user must be an enabled System Manager')
                 frappe.set_user(user)
@@ -60,4 +81,6 @@ def drain():
                 else:raise DefinitionError('Save this legacy workflow in the editor to upgrade before running')
             except Exception:
                 frappe.db.rollback();store.checkpoint(run,'needs_attention',error='Execution stopped. Inspect the destination and server error log.');frappe.log_error(title='Automation execution failed')
-            finally:frappe.set_user(original)
+            finally:
+                frappe.flags.automation_ancestry = previous_ancestry
+                frappe.set_user(original)
