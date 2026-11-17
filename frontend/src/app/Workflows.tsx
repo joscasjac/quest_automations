@@ -1,5 +1,8 @@
 import {PULSE_ACTION_LIBRARY,createPulseStep,isPulseOperation} from '../adapter/pulseCatalog';
 import type {PulseOperation} from '../adapter/pulseCatalog';
+import {CRM_ACTION_LIBRARY,createCrmStep,isCrmOperation} from '../adapter/crmCatalog';
+import type {CrmOperation} from '../adapter/crmCatalog';
+const isCatalogOperation=(value:string)=>isPulseOperation(value)||isCrmOperation(value);
 import {WorkflowDraftContext} from '../adapter/WorkflowDraft';
 import {EmailFields} from "../adapter/EmailFields";
 import {FieldSourcesProvider} from '../adapter/FieldSources';
@@ -45,7 +48,7 @@ type RecordTrigger = Extract<DraftTrigger, { kind: "record" }>;
 type TriggerFilter = NonNullable<RecordTrigger["filters"]>[number];
 type DraftStep = WorkflowVersion["steps"][number];
 type StepKind = DraftStep["kind"];
-type ActionKind = StepKind | PulseOperation;
+type ActionKind = StepKind | PulseOperation | CrmOperation;
 type IfElseStep = Extract<DraftStep, { kind: "if_else" }>;
 type BranchActionStep = Exclude<DraftStep, IfElseStep>;
 type BranchActionKind = BranchActionStep["kind"];
@@ -288,6 +291,7 @@ const ACTION_LIBRARY: Array<{
   icon: WorkflowCatalogIcon;
 }> = [
   ...PULSE_ACTION_LIBRARY,
+  ...CRM_ACTION_LIBRARY,
   {kind:"run_ai_capability",title:"Run AI Capability",description:"Run a published AI capability with mapped inputs and a structured result.",group:"AI",icon:"log"},
   {kind:"api_request",title:"API request",description:"Call an API with a URL, method, headers, and body.",group:"Webhooks",icon:"go_to"},
   {kind:"get_document",title:"Get document",description:"Fetch any ERPNext document and use its fields in later actions.",group:"ERPNext",icon:"record"},
@@ -2840,7 +2844,7 @@ function SidebarActionCatalog({
   onSelect: (kind: ActionKind) => void;
 }) {
   const actionOptions: Array<ActionCatalogOption> = ACTION_LIBRARY.filter(
-    (item) => !excludeKinds.includes(isPulseOperation(item.kind)?"erpnext":item.kind),
+    (item) => !excludeKinds.includes(isCatalogOperation(item.kind)?"erpnext":item.kind as StepKind),
   ).map((item) => ({
       value: item.kind,
       title: item.title,
@@ -3477,13 +3481,13 @@ function StepEditor({
   onMove: (index: number, direction: -1 | 1) => void;
 }) {
   const actionOptions = ACTION_LIBRARY.filter(
-    (item) => !actionKinds || actionKinds.includes(isPulseOperation(item.kind)?"erpnext":item.kind),
+    (item) => !actionKinds || actionKinds.includes(isCatalogOperation(item.kind)?"erpnext":item.kind as StepKind),
   );
   return (
     <div className="h-full space-y-3 overflow-y-auto border-t border-edge pt-4">
       <Field label="Action">
         <Select
-          value={step.kind==="erpnext"&&step.operation&&isPulseOperation(step.operation)?step.operation:step.kind}
+          value={step.kind==="erpnext"&&step.operation&&isCatalogOperation(step.operation)?step.operation:step.kind}
           onChange={(value) => onChange(createDefaultStep(value as ActionKind))}
           options={actionOptions.map((item) => ({
             value: item.kind,
@@ -4176,6 +4180,7 @@ function workflowTriggerList(workflow: Workflow | undefined): DraftTriggerList {
 
 function createDefaultStep(kind: ActionKind): DraftStep {
   if(isPulseOperation(kind))return createPulseStep(kind);
+  if(isCrmOperation(kind))return createCrmStep(kind);
   if(kind==="run_ai_capability")return {kind,label:"Run AI Capability",configJson:JSON.stringify({capability:"meeting-summary",input:{notes:{$ref:"trigger.notes"}}})};
   if(kind==="outgoing_webhook")return {kind,label:"Outgoing webhook",configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
   if(kind==="api_request")return {kind,label:"API request",configJson:JSON.stringify({url:"",method:"GET",headers:{}})};
@@ -4708,7 +4713,7 @@ function actionIcon(kind: StepKind): WorkflowCatalogIcon {
 }
 
 function stepTitle(step: DraftStep) {
-  const action = ACTION_LIBRARY.find((item) => item.kind === (step.kind==="erpnext"&&step.operation&&isPulseOperation(step.operation)?step.operation:step.kind));
+  const action = ACTION_LIBRARY.find((item) => item.kind === (step.kind==="erpnext"&&step.operation&&isCatalogOperation(step.operation)?step.operation:step.kind));
   return action?.title ?? step.kind;
 }
 

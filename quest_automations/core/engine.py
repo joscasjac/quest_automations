@@ -17,6 +17,16 @@ def execute_action(kind, config, run_id, step_id):
         except ImportError as exc:
             raise DefinitionError('Install or update Pulse on this site to use Pulse actions') from exc
         return execute(kind.removeprefix('pulse_'), config)
+    if kind.startswith('crm_'):
+        from .definition import CRM_ACTIONS
+        from .crm_i18n import message
+        if kind not in CRM_ACTIONS:
+            raise DefinitionError(message('Unsupported CRM action'))
+        try:
+            from crm_conversations.api.automation import execute
+        except ImportError as exc:
+            raise DefinitionError(message('Install CRM Conversations on this site to use CRM actions')) from exc
+        return execute(kind.removeprefix('crm_'), config)
     if kind == 'outgoing_webhook':
         from .http_action import execute
         return execute(config,run_id,step_id)

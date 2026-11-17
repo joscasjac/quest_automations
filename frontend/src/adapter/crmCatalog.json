@@ -1,0 +1,218 @@
+{
+  "crm_send_whatsapp": {
+    "label": "CRM: send whatsapp",
+    "required": [
+      "doctype",
+      "name",
+      "message"
+    ],
+    "optional": [
+      "phone"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "message": "string",
+      "phone": "string"
+    }
+  },
+  "crm_send_whatsapp_template": {
+    "label": "CRM: send whatsapp template",
+    "required": [
+      "doctype",
+      "name",
+      "template"
+    ],
+    "optional": [
+      "phone"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "template": "string",
+      "phone": "string"
+    }
+  },
+  "crm_send_sms": {
+    "label": "CRM: send sms",
+    "required": [
+      "doctype",
+      "name",
+      "message"
+    ],
+    "optional": [
+      "phone"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "message": "string",
+      "phone": "string"
+    }
+  },
+  "crm_send_messenger": {
+    "label": "CRM: send messenger",
+    "required": [
+      "doctype",
+      "name",
+      "message"
+    ],
+    "optional": [
+      "profile"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "message": "string",
+      "profile": "string"
+    }
+  },
+  "crm_send_instagram": {
+    "label": "CRM: send instagram",
+    "required": [
+      "doctype",
+      "name",
+      "message"
+    ],
+    "optional": [
+      "profile"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "message": "string",
+      "profile": "string"
+    }
+  },
+  "crm_send_email": {
+    "label": "CRM: send email",
+    "required": [
+      "doctype",
+      "name",
+      "subject",
+      "content"
+    ],
+    "optional": [
+      "bcc",
+      "cc",
+      "recipients",
+      "sender"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "subject": "string",
+      "content": "string",
+      "bcc": "string",
+      "cc": "string",
+      "recipients": "string",
+      "sender": "string"
+    }
+  },
+  "crm_add_note": {
+    "label": "CRM: add note",
+    "required": [
+      "doctype",
+      "name",
+      "title"
+    ],
+    "optional": [
+      "content"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "title": "string",
+      "content": "string"
+    }
+  },
+  "crm_add_task": {
+    "label": "CRM: add task",
+    "required": [
+      "doctype",
+      "name",
+      "title"
+    ],
+    "optional": [
+      "assigned_to",
+      "description",
+      "due_date",
+      "priority",
+      "status"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "title": "string",
+      "assigned_to": "string",
+      "description": "string",
+      "due_date": "string",
+      "priority": "string",
+      "status": "string"
+    }
+  },
+  "crm_add_comment": {
+    "label": "CRM: add comment",
+    "required": [
+      "doctype",
+      "name",
+      "content"
+    ],
+    "optional": [],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "content": "string"
+    }
+  },
+  "crm_log_call": {
+    "label": "CRM: log call",
+    "required": [
+      "doctype",
+      "name"
+    ],
+    "optional": [
+      "duration",
+      "note",
+      "phone",
+      "recording_url",
+      "status",
+      "transcript",
+      "type"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "duration": "number",
+      "note": "string",
+      "phone": "string",
+      "recording_url": "string",
+      "status": "string",
+      "transcript": "string",
+      "type": "string"
+    }
+  },
+  "crm_get_conversation": {
+    "label": "CRM: get conversation",
+    "required": [
+      "doctype",
+      "name"
+    ],
+    "optional": [
+      "channels",
+      "limit"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "channels": "array",
+      "limit": "number"
+    }
+  },
+  "crm_describe_operations": {
+    "label": "CRM: describe operations",
+    "required": [],
+    "optional": [],
+    "types": {}
+  }
+}

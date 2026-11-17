@@ -69,7 +69,22 @@ PULSE_ACTIONS = {'pulse_create_project': ('project_name',),
  'pulse_export_tasks': ('project',)}
 PULSE_ACTIONS["pulse_describe_operations"] = ()
 PULSE_ACTIONS["pulse_get_task_creation_fields"] = ("project",)
-ACTIONS = ('run_ai_capability',) + tuple(PULSE_ACTIONS) + ('get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
+# Frappe CRM actions delegate to crm_conversations.api.automation.execute; every
+# action targets one CRM Lead or CRM Deal and records its activity there.
+CRM_ACTIONS = {'crm_send_whatsapp': ('doctype', 'name', 'message'),
+ 'crm_send_whatsapp_template': ('doctype', 'name', 'template'),
+ 'crm_send_sms': ('doctype', 'name', 'message'),
+ 'crm_send_messenger': ('doctype', 'name', 'message'),
+ 'crm_send_instagram': ('doctype', 'name', 'message'),
+ 'crm_send_email': ('doctype', 'name', 'subject', 'content'),
+ 'crm_add_note': ('doctype', 'name', 'title'),
+ 'crm_add_task': ('doctype', 'name', 'title'),
+ 'crm_add_comment': ('doctype', 'name', 'content'),
+ 'crm_log_call': ('doctype', 'name'),
+ 'crm_get_conversation': ('doctype', 'name'),
+ 'crm_describe_operations': ()}
+CRM_DOCTYPES = ('CRM Lead', 'CRM Deal')
+ACTIONS = ('run_ai_capability',) + tuple(PULSE_ACTIONS) + tuple(CRM_ACTIONS) + ('get_document', 'create_document', 'update_document', 'apply_workflow', 'condition', 'delay', 'outgoing_webhook')
 OPERATORS = ('equals', 'not_equals', 'greater_than', 'less_than', 'contains', 'is_set')
 NAME = re.compile(r'^[a-zA-Z][a-zA-Z0-9_-]{0,63}$')
 BLOCKED = {'__proto__', 'prototype', 'constructor', '__class__', '__dict__'}
@@ -194,6 +209,16 @@ def validate(definition):
                             (isinstance(config.get(field), dict) and set(config[field]) == {'$ref'}), 'Choose whether the checklist item is done')
                 else:
                     text_or_reference(config, field)
+        if kind in CRM_ACTIONS:
+            from .crm_i18n import action_label, message
+            for field in CRM_ACTIONS[kind]:
+                try:
+                    text_or_reference(config, field)
+                except DefinitionError:
+                    raise DefinitionError(message('{action}: {field} is required and must be text or a reference',
+                                                  action=action_label(kind), field=field)) from None
+            if isinstance(config.get('doctype'), str):
+                require(config['doctype'] in CRM_DOCTYPES, message('CRM actions target a CRM Lead or CRM Deal'))
         if kind == 'delay':
             seconds = config.get('seconds')
             require(type(seconds) is int and 1 <= seconds <= 2592000, 'Delay must be 1–2592000 seconds')

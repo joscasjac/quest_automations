@@ -5,7 +5,7 @@ import hashlib,hmac,json
 from urllib.parse import urlsplit,parse_qs,unquote,urlencode
 import frappe
 from .store import Store
-from .core.definition import DefinitionError,validate,select_trigger,EVENTS,PULSE_ACTIONS
+from .core.definition import DefinitionError,validate,select_trigger,EVENTS,PULSE_ACTIONS,CRM_ACTIONS
 from .core.engine import preview
 from .core.graph import KINDS
 from .native import erp_doctypes,erp_metadata,erp_email_accounts,erp_files
@@ -34,7 +34,7 @@ def dispatch(path='',method='GET',body=None):
             from .ai_capabilities import catalog
             return catalog()
         if route=='api/v1/files':return {'items':erp_files()}
-        if route=='api/v1/catalog':return {'schemaVersion':2,'pulseActions':{key:list(fields) for key,fields in PULSE_ACTIONS.items()},'aiCapabilityAction':{'kind':'run_ai_capability','config':{'capability':'Saved capability key','input':{'notes':{'$ref':'trigger.notes'}}},'result':'data contains the validated output; run links to Quest AI Run; revision records the published definition','management':'Quest AI Capability: save draft, Test draft, Publish capability','customerEmail':'AI workflows can notify Joseph internally; customer drafts require separate human review'},'graphActions':list(KINDS),'pulseTriggers':PULSE_EVENT_PRESETS,'graphTriggers':['manual','incoming_webhook','document_event','schedule'],'documentEvents':EVENTS,'nativeCodeMethods':{'api.findDocuments':{'config':{'doctype':'DocType name','filters':{},'fields':['name'],'limit':100,'parent':'Required only for child tables'},'returns':'Array of readable records; fails if the limit is reached'},'api.createDocuments':{'argument':'Array of new document objects, each with doctype','returns':'Array of new names; batch rolls back on failure'}},'nativeCodePermissions':'Current publishing user; no API key; no operations during preview'}
+        if route=='api/v1/catalog':return {'schemaVersion':2,'pulseActions':{key:list(fields) for key,fields in PULSE_ACTIONS.items()},'crmActions':{key:list(fields) for key,fields in CRM_ACTIONS.items()},'aiCapabilityAction':{'kind':'run_ai_capability','config':{'capability':'Saved capability key','input':{'notes':{'$ref':'trigger.notes'}}},'result':'data contains the validated output; run links to Quest AI Run; revision records the published definition','management':'Quest AI Capability: save draft, Test draft, Publish capability','customerEmail':'AI workflows can notify Joseph internally; customer drafts require separate human review'},'graphActions':list(KINDS),'pulseTriggers':PULSE_EVENT_PRESETS,'graphTriggers':['manual','incoming_webhook','document_event','schedule'],'documentEvents':EVENTS,'nativeCodeMethods':{'api.findDocuments':{'config':{'doctype':'DocType name','filters':{},'fields':['name'],'limit':100,'parent':'Required only for child tables'},'returns':'Array of readable records; fails if the limit is reached'},'api.createDocuments':{'argument':'Array of new document objects, each with doctype','returns':'Array of new names; batch rolls back on failure'}},'nativeCodePermissions':'Current publishing user; no API key; no operations during preview'}
         if route=='api/v1/openapi.json':return json.loads(Path(frappe.get_app_path('quest_automations','openapi.json')).read_text())
         if route=='api/v1/workflows':
             if method=='GET':return store.list()
