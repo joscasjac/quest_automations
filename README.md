@@ -160,6 +160,30 @@ Reference incoming data as `{{trigger.field_name}}` and earlier action output as
 
 Deleting a saved trigger invalidates its endpoint, clears its captured sample and schedule, and cancels queued/waiting runs. Completed run history stays available until the workflow itself is deleted. Workflow deletion removes its versions, samples, schedules, and run records. Cleanup waits until active execution has finished; it cannot undo an external action already sent.
 
+## Frappe CRM actions
+
+With the companion **CRM Conversations** app (`crm_conversations`) installed on the same site, workflows can act on a Frappe CRM **CRM Lead** or **CRM Deal**. Everything an action sends or creates is attached to that record:
+
+| Action | Required | Optional |
+| --- | --- | --- |
+| `crm_send_whatsapp` | `doctype`, `name`, `message` | `phone` |
+| `crm_send_sms` | `doctype`, `name`, `message` | `phone` |
+| `crm_send_email` | `doctype`, `name`, `subject`, `content` | `recipients`, `cc`, `bcc`, `sender` |
+| `crm_add_note` | `doctype`, `name`, `title` | `content` |
+| `crm_add_task` | `doctype`, `name`, `title` | `description`, `status`, `priority`, `due_date`, `assigned_to` |
+| `crm_add_comment` | `doctype`, `name`, `content` | |
+| `crm_log_call` | `doctype`, `name` | `type`, `status`, `duration`, `phone`, `transcript`, `recording_url`, `note` |
+| `crm_get_conversation` | `doctype`, `name` | `limit`, `channels` |
+| `crm_describe_operations` | | |
+
+`doctype` is `CRM Lead` or `CRM Deal`, or a reference such as `{{trigger.doctype}}`. In the editor, the actions are listed under **CRM** ("CRM: send whatsapp", and so on). In a graph, use an `erpnext` step with `operation` set to the action kind. Actions run as the workflow user, with the usual permission checks. Preview never calls CRM Conversations. If the app is not installed, the run fails with "Install CRM Conversations on this site to use CRM actions". The older `send_email`, `create_note` and `create_task` actions still target ERPNext `Note` and `Task`.
+
+The editor catalog `frontend/src/adapter/crmCatalog.json` is generated from the `ALLOWED` table in CRM Conversations. Regenerate it, then rebuild the frontend:
+
+```sh
+python3 scripts/generate_crm_frontend_catalog.py --crm-repo ../crm_conversations
+```
+
 ## Current boundaries
 
 - OAuth2 is not included in this iteration.
