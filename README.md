@@ -167,7 +167,10 @@ With the companion **CRM Conversations** app (`crm_conversations`) installed on 
 | Action | Required | Optional |
 | --- | --- | --- |
 | `crm_send_whatsapp` | `doctype`, `name`, `message` | `phone` |
+| `crm_send_whatsapp_template` | `doctype`, `name`, `template` | `phone` |
 | `crm_send_sms` | `doctype`, `name`, `message` | `phone` |
+| `crm_send_messenger` | `doctype`, `name`, `message` | `profile` |
+| `crm_send_instagram` | `doctype`, `name`, `message` | `profile` |
 | `crm_send_email` | `doctype`, `name`, `subject`, `content` | `recipients`, `cc`, `bcc`, `sender` |
 | `crm_add_note` | `doctype`, `name`, `title` | `content` |
 | `crm_add_task` | `doctype`, `name`, `title` | `description`, `status`, `priority`, `due_date`, `assigned_to` |
@@ -176,13 +179,15 @@ With the companion **CRM Conversations** app (`crm_conversations`) installed on 
 | `crm_get_conversation` | `doctype`, `name` | `limit`, `channels` |
 | `crm_describe_operations` | | |
 
-`doctype` is `CRM Lead` or `CRM Deal`, or a reference such as `{{trigger.doctype}}`. In the editor, the actions are listed under **CRM** ("CRM: send whatsapp", and so on). In a graph, use an `erpnext` step with `operation` set to the action kind. Actions run as the workflow user, with the usual permission checks. Preview never calls CRM Conversations. If the app is not installed, the run fails with "Install CRM Conversations on this site to use CRM actions". The older `send_email`, `create_note` and `create_task` actions still target ERPNext `Note` and `Task`.
+`doctype` is `CRM Lead` or `CRM Deal`, or a reference such as `{{trigger.doctype}}`. `template` is a WA Template name; WhatsApp accepts only a template after its 24-hour reply window closes. `profile` is a CRM Social Profile name and defaults to the person linked to the record. In the editor, the actions are listed under **CRM** ("CRM: send whatsapp", and so on). In a graph, use an `erpnext` step with `operation` set to the action kind. Actions run as the workflow user, with the usual permission checks. Preview never calls CRM Conversations. If the app is not installed, the run fails with "Install CRM Conversations on this site to use CRM actions". The older `send_email`, `create_note` and `create_task` actions still target ERPNext `Note` and `Task`.
 
 The editor catalog `frontend/src/adapter/crmCatalog.json` is generated from the `ALLOWED` table in CRM Conversations. Regenerate it, then rebuild the frontend:
 
 ```sh
 python3 scripts/generate_crm_frontend_catalog.py --crm-repo ../crm_conversations
 ```
+
+The generator stops if `CRM_ACTIONS` and the app's `REQUIRED` table disagree.
 
 ## Current boundaries
 

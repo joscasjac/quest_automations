@@ -72,7 +72,10 @@ PULSE_ACTIONS["pulse_get_task_creation_fields"] = ("project",)
 # Frappe CRM actions delegate to crm_conversations.api.automation.execute; every
 # action targets one CRM Lead or CRM Deal and records its activity there.
 CRM_ACTIONS = {'crm_send_whatsapp': ('doctype', 'name', 'message'),
+ 'crm_send_whatsapp_template': ('doctype', 'name', 'template'),
  'crm_send_sms': ('doctype', 'name', 'message'),
+ 'crm_send_messenger': ('doctype', 'name', 'message'),
+ 'crm_send_instagram': ('doctype', 'name', 'message'),
  'crm_send_email': ('doctype', 'name', 'subject', 'content'),
  'crm_add_note': ('doctype', 'name', 'title'),
  'crm_add_task': ('doctype', 'name', 'title'),

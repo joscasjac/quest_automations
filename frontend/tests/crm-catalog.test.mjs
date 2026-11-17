@@ -12,7 +12,7 @@ new Function('module','exports','require',source)(catalogModule,catalogModule.ex
 const {crmActions,CRM_ACTION_LIBRARY,createCrmStep,crmInitialConfig,crmDefaultValue,isCrmOperation}=catalogModule.exports;
 
 test('every CRM operation creates a serializable ERP step for the visible picker',()=>{
- assert.equal(CRM_ACTION_LIBRARY.length,9);
+ assert.equal(CRM_ACTION_LIBRARY.length,12);
  for(const action of CRM_ACTION_LIBRARY){
   const step=createCrmStep(action.kind);
   assert.equal(action.group,'CRM');
@@ -29,6 +29,8 @@ test('every CRM operation creates a serializable ERP step for the visible picker
 test('CRM steps target a lead by default and keep typed optional inputs',()=>{
  assert.deepEqual(crmInitialConfig('crm_send_sms'),{doctype:'CRM Lead',name:'',message:''});
  assert.deepEqual(crmInitialConfig('crm_describe_operations'),{});
+ assert.deepEqual(crmInitialConfig('crm_send_whatsapp_template'),{doctype:'CRM Lead',name:'',template:''});
+ assert.deepEqual(crmActions.crm_send_messenger.optional,['profile']);
  assert.equal(crmDefaultValue('crm_log_call','duration'),0);
  assert.deepEqual(crmDefaultValue('crm_get_conversation','channels'),[]);
 });

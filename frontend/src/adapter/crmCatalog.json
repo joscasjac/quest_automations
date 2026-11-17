@@ -16,6 +16,23 @@
       "phone": "string"
     }
   },
+  "crm_send_whatsapp_template": {
+    "label": "CRM: send whatsapp template",
+    "required": [
+      "doctype",
+      "name",
+      "template"
+    ],
+    "optional": [
+      "phone"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "template": "string",
+      "phone": "string"
+    }
+  },
   "crm_send_sms": {
     "label": "CRM: send sms",
     "required": [
@@ -31,6 +48,40 @@
       "name": "string",
       "message": "string",
       "phone": "string"
+    }
+  },
+  "crm_send_messenger": {
+    "label": "CRM: send messenger",
+    "required": [
+      "doctype",
+      "name",
+      "message"
+    ],
+    "optional": [
+      "profile"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "message": "string",
+      "profile": "string"
+    }
+  },
+  "crm_send_instagram": {
+    "label": "CRM: send instagram",
+    "required": [
+      "doctype",
+      "name",
+      "message"
+    ],
+    "optional": [
+      "profile"
+    ],
+    "types": {
+      "doctype": "string",
+      "name": "string",
+      "message": "string",
+      "profile": "string"
     }
   },
   "crm_send_email": {

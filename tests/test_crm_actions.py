@@ -46,6 +46,18 @@ class CrmActionsTests(unittest.TestCase):
         for legacy in ("send_email", "create_note", "create_task"):
             self.assertNotIn(legacy, CRM_ACTIONS)
 
+    def test_every_conversation_provider_is_available(self):
+        self.assertEqual(CRM_ACTIONS['crm_send_whatsapp_template'], ('doctype', 'name', 'template'))
+        self.assertEqual(CRM_ACTIONS['crm_send_messenger'], ('doctype', 'name', 'message'))
+        self.assertEqual(CRM_ACTIONS['crm_send_instagram'], ('doctype', 'name', 'message'))
+        module = stub_module(name="MSG-1")
+        with patch.dict(sys.modules, {"crm_conversations.api.automation": module}):
+            execute_action("crm_send_whatsapp_template", {"doctype": "CRM Lead", "name": "LEAD-1", "template": "follow_up"}, "run", "step")
+            execute_action("crm_send_instagram", {"doctype": "CRM Deal", "name": "DEAL-1", "message": "Hi", "profile": "IG-1"}, "run", "step")
+        self.assertEqual([c.args[0] for c in module.execute.call_args_list], ["send_whatsapp_template", "send_instagram"])
+        with self.assertRaises(DefinitionError):
+            validate(workflow("crm_send_whatsapp_template", {"doctype": "CRM Lead", "name": "LEAD-1", "message": "Free text"}))
+
     def test_missing_required_values_rejected(self):
         with self.assertRaises(DefinitionError):
             validate(workflow("crm_send_whatsapp", {"doctype": "CRM Lead", "name": "LEAD-1"}))
@@ -96,6 +108,8 @@ class CrmActionsTests(unittest.TestCase):
     def test_builder_catalog_matches_crm_conversations_contract(self):
         builder = json.loads((ROOT / 'frontend/src/adapter/crmCatalog.json').read_text())
         optional = {'crm_send_whatsapp': {'phone'}, 'crm_send_sms': {'phone'},
+                    'crm_send_whatsapp_template': {'phone'},
+                    'crm_send_messenger': {'profile'}, 'crm_send_instagram': {'profile'},
                     'crm_send_email': {'recipients', 'cc', 'bcc', 'sender'}, 'crm_add_note': {'content'},
                     'crm_add_task': {'description', 'status', 'priority', 'due_date', 'assigned_to'},
                     'crm_add_comment': set(), 'crm_describe_operations': set(),
@@ -133,6 +147,20 @@ class CrmActionsTests(unittest.TestCase):
             process(run)
         self.assertEqual(run['status'], 'succeeded', run)
         module.execute.assert_called_once_with('add_note', {'doctype': 'CRM Deal', 'name': 'DEAL-7', 'title': 'Stage Won'})
+
+    def test_generator_reads_contract_tables_that_reuse_required(self):
+        import tempfile
+        sys.path.insert(0, str(ROOT / 'scripts'))
+        try:
+            from generate_crm_frontend_catalog import module_tables
+        finally:
+            sys.path.pop(0)
+        with tempfile.TemporaryDirectory() as folder:
+            path = Path(folder) / 'automation.py'
+            path.write_text('REQUIRED = {"send_sms": ("doctype", "name", "message")}\n'
+                            'ALLOWED = {"send_sms": (*REQUIRED["send_sms"], "phone")}\n')
+            tables = module_tables(path, {'REQUIRED', 'ALLOWED'})
+        self.assertEqual(tables['ALLOWED']['send_sms'], ('doctype', 'name', 'message', 'phone'))
 
     def test_generator_reproduces_committed_catalog(self):
         sys.path.insert(0, str(ROOT / 'scripts'))
