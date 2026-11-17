@@ -189,6 +189,8 @@ python3 scripts/generate_crm_frontend_catalog.py --crm-repo ../crm_conversations
 
 The generator stops if `CRM_ACTIONS` and the app's `REQUIRED` table disagree.
 
+CRM action labels, editor inputs and CRM validation messages are available in Spanish. The editor uses Spanish when the Frappe user's language is `es` (or a variant such as `es-MX`) and English otherwise. Spanish strings live in `frontend/src/adapter/crmCatalog.es.json` (editor) and `quest_automations/core/crm_i18n.py` (server). Only the CRM actions are translated.
+
 ## Current boundaries
 
 - OAuth2 is not included in this iteration.

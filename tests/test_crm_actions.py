@@ -171,3 +171,62 @@ class CrmActionsTests(unittest.TestCase):
         builder = json.loads((ROOT / 'frontend/src/adapter/crmCatalog.json').read_text())
         allowed = {k.removeprefix('crm_'): tuple(v['required']) + tuple(v['optional']) for k, v in builder.items()}
         self.assertEqual(build(CRM_ACTIONS, allowed), builder)
+
+
+class CrmSpanishTests(unittest.TestCase):
+    def setUp(self):
+        self.es = json.loads((ROOT / 'frontend/src/adapter/crmCatalog.es.json').read_text())
+
+    def spanish(self):
+        return patch.object(sys.modules['frappe'], 'local', types.SimpleNamespace(lang='es-MX'), create=True)
+
+    def test_es_catalog_covers_every_crm_action_label(self):
+        from quest_automations.core.crm_i18n import ACTION_LABELS_ES
+        self.assertEqual(set(self.es['actions']), set(CRM_ACTIONS))
+        self.assertEqual(self.es['actions'], ACTION_LABELS_ES)
+        for kind, label in self.es['actions'].items():
+            self.assertTrue(label.startswith('CRM: '), kind)
+            self.assertNotEqual(label.lower(), 'crm: ' + kind.removeprefix('crm_').replace('_', ' '), kind)
+        self.assertEqual(self.es['actions']['crm_send_whatsapp'], 'CRM: Enviar WhatsApp')
+        self.assertEqual(self.es['actions']['crm_log_call'], 'CRM: Registrar llamada')
+        for brand in ('WhatsApp', 'SMS', 'Messenger', 'Instagram'):
+            self.assertTrue(any(brand in label for label in self.es['actions'].values()), brand)
+
+    def test_es_catalog_covers_every_crm_field_and_editor_text(self):
+        builder = json.loads((ROOT / 'frontend/src/adapter/crmCatalog.json').read_text())
+        fields = {key for spec in builder.values() for key in spec['types']}
+        self.assertEqual(fields - set(self.es['fields']), set())
+        self.assertEqual(set(self.es['help']) - fields, set())
+        self.assertEqual(set(self.es['text']), {'hint', 'required', 'remove', 'noInputs', 'optionalInput',
+                                                'chooseOptional', 'addInput', 'unavailable', 'footer'})
+        self.assertIn('{field}', self.es['text']['remove'])
+
+    def test_every_backend_message_has_a_spanish_translation(self):
+        from quest_automations.core import crm_i18n, definition, engine
+        sources = Path(definition.__file__).read_text() + Path(engine.__file__).read_text()
+        import re
+        used = set(re.findall(r"message\('([^']+)'", sources))
+        self.assertTrue(used)
+        self.assertEqual(used - set(crm_i18n.MESSAGES_ES), set())
+
+    def test_validation_and_errors_follow_the_frappe_user_language(self):
+        bad = workflow("crm_add_comment", {"doctype": "Opportunity", "name": "OPP-1", "content": "Hola"})
+        with self.assertRaisesRegex(DefinitionError, 'CRM actions target a CRM Lead or CRM Deal'):
+            validate(bad)
+        with self.spanish():
+            with self.assertRaisesRegex(DefinitionError, 'Las acciones de CRM deben apuntar'):
+                validate(bad)
+            with self.assertRaisesRegex(DefinitionError, r'^CRM: Agregar nota: title es obligatorio'):
+                validate(workflow("crm_add_note", {"doctype": "CRM Lead", "name": "LEAD-1"}))
+            with self.assertRaisesRegex(DefinitionError, 'Acción de CRM no compatible'):
+                execute_action("crm_unknown", {}, "run", "step")
+            with patch.dict(sys.modules, {"crm_conversations": None, "crm_conversations.api": None, "crm_conversations.api.automation": None}):
+                with self.assertRaisesRegex(DefinitionError, 'Instala CRM Conversations en este sitio'):
+                    execute_action("crm_add_note", {"doctype": "CRM Lead", "name": "LEAD-1", "title": "T"}, "run", "step")
+        with patch.object(sys.modules['frappe'], 'local', types.SimpleNamespace(lang='fr'), create=True):
+            with self.assertRaisesRegex(DefinitionError, r'^CRM: add note: title is required'):
+                validate(workflow("crm_add_note", {"doctype": "CRM Lead", "name": "LEAD-1"}))
+
+    def test_editor_boot_passes_the_user_language(self):
+        page = (ROOT / 'quest_automations/www/automations.py').read_text()
+        self.assertIn("'lang':frappe.local.lang", page)

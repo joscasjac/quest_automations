@@ -210,10 +210,15 @@ def validate(definition):
                 else:
                     text_or_reference(config, field)
         if kind in CRM_ACTIONS:
+            from .crm_i18n import action_label, message
             for field in CRM_ACTIONS[kind]:
-                text_or_reference(config, field)
+                try:
+                    text_or_reference(config, field)
+                except DefinitionError:
+                    raise DefinitionError(message('{action}: {field} is required and must be text or a reference',
+                                                  action=action_label(kind), field=field)) from None
             if isinstance(config.get('doctype'), str):
-                require(config['doctype'] in CRM_DOCTYPES, 'CRM actions target a CRM Lead or CRM Deal')
+                require(config['doctype'] in CRM_DOCTYPES, message('CRM actions target a CRM Lead or CRM Deal'))
         if kind == 'delay':
             seconds = config.get('seconds')
             require(type(seconds) is int and 1 <= seconds <= 2592000, 'Delay must be 1–2592000 seconds')

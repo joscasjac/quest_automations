@@ -34,3 +34,24 @@ test('CRM steps target a lead by default and keep typed optional inputs',()=>{
  assert.equal(crmDefaultValue('crm_log_call','duration'),0);
  assert.deepEqual(crmDefaultValue('crm_get_conversation','channels'),[]);
 });
+
+const i18nSource = buildSync({entryPoints:[path.join(root,'src/adapter/crmI18n.ts')],bundle:true,platform:'node',format:'cjs',write:false}).outputFiles[0].text;
+const i18nModule = {exports:{}};
+new Function('module','exports','require',i18nSource)(i18nModule,i18nModule.exports,require);
+const {CRM_ES,crmLang,crmText,crmFieldLabel}=i18nModule.exports;
+const {crmActionLabel}=catalogModule.exports;
+
+test('Spanish covers every CRM action label and falls back to English',()=>{
+ for(const kind of Object.keys(crmActions)){
+  assert.equal(typeof CRM_ES.actions[kind],'string',kind);
+  assert.equal(crmActionLabel(kind,'es'),CRM_ES.actions[kind]);
+  assert.equal(crmActionLabel(kind,'en'),crmActions[kind].label);
+  for(const field of Object.keys(crmActions[kind].types))assert.notEqual(crmFieldLabel(field,'es'),undefined,field);
+ }
+ assert.equal(crmActionLabel('crm_send_whatsapp','es'),'CRM: Enviar WhatsApp');
+ assert.equal(crmActionLabel('crm_get_conversation','es'),'CRM: Obtener conversación');
+ assert.equal(crmLang('es'),'es');assert.equal(crmLang('es-MX'),'es');assert.equal(crmLang('en'),'en');assert.equal(crmLang(undefined),'en');assert.equal(crmLang('fr'),'en');
+ assert.equal(crmText('remove',{field:'Teléfono'},'es'),'Quitar Teléfono');
+ assert.equal(crmText('remove',{field:'phone'},'en'),'Remove phone');
+ assert.match(crmText('hint',{},'es'),/^Usa CRM Conversations/);
+});
