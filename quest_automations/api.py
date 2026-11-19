@@ -8,11 +8,14 @@ from .store import Store
 from .core.definition import DefinitionError,validate,select_trigger,EVENTS,PULSE_ACTIONS
 from .core.engine import preview
 from .core.graph import KINDS
+from .core import extensions
 from .native import erp_doctypes,erp_metadata,erp_email_accounts,erp_files
 
-def has_access():return frappe.session.user!='Guest' and 'System Manager' in frappe.get_roles()
+def has_access():
+    from .store import EDITOR_ROLES
+    return frappe.session.user!='Guest' and bool(set(EDITOR_ROLES)&set(frappe.get_roles()))
 def require_access():
-    if not has_access():frappe.throw('System Manager access is required',frappe.PermissionError)
+    if not has_access():frappe.throw('System Manager or Sales Manager access is required',frappe.PermissionError)
 def endpoint(workflow_id,trigger_id,token):
     query={'workflow_id':workflow_id,'trigger_id':trigger_id,'token':token}
     return frappe.utils.get_url()+'/api/method/quest_automations.api.webhook?'+urlencode(query)
@@ -34,7 +37,7 @@ def dispatch(path='',method='GET',body=None):
             from .ai_capabilities import catalog
             return catalog()
         if route=='api/v1/files':return {'items':erp_files()}
-        if route=='api/v1/catalog':return {'schemaVersion':2,'pulseActions':{key:list(fields) for key,fields in PULSE_ACTIONS.items()},'aiCapabilityAction':{'kind':'run_ai_capability','config':{'capability':'Saved capability key','input':{'notes':{'$ref':'trigger.notes'}}},'result':'data contains the validated output; run links to Quest AI Run; revision records the published definition','management':'Quest AI Capability: save draft, Test draft, Publish capability','customerEmail':'AI workflows can notify Joseph internally; customer drafts require separate human review'},'graphActions':list(KINDS),'pulseTriggers':PULSE_EVENT_PRESETS,'graphTriggers':['manual','incoming_webhook','document_event','schedule'],'documentEvents':EVENTS,'nativeCodeMethods':{'api.findDocuments':{'config':{'doctype':'DocType name','filters':{},'fields':['name'],'limit':100,'parent':'Required only for child tables'},'returns':'Array of readable records; fails if the limit is reached'},'api.createDocuments':{'argument':'Array of new document objects, each with doctype','returns':'Array of new names; batch rolls back on failure'}},'nativeCodePermissions':'Current publishing user; no API key; no operations during preview'}
+        if route=='api/v1/catalog':return {'schemaVersion':2,'pulseActions':{key:list(fields) for key,fields in PULSE_ACTIONS.items()},'aiCapabilityAction':{'kind':'run_ai_capability','config':{'capability':'Saved capability key','input':{'notes':{'$ref':'trigger.notes'}}},'result':'data contains the validated output; run links to Quest AI Run; revision records the published definition','management':'Quest AI Capability: save draft, Test draft, Publish capability','customerEmail':'AI workflows can notify Joseph internally; customer drafts require separate human review'},'graphActions':list(KINDS),'pulseTriggers':PULSE_EVENT_PRESETS,'graphTriggers':['manual','incoming_webhook','document_event','schedule','crm'],'extensionActions':extensions.actions(),'extensionTriggers':extensions.triggers(),'crmTrigger':{'kind':'crm','doctype':'CRM Lead or CRM Deal','exit':{'onReply':'true by default: a reply ends the run','condition':'optional condition on the record that ends the run'},'enroll':'POST workflows/{id}/enroll with doctype and names'},'documentEvents':EVENTS,'nativeCodeMethods':{'api.findDocuments':{'config':{'doctype':'DocType name','filters':{},'fields':['name'],'limit':100,'parent':'Required only for child tables'},'returns':'Array of readable records; fails if the limit is reached'},'api.createDocuments':{'argument':'Array of new document objects, each with doctype','returns':'Array of new names; batch rolls back on failure'}},'nativeCodePermissions':'Current publishing user; no API key; no operations during preview'}
         if route=='api/v1/openapi.json':return json.loads(Path(frappe.get_app_path('quest_automations','openapi.json')).read_text())
         if route=='api/v1/workflows':
             if method=='GET':return store.list()
@@ -76,6 +79,9 @@ def dispatch(path='',method='GET',body=None):
                 if operation=='publish':
                     result=store.publish(identifier,body.get('revision'));from .jobs import wake;wake();return result
                 if operation=='pause':return store.pause(identifier)
+                if operation=='enroll':
+                    from .enroll import enroll
+                    return enroll(identifier,body.get('doctype'),body.get('names'),body.get('triggerId'))
                 if operation=='run':
                     key=frappe.get_request_header('Idempotency-Key') or body.get('eventId')
                     if not key or len(key)>200:raise DefinitionError('Provide Idempotency-Key or eventId')

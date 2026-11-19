@@ -3,6 +3,7 @@ import type {ReactNode} from 'react';
 import type {MergeFieldOption} from '../lib/mergeFields';
 import {request} from './api';
 import {useParams} from 'react-router-dom';
+import {crmFieldOptions} from './CrmFields';
 export const FieldSources=createContext<MergeFieldOption[]>([]);
 export const useFieldSources=()=>useContext(FieldSources);
 const layout=new Set(['Section Break','Column Break','Tab Break','HTML','Button','Fold','Heading']);
@@ -44,6 +45,7 @@ export function FieldSourcesProvider({triggers,steps,selection,children}:{trigge
   });
   const addAi=(s:any,prefix:string)=>{if(s.kind!=='run_ai_capability'&&!(s.kind==='erpnext'&&s.operation==='run_ai_capability'))return;let config:any;try{config=JSON.parse(s.configJson)}catch{return}const capability=aiCatalog.find(item=>item.key===config.capability);all.push({path:prefix+'.data',label:s.label+' result',group:s.label,description:'Validated AI result'});const walk=(schema:any,path:string,label:string,depth:number)=>{if(depth>5)return;if(depth>0)all.push({path,label,group:s.label+' result',description:schema.type});if(schema.type==='object')for(const [key,child] of Object.entries(schema.properties))walk(child,path+'.'+key,label?label+'.'+key:key,depth+1);if(schema.type==='array')walk(schema.items,path+'.0',label+'[0]',depth+1)};if(capability)walk(capability.output_schema,prefix+'.data','',0)};
   steps.forEach((s,i)=>{addAi(s,'steps.step_'+i);if(s.kind==='if_else')[...s.branches,{steps:s.elseSteps}].forEach((b:any,n:number)=>(b.steps??[]).forEach((child:any,k:number)=>addAi(child,`steps.step_${i}_branch_${n}_${k}`)))});
+  all.push(...crmFieldOptions(steps));
   steps.forEach((s,i)=>{if(s.kind==='custom_code')all.push({path:'steps.step_'+i,label:s.label+' result',group:'Previous actions',description:'Value returned by JavaScript'})});
   all.push({path:'workflow.name',label:'Workflow name',group:'Workflow',description:'Current workflow'},{path:'system.today',label:'Today',group:'System',description:'Current date'});
   return all.filter((o,i)=>{

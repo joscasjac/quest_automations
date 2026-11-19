@@ -99,7 +99,7 @@ def trigger_list(definition):
         require(isinstance(identifier, str) and NAME.fullmatch(identifier) and identifier not in BLOCKED,
                 'Each trigger needs a valid stable ID')
         require(identifier not in seen, 'Duplicate trigger ID')
-        allowed = ('manual', 'document_event', 'incoming_webhook', 'record', 'schedule') if definition.get('schemaVersion') == 2 else ('manual', 'document_event', 'incoming_webhook')
+        allowed = ('manual', 'document_event', 'incoming_webhook', 'record', 'schedule', 'crm') if definition.get('schemaVersion') == 2 else ('manual', 'document_event', 'incoming_webhook')
         require(trigger.get('kind') in allowed, 'Unsupported trigger')
         seen.add(identifier)
     return triggers
@@ -139,7 +139,8 @@ def validate(definition):
                 'Step IDs must begin with a letter and contain only letters, digits, hyphens, or underscores')
         require(identifier not in seen, f'Duplicate step ID: {identifier}')
         kind = step.get('kind')
-        require(kind in ACTIONS, f'Unsupported action: {kind}')
+        from . import extensions
+        require(kind in ACTIONS or kind in extensions.actions(), f'Unsupported action: {kind}')
         config = step.get('config')
         require(isinstance(config, dict), f'{identifier}: config must be an object')
         check_references(config, seen)
@@ -194,6 +195,13 @@ def validate(definition):
                             (isinstance(config.get(field), dict) and set(config[field]) == {'$ref'}), 'Choose whether the checklist item is done')
                 else:
                     text_or_reference(config, field)
+        if kind not in ACTIONS:
+            try:
+                extensions.validate_action(kind, config)
+            except DefinitionError:
+                raise
+            except (ValueError, TypeError) as error:
+                raise DefinitionError(str(error)) from error
         if kind == 'delay':
             seconds = config.get('seconds')
             require(type(seconds) is int and 1 <= seconds <= 2592000, 'Delay must be 1–2592000 seconds')

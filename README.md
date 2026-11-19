@@ -36,6 +36,17 @@ Creating a workflow does not publish it. Review-before-publish is a supported wo
 
 Screenshots show demonstration workflows with example data, not customer records.
 
+## Extensions: CRM campaigns and other apps
+
+Other apps can add steps, live data for conditions and exit rules through the `quest_automation_extensions` hook (see `quest_automations/core/extensions.py`). The CRM Campaigns app uses it for:
+
+- the **"Lead / Deal added from the CRM"** trigger (`{"kind": "crm", "doctype": "CRM Lead", "exit": {"onReply": true, "condition": …}}`): people are added from the CRM, FAC or `POST workflows/{id}/enroll`, and never twice at once;
+- **campaign email, WhatsApp template and SMS steps** (`{"kind": "erpnext", "operation": "crm_send_email" …}`);
+- conditions on earlier steps (`steps.step_0.opened`, `clicked`, `replied`…) and on the person (`person.opted_out`);
+- **exit rules** checked before every step: a reply, an unsubscribe, being taken out, or a matching record end the run.
+
+Sales Managers can build and publish workflows too; code, API requests and AI actions need a System Manager.
+
 ## ERPNext is the backend
 
 The React editor is served by the Frappe app at `/automations`. Frappe provides authentication, the site database, document events, and background jobs. Workflows, versions, captured samples, and run history live in the **Automation Record** DocType and are included in normal site database backups.

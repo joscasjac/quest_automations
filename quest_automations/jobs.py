@@ -73,7 +73,9 @@ def drain():
             try:
                 frappe.flags.automation_ancestry = [*run.get('ancestry', []), run['workflow_id']]
                 user=run.get('run_as')
-                if not user or not frappe.db.get_value('User',user,'enabled') or 'System Manager' not in frappe.get_roles(user):raise DefinitionError('The publishing user must be an enabled System Manager')
+                from .store import EDITOR_ROLES,check_author
+                if not user or not frappe.db.get_value('User',user,'enabled') or not set(EDITOR_ROLES)&set(frappe.get_roles(user)):raise DefinitionError('The publishing user must be an enabled System Manager or Sales Manager')
+                check_author(run['definition'],user)
                 frappe.set_user(user)
                 if run['definition'].get('schemaVersion')==2:
                     from .core.graph import process

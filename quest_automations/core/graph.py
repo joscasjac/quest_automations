@@ -37,6 +37,13 @@ def validate_graph(definition):
             if 'changedFields' in trigger:
                 fields=trigger['changedFields']
                 require(isinstance(fields,list) and 1<=len(fields)<=20 and all(isinstance(field,str) and re.fullmatch(r'[A-Za-z][A-Za-z0-9_]*',field) for field in fields),'Choose 1–20 changed field names')
+        if kind=='crm':
+            # People are added from the CRM (or by an agent), never by a document event.
+            require(trigger.get('doctype') in ('CRM Lead','CRM Deal'),'Choose leads or deals for a CRM trigger')
+            exit_rules=trigger.get('exit',{})
+            require(isinstance(exit_rules,dict),'Exit rules must be an object')
+            require(type(exit_rules.get('onReply',True)) is bool,'Choose whether a reply ends the workflow')
+            if exit_rules.get('condition'):validate_condition(exit_rules['condition'])
         if kind=='record':
             require(trigger.get('entityType') in ENTITIES,'Unsupported record type')
             require(trigger.get('event') in ('created','updated','stage_changed','status_changed'),'Unsupported record event')
@@ -110,16 +117,24 @@ def validate_condition(condition):
 
 def context_for(run):
     payload=run['input'];now=datetime.now(timezone.utc)
-    context={'trigger':payload,'steps':run['outputs'],'workflow':{'name':run['definition']['name']},'system':{'today':now.date().isoformat()},'current_day_of_week':now.strftime('%A')}
+    context={'trigger':payload,'steps':dict(run['outputs']),'workflow':{'name':run['definition']['name']},'system':{'today':now.date().isoformat()},'current_day_of_week':now.strftime('%A')}
+    if run.get('id')!='preview':
+        from . import extensions
+        extensions.enrich(context,run)  # live data, such as whether an email was opened
     # Legacy merge fields resolve from explicitly supplied entities, never invented CRM records.
     for entity in ('contact','company','deal','task','owner','project'):
         if isinstance(payload.get(entity),dict):context[entity]=payload[entity]
     return context
 
 
-def render(value,context):
-    if isinstance(value,dict):return resolve({k:render(v,context) for k,v in value.items()},context)
-    if isinstance(value,list):return [render(v,context) for v in value]
+_MISSING=object()
+
+
+def render(value,context,lenient=False):
+    """Fill {{path}} merge fields. lenient leaves unknown ones as written, for actions that fill
+    their own fields (CRM steps write the record's fields as {{ first_name }})."""
+    if isinstance(value,dict):return resolve({k:render(v,context,lenient) for k,v in value.items()},context)
+    if isinstance(value,list):return [render(v,context,lenient) for v in value]
     if not isinstance(value,str):return value
     match=PATTERN.fullmatch(value)
     def lookup(path):
@@ -129,10 +144,16 @@ def render(value,context):
         for part in parts:
             if isinstance(current,dict) and part in current:current=current[part]
             elif isinstance(current,list) and part.isdigit() and int(part)<len(current):current=current[int(part)]
+            elif lenient:return _MISSING
             else:raise DefinitionError('Missing merge field: '+path)
         return current
-    if match:return lookup(match[1])
-    return PATTERN.sub(lambda m:str(lookup(m[1])),value)
+    if match:
+        found=lookup(match[1])
+        return value if found is _MISSING else found
+    def replace(m):
+        found=lookup(m[1])
+        return m[0] if found is _MISSING else str(found)
+    return PATTERN.sub(replace,value)
 
 
 def document_fields_changed(trigger, payload):
@@ -193,6 +214,12 @@ def execute_native(step,context,run_id,step_id):
         return execute_code(step['code'],context,run_id,step_id)
     kind=step['kind'];raw_config=step.get('configJson');step=render({k:v for k,v in step.items() if k!='configJson'},context)
     if kind in ('noop','log'):return {'message':step.get('message','No operation')}
+    if kind=='erpnext' and step.get('operation'):
+        from . import extensions
+        if step['operation'] in extensions.actions():
+            config=render({k:v for k,v in json.loads(raw_config).items() if k not in ('responseSample','bodyDraft')},context,lenient=True)
+            raw={k:v for k,v in json.loads(raw_config).items() if k not in ('responseSample','bodyDraft')}
+            return extensions.execute(step['operation'],{**config,'_label':step.get('label'),'_raw':raw},context,run_id,step_id)
     if kind in ('erpnext','outgoing_webhook','get_document','api_request','run_ai_capability'):
         from .engine import execute_action
         # Render individual parsed values so quotes and arrays stay valid JSON.
@@ -237,11 +264,24 @@ def execute_native(step,context,run_id,step_id):
     raise DefinitionError('Unsupported action')
 
 
+def _ended(run):
+    from . import extensions
+    extensions.finished(run)
+
+
 def process(run,store=None,executor=execute_native,preview=False):
     code=compile_graph(run['definition']);visited={l['id'] for l in run['logs'] if l.get('goto')}
     while run['cursor']<len(code):
-        instruction=code[run['cursor']];step=instruction['step'];kind=step['kind'];key=instruction['id'];context=context_for(run);context['_preview']=preview
+        instruction=code[run['cursor']];step=instruction['step'];kind=step['kind'];key=instruction['id']
         if kind=='_jump':run['cursor']=step['target'];continue
+        if not preview and store:
+            from . import extensions
+            reason=extensions.stop_reason(run)
+            if reason:
+                # Exit rules (a reply, an unsubscribe…) end the run before its next action.
+                run['logs'].append({'id':key,'label':step['label'],'at':time.time(),'status':'canceled','output':reason})
+                run['exit_reason']=reason;store.checkpoint(run,'canceled',error=reason);_ended(run);return
+        context=context_for(run);context['_preview']=preview
         log={'id':key,'label':step['label'],'at':time.time(),'status':'succeeded'}
         try:
             require(len(run['logs'])<1000,'Workflow exceeded the execution limit')
@@ -263,7 +303,9 @@ def process(run,store=None,executor=execute_native,preview=False):
             else:
                 if preview and kind not in ('noop','log','custom_code'):
                     # Validate field resolution, but never fabricate external outputs.
-                    if kind in ('erpnext','outgoing_webhook','get_document','api_request','run_ai_capability'):render({k:v for k,v in json.loads(step['configJson']).items() if k not in ('responseSample','bodyDraft')},context)
+                    if kind in ('erpnext','outgoing_webhook','get_document','api_request','run_ai_capability'):
+                        from . import extensions
+                        render({k:v for k,v in json.loads(step['configJson']).items() if k not in ('responseSample','bodyDraft')},context,lenient=kind=='erpnext' and step.get('operation') in extensions.actions())
                     else:render(step,context)
                     log['output']='Preview: would execute '+kind
                 else:run['outputs'][key]=executor(step,context,run['id'],key)
@@ -273,10 +315,10 @@ def process(run,store=None,executor=execute_native,preview=False):
         except Exception as error:
             message=str(error) if isinstance(error,(DefinitionError,ValueError)) else 'External action failed or its result is uncertain. Inspect the destination before retrying.'
             log.update(status='failed',error=message);run['logs'].append(log);run['error']=message;run['status']='failed' if preview or isinstance(error,(DefinitionError,ValueError)) else 'needs_attention'
-            if store:store.checkpoint(run,run['status'],error=message)
+            if store:store.checkpoint(run,run['status'],error=message);_ended(run)
             return
     run['status']='succeeded'
-    if store:store.checkpoint(run,'succeeded')
+    if store:store.checkpoint(run,'succeeded');_ended(run)
 
 
 def preview_graph(definition,payload):

@@ -3,6 +3,25 @@ import hashlib,hmac,json,secrets,threading,time,uuid
 import frappe
 from .core.definition import DefinitionError,validate,trigger_list,select_trigger
 
+ACTIVE=('queued','waiting','running')
+# Actions that reach outside the site's permission model stay with System Managers.
+SYSTEM_ONLY=('custom_code','api_request','outgoing_webhook','run_ai_capability')
+EDITOR_ROLES=('System Manager','Sales Manager')
+
+
+def check_author(definition,user=None):
+    roles=frappe.get_roles(user) if user else frappe.get_roles()
+    if 'System Manager' in roles:return
+    def kinds(steps):
+        for s in steps or []:
+            yield s.get('kind')
+            if s.get('kind')=='erpnext':yield s.get('operation')
+            if s.get('kind')=='if_else':
+                for b in s.get('branches',[]):yield from kinds(b.get('steps'))
+                yield from kinds(s.get('elseSteps'))
+    used=set(kinds(definition.get('steps')))
+    if used&set(SYSTEM_ONLY):raise DefinitionError('Code, API requests and AI actions need a System Manager')
+
 TYPE='Automation Record'
 def encode(v):return json.dumps(json.loads(frappe.as_json(v)),allow_nan=False,separators=(',',':'))
 def identity(*parts):return hashlib.sha256(encode(parts).encode()).hexdigest()
@@ -26,6 +45,7 @@ class Store:
     def list(self):return [self.workflow(n) for n in names('Workflow')]
     def save(self,draft,identifier=None,revision=None):
         if not isinstance(draft,dict) or not draft.get('name'):raise DefinitionError('Draft needs a name')
+        check_author(draft)
         validate({**draft,'steps':draft.get('steps') or [{'kind':'noop','label':'Empty draft'}]})
         if len(encode(draft))>250000:raise DefinitionError('Draft exceeds 250 KB')
         now=time.time()
@@ -47,6 +67,7 @@ class Store:
     def publish(self,identifier,revision):
         row=load(identifier,True)
         if row['revision']!=revision:raise DefinitionError('Revision conflict: reload before publishing')
+        check_author(row['draft'])
         row.update(published=validate(row['draft']),version=row['version']+1,status='active',run_as=frappe.session.user,updated=time.time())
         put(identifier,'Workflow',row)
         for name in names('Schedule',{'parent_record':identifier}):frappe.delete_doc(TYPE,name,ignore_permissions=True)
@@ -123,6 +144,29 @@ class Store:
             return json.loads(existing)
         run={'id':run_id,'workflow_id':identifier,'version':row['version'],'definition':row['published'],'input':payload,'outputs':{},'logs':[],'cursor':0,'status':'queued','due':time.time(),'created':time.time(),'event_key':event_key,'trigger_id':t['id'] if t else None,'run_as':row['run_as'],'ancestry':ancestry}
         put(run_id,'Run',run,identifier);return run
+    def enroll(self,identifier,doctype,name,payload,trigger_id=None,enrolled_by=None):
+        """Start a workflow for one CRM record. A record already in it is not added twice."""
+        row=load(identifier,True)
+        if row.get('_kind')!='Workflow':raise KeyError('Workflow not found')
+        if row['status']!='active' or not row['published']:raise DefinitionError('Workflow must be published and active')
+        matches=[t for t in trigger_list(row['published']) if t['kind']=='crm' and t.get('doctype')==doctype and trigger_id in (None,t['id'])]
+        if not matches:raise DefinitionError('This workflow does not take '+doctype+' from the CRM')
+        trigger=matches[0]
+        for active in names('Run',{'parent_record':identifier,'status':['in',list(ACTIVE)]},limit=0):
+            current=load(active)
+            if current.get('input',{}).get('doctype')==doctype and current['input'].get('name')==name:
+                return {**current,'already':True}
+        now=time.time();event_key=trigger['id']+':crm:'+doctype+':'+name+':'+repr(now)
+        run_id=identity('run',identifier,event_key)
+        run={'id':run_id,'workflow_id':identifier,'version':row['version'],'definition':row['published'],'input':{**payload,'doctype':doctype,'name':name},'outputs':{},'logs':[],'cursor':0,'status':'queued','due':now,'created':now,'event_key':event_key,'trigger_id':trigger['id'],'run_as':row['run_as'],'ancestry':[],'enrolled_by':enrolled_by or frappe.session.user}
+        put(run_id,'Run',run,identifier);return run
+    def cancel(self,identifier,reason):
+        """End a queued or waiting run (a person taken out of a workflow). A running one stops at its next action."""
+        run=load(identifier,True)
+        if run.get('status') not in ('queued','waiting'):return run
+        run.update(status='canceled',error=reason,exit_reason=reason,due=time.time());put(identifier,'Run',run,run['workflow_id'])
+        from .core.extensions import finished
+        finished(run);return run
     def run(self,identifier):
         if frappe.db.get_value(TYPE,identifier,'kind')!='Run':raise KeyError('Run not found')
         return load(identifier)

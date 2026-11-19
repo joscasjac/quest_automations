@@ -1,4 +1,8 @@
 import {PULSE_ACTION_LIBRARY,createPulseStep,isPulseOperation} from '../adapter/pulseCatalog';
+import {CRM_ACTION_LIBRARY,CRM_TRIGGER_LIBRARY,createCrmStep,isCrmOperation,crmTriggerTitle,crmTriggerLabel} from '../adapter/CrmFields';
+import type {CrmOperation} from '../adapter/CrmFields';
+// CRM steps (crm_campaigns) are ERPNext actions with an operation, like Pulse actions.
+const isCatalogOperation=(value:string):value is PulseOperation|CrmOperation=>isPulseOperation(value)||isCrmOperation(value);
 import type {PulseOperation} from '../adapter/pulseCatalog';
 import {WorkflowDraftContext} from '../adapter/WorkflowDraft';
 import {EmailFields} from "../adapter/EmailFields";
@@ -45,7 +49,7 @@ type RecordTrigger = Extract<DraftTrigger, { kind: "record" }>;
 type TriggerFilter = NonNullable<RecordTrigger["filters"]>[number];
 type DraftStep = WorkflowVersion["steps"][number];
 type StepKind = DraftStep["kind"];
-type ActionKind = StepKind | PulseOperation;
+type ActionKind = StepKind | PulseOperation | CrmOperation;
 type IfElseStep = Extract<DraftStep, { kind: "if_else" }>;
 type BranchActionStep = Exclude<DraftStep, IfElseStep>;
 type BranchActionKind = BranchActionStep["kind"];
@@ -287,6 +291,7 @@ const ACTION_LIBRARY: Array<{
   group: string;
   icon: WorkflowCatalogIcon;
 }> = [
+  ...CRM_ACTION_LIBRARY,
   ...PULSE_ACTION_LIBRARY,
   {kind:"run_ai_capability",title:"Run AI Capability",description:"Run a published AI capability with mapped inputs and a structured result.",group:"AI",icon:"log"},
   {kind:"api_request",title:"API request",description:"Call an API with a URL, method, headers, and body.",group:"Webhooks",icon:"go_to"},
@@ -385,6 +390,7 @@ const BRANCH_ACTION_KINDS: ReadonlyArray<BranchActionKind> = [
 ];
 
 const TRIGGER_LIBRARY: Array<TriggerCatalogOption> = [
+  ...(CRM_TRIGGER_LIBRARY as Array<TriggerCatalogOption>),
 {"value": "pulse_event_task_created", "title": "Pulse task created", "description": "Start from a permission-checked Task event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Task", "event": "after_insert"}},
 {"value": "pulse_event_task_updated", "title": "Pulse task updated", "description": "Start from a permission-checked Task event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Task", "event": "on_update"}},
 {"value": "pulse_event_task_completed", "title": "Pulse task completed", "description": "Start from a permission-checked Task event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Task", "event": "on_update", "condition": {"field": "status", "operator": "is", "value": "Completed", "match": "all", "conditions": [{"field": "trigger.previous.status", "operator": "is_not", "value": "Completed"}]}}},
@@ -2840,7 +2846,7 @@ function SidebarActionCatalog({
   onSelect: (kind: ActionKind) => void;
 }) {
   const actionOptions: Array<ActionCatalogOption> = ACTION_LIBRARY.filter(
-    (item) => !excludeKinds.includes(isPulseOperation(item.kind)?"erpnext":item.kind),
+    (item) => !excludeKinds.includes(isCatalogOperation(item.kind)?"erpnext":item.kind),
   ).map((item) => ({
       value: item.kind,
       title: item.title,
@@ -3477,13 +3483,13 @@ function StepEditor({
   onMove: (index: number, direction: -1 | 1) => void;
 }) {
   const actionOptions = ACTION_LIBRARY.filter(
-    (item) => !actionKinds || actionKinds.includes(isPulseOperation(item.kind)?"erpnext":item.kind),
+    (item) => !actionKinds || actionKinds.includes(isCatalogOperation(item.kind)?"erpnext":item.kind),
   );
   return (
     <div className="h-full space-y-3 overflow-y-auto border-t border-edge pt-4">
       <Field label="Action">
         <Select
-          value={step.kind==="erpnext"&&step.operation&&isPulseOperation(step.operation)?step.operation:step.kind}
+          value={step.kind==="erpnext"&&step.operation&&isCatalogOperation(step.operation)?step.operation:step.kind}
           onChange={(value) => onChange(createDefaultStep(value as ActionKind))}
           options={actionOptions.map((item) => ({
             value: item.kind,
@@ -4175,6 +4181,7 @@ function workflowTriggerList(workflow: Workflow | undefined): DraftTriggerList {
 }
 
 function createDefaultStep(kind: ActionKind): DraftStep {
+  if(isCrmOperation(kind))return createCrmStep(kind);
   if(isPulseOperation(kind))return createPulseStep(kind);
   if(kind==="run_ai_capability")return {kind,label:"Run AI Capability",configJson:JSON.stringify({capability:"meeting-summary",input:{notes:{$ref:"trigger.notes"}}})};
   if(kind==="outgoing_webhook")return {kind,label:"Outgoing webhook",configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
@@ -4645,6 +4652,7 @@ function fieldOptions(entityType: UpdateEntityType) {
 }
 
 function triggerTitle(trigger: DraftTriggerState) {
+  if(trigger?.kind==="crm")return crmTriggerTitle(trigger);
   if(trigger?.kind==="incoming_webhook")return trigger.name||"Incoming webhook";
   if(trigger?.kind==="document_event")return `${trigger.doctype} event`;
   if (!trigger) return "Add a Trigger";
@@ -4668,6 +4676,7 @@ function triggerTitle(trigger: DraftTriggerState) {
 }
 
 function triggerLabel(trigger: DraftTriggerState) {
+  if(trigger?.kind==="crm")return crmTriggerLabel(trigger);
   if(trigger?.kind==="incoming_webhook")return "Receive a JSON payload";
   if(trigger?.kind==="document_event")return `${trigger.doctype} · ${{after_insert:"Created",on_update:"Updated",on_submit:"Submitted",on_cancel:"Cancelled",on_update_after_submit:"Updated after submission"}[trigger.event]??trigger.event}`;
   if (!trigger) return "Choose how this workflow starts";
@@ -4691,6 +4700,7 @@ function eventLabel(event: RecordEvent) {
 }
 
 function triggerIcon(trigger: DraftTrigger): WorkflowCatalogIcon {
+  if(trigger.kind==="crm")return trigger.doctype==="CRM Deal"?"deal":"contact";
   if(trigger.kind==="incoming_webhook")return "go_to";
   if(trigger.kind==="document_event")return "record";
   if (trigger.kind === "manual") return "manual";
@@ -4708,7 +4718,7 @@ function actionIcon(kind: StepKind): WorkflowCatalogIcon {
 }
 
 function stepTitle(step: DraftStep) {
-  const action = ACTION_LIBRARY.find((item) => item.kind === (step.kind==="erpnext"&&step.operation&&isPulseOperation(step.operation)?step.operation:step.kind));
+  const action = ACTION_LIBRARY.find((item) => item.kind === (step.kind==="erpnext"&&step.operation&&isCatalogOperation(step.operation)?step.operation:step.kind));
   return action?.title ?? step.kind;
 }
 
@@ -4717,6 +4727,7 @@ function stepSubtitle(step: DraftStep) {
   if(step.kind==="api_request"){try{const c=JSON.parse(step.configJson);return (c.method||"GET")+" "+(c.url||"Configure request")}catch{return "Configure API request"}}
   if(step.kind==="custom_code")return "Transform data with JavaScript";
   if(step.kind==="get_document"){try{return "Get "+JSON.parse(step.configJson).doctype}catch{return "Get an ERPNext document"}}
+  if(step.kind==="erpnext"&&step.operation&&isCrmOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.subject||c.template||c.body||"Write the message"}catch{return "Write the message"}}
   if(step.kind==="erpnext")return step.operation?.replaceAll("_"," ")||"ERPNext action";
   if(step.kind==="outgoing_webhook"){try{return JSON.parse(step.configJson).url||"Configure HTTP request"}catch{return "Configure HTTP request"}}
   if (step.kind === "noop") return step.label;
