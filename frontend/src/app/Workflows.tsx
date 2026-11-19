@@ -4727,7 +4727,7 @@ function stepSubtitle(step: DraftStep) {
   if(step.kind==="api_request"){try{const c=JSON.parse(step.configJson);return (c.method||"GET")+" "+(c.url||"Configure request")}catch{return "Configure API request"}}
   if(step.kind==="custom_code")return "Transform data with JavaScript";
   if(step.kind==="get_document"){try{return "Get "+JSON.parse(step.configJson).doctype}catch{return "Get an ERPNext document"}}
-  if(step.kind==="erpnext"&&step.operation&&isCrmOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.subject||c.template||c.body||"Write the message"}catch{return "Write the message"}}
+  if(step.kind==="erpnext"&&step.operation&&isCrmOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.subject||c.email_template||c.template||c.body||"Write the message"}catch{return "Write the message"}}
   if(step.kind==="erpnext")return step.operation?.replaceAll("_"," ")||"ERPNext action";
   if(step.kind==="outgoing_webhook"){try{return JSON.parse(step.configJson).url||"Configure HTTP request"}catch{return "Configure HTTP request"}}
   if (step.kind === "noop") return step.label;

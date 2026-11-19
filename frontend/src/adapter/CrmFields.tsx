@@ -27,7 +27,7 @@ export const CRM_TRIGGER_LIBRARY=[
  {value:'crm_deal',title:'Deal added from the CRM',description:'Start when someone adds a deal from the CRM, an agent or the API.',group:'CRM',icon:'deal' as const,trigger:{kind:'crm',doctype:'CRM Deal',exit:{onReply:true}}},
 ];
 
-type Context={templates:Array<{name:string;label:string;body:string;status:string}>;fields:Record<string,{common:Array<{value:string;label:string}>;more:Array<{value:string;label:string}>}>;channels:Record<string,string|null>;email:{provider:string;from:[string,string];problem:string|null};opt_out_line?:string};
+type Context={templates:Array<{name:string;label:string;body:string;status:string}>;email_templates?:Array<{name:string;subject:string;design:boolean}>;fields:Record<string,{common:Array<{value:string;label:string}>;more:Array<{value:string;label:string}>}>;channels:Record<string,string|null>;email:{provider:string;from:[string,string];problem:string|null};opt_out_line?:string};
 let shared:Promise<Context|null>|null=null;
 function loadContext():Promise<Context|null>{
  if(shared)return shared;
@@ -49,14 +49,21 @@ export function CrmActionFields({step,onChange}:{step:ErpStep;onChange:(s:ErpSte
  const op=step.operation as string;
  if(op==='crm_send_email'){
   const personal=config.send_as==='personal';
+  const emailTemplates=ctx?.email_templates??[];
+  const emailTpl=emailTemplates.find(t=>t.name===config.email_template);
   return <div className="space-y-5">
    {ctx&&!personal&&ctx.email.problem&&<Note tone="warn">{ctx.email.problem}</Note>}
    <Label name="Send as" hint={personal?'From the owner’s own mailbox (Gmail, Outlook or the ERP account), like a one-to-one email. No campaign layout; a small unsubscribe line is added.':`As a campaign, ${ctx?`with ${ctx.email.provider==='ERP'?'the ERP email account':ctx.email.provider}${ctx.email.from?.[1]?` from ${ctx.email.from[1]}`:''}`:'with the campaign email provider'}. Your business address and an unsubscribe link are added.`}>
     <Select ariaLabel="Send as" value={personal?'personal':'campaign'} options={[{value:'campaign',label:'Campaign email'},{value:'personal',label:'Personal email from the owner'}]} onChange={send_as=>update({send_as})}/>
    </Label>
-   <MappedInput label="Subject" value={config.subject??''} onChange={subject=>update({subject})}/>
+   <Label name="Email" hint={emailTpl?(emailTpl.design?'Designed with blocks in the CRM (Campaigns → Templates). Each email uses the template as it is when it is sent, so edits there apply to the next emails.':'A regular email saved in the CRM. Each email uses the template as it is when it is sent.'):'Write it here, or pick a template made in the CRM: Campaigns → Templates, where emails can also be designed by dragging blocks.'}>
+    <Select ariaLabel="Email template" value={config.email_template??''} options={[{value:'',label:'Free text'},...emailTemplates.map(t=>({value:t.name,label:t.design?`${t.name} · designed`:t.name}))]} onChange={email_template=>update({email_template})}/>
+   </Label>
+   {config.email_template&&!emailTpl&&ctx&&<Note tone="warn">{`The template “${config.email_template}” is no longer in the CRM. Pick another one or write the email.`}</Note>}
+   <MappedInput label={config.email_template?'Subject (optional: empty uses the template’s)':'Subject'} value={config.subject??''} onChange={subject=>update({subject})}/>
+   {config.email_template&&emailTpl?.subject&&!config.subject&&<p className="-mt-3 text-xs text-neutral-500">{`Template subject: ${emailTpl.subject}`}</p>}
    {!personal&&<MappedInput label="Preview text (optional)" value={config.preheader??''} onChange={preheader=>update({preheader})}/>}
-   <RichEmail value={config.body??''} onChange={body=>update({body})}/>
+   {!config.email_template&&<RichEmail value={config.body??''} onChange={body=>update({body})}/>}
    <p className="text-xs text-neutral-500">{FIELD_HINT} People who unsubscribed from email are skipped.</p>
   </div>;
  }
