@@ -1,16 +1,32 @@
 import hashlib,time
 import frappe
-from .store import Store,names,load,put
+from .store import Store,names,load,put,TRIGGER_CACHE
 from .core.graph import event_trigger
 from .core.definition import trigger_list,DefinitionError
 
 def wake():
     frappe.enqueue('quest_automations.jobs.drain',queue='long',timeout=900,enqueue_after_commit=True)
 
+def event_triggers():
+    """doctype → events that some active workflow listens to. document_event runs on every save of
+    every record, so this is read from Redis; store.put/delete clear it when a workflow changes."""
+    cached=frappe.cache.get_value(TRIGGER_CACHE)
+    if cached is not None:return cached
+    out={}
+    for name in names('Workflow',{'status':'active'},limit=10000):
+        try:published=load(name).get('published')
+        except KeyError:continue
+        if not published:continue
+        for t in trigger_list(published):
+            e=event_trigger(t)
+            if e.get('doctype') and e.get('event'):out.setdefault(e['doctype'],set()).add(e['event'])
+    out={k:sorted(v) for k,v in out.items()}
+    frappe.cache.set_value(TRIGGER_CACHE,out,expires_in_sec=600)
+    return out
+
 def document_event(doc,method):
     if doc.doctype in ('Automation Record','Error Log','Scheduled Job Log','Activity Log'):return
-    active=names('Workflow',{'status':'active'},limit=10000)
-    if not any(any(event_trigger(t).get('doctype')==doc.doctype and event_trigger(t).get('event')==method for t in trigger_list(load(name)['published'])) for name in active):return
+    if method not in event_triggers().get(doc.doctype,()):return
     payload=doc.as_dict()
     for f in doc.meta.fields:
         if f.fieldtype=='Password':payload.pop(f.fieldname,None)

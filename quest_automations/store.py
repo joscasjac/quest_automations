@@ -23,6 +23,16 @@ def check_author(definition,user=None):
     if used&set(SYSTEM_ONLY):raise DefinitionError('Code, API requests and AI actions need a System Manager')
 
 TYPE='Automation Record'
+TRIGGER_CACHE='quest_automations:event_triggers'
+def clear_trigger_cache():
+    """Drop the doctype → events map that document_event reads on every save. Cleared now and again
+    after commit, so another worker can't re-cache the old state in between."""
+    frappe.cache.delete_value(TRIGGER_CACHE)
+    frappe.db.after_commit.add(lambda:frappe.cache.delete_value(TRIGGER_CACHE))
+def ensure_indexes():
+    """after_migrate: the worker claims runs and every save looks up workflows by these columns."""
+    frappe.db.add_index(TYPE,['kind','status','due'],'kind_status_due')
+    frappe.db.add_index(TYPE,['parent_record','kind'],'parent_kind')
 def encode(v):return json.dumps(json.loads(frappe.as_json(v)),allow_nan=False,separators=(',',':'))
 def identity(*parts):return hashlib.sha256(encode(parts).encode()).hexdigest()
 def load(name,lock=False):
@@ -33,6 +43,7 @@ def put(name,kind,value,parent=None):
     fields={'payload':encode(value),'kind':kind,'parent_record':parent,'status':value.get('status'),'due':value.get('due',0)}
     if frappe.db.exists(TYPE,name):frappe.db.set_value(TYPE,name,fields,update_modified=True)
     else:frappe.get_doc({'doctype':TYPE,'name':name,**fields}).insert(ignore_permissions=True)
+    if kind=='Workflow':clear_trigger_cache()
 def names(kind,filters=None,order='modified desc',limit=200):
     return frappe.get_all(TYPE,filters={'kind':kind,**(filters or {})},order_by=order,pluck='name',limit_page_length=limit)
 
@@ -111,6 +122,7 @@ class Store:
             for name in names(kind,{'parent_record':identifier},limit=0):
                 frappe.delete_doc(TYPE,name,ignore_permissions=True)
         frappe.delete_doc(TYPE,identifier,ignore_permissions=True)
+        clear_trigger_cache()
         return {'deleted':True,'id':identifier}
     def hook_secret(self,identifier,trigger_id=None):
         row=load(identifier)

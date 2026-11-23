@@ -13,4 +13,4 @@ scheduler_events = {"cron":{"* * * * *":["quest_automations.jobs.wake"]}}
 doc_events = {"*":{event:"quest_automations.jobs.document_event" for event in ("after_insert","on_update","on_submit","on_cancel","on_update_after_submit")}}
 add_to_apps_screen = [{"name":"quest_automations","logo":"/assets/quest_automations/icon.svg","title":"Automations","route":"/automations","has_permission":"quest_automations.api.has_access"}]
 
-after_migrate = ["quest_automations.live_setup.seed", "quest_automations.ai_setup.seed"]
+after_migrate = ["quest_automations.live_setup.seed", "quest_automations.ai_setup.seed", "quest_automations.store.ensure_indexes"]
