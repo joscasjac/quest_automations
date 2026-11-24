@@ -1,4 +1,7 @@
 import {PULSE_ACTION_LIBRARY,createPulseStep,isPulseOperation} from '../adapter/pulseCatalog';
+import {CopilotPanel} from './Copilot';
+import type {CopilotContext} from './Copilot';
+import {__} from '../lib/i18n';
 import {RESERVAS_ACTION_LIBRARY,RESERVAS_TRIGGER_LIBRARY,createReservasStep,isReservasOperation,isReservasTrigger,reservasTriggerTitle,reservasTriggerLabel} from '../adapter/ReservasFields';
 import type {ReservasOperation} from '../adapter/ReservasFields';
 import {CRM_ACTION_LIBRARY,CRM_TRIGGER_LIBRARY,createCrmStep,isCrmOperation,crmTriggerTitle,crmTriggerLabel} from '../adapter/CrmFields';
@@ -640,6 +643,13 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
   const [gotoPickerFor, setGotoPickerFor] = useState<GotoPickerSource>(null);
   const [busy, setBusy] = useState<string | null>(null);
   const [formError, setFormError] = useState("");
+  const [copilotOpen, setCopilotOpen] = useState(() => {
+    // reopened on wide screens only; on a phone it would cover the canvas on every visit
+    try { return localStorage.getItem("quest-automations-copilot-open") === "1" && window.matchMedia("(min-width: 1280px)").matches; } catch { return false; }
+  });
+  useEffect(() => {
+    try { localStorage.setItem("quest-automations-copilot-open", copilotOpen ? "1" : "0"); } catch { /* still works without storage */ }
+  }, [copilotOpen]);
   const selected = creating ? undefined : workflow ?? undefined;
   const runs = useQuery(
     api.workflows.runsForDefinition,
@@ -1162,8 +1172,37 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     }
   };
 
+  const copilotSelection =
+    selectedNode.type === "trigger" && draftTriggers[selectedNode.index]
+      ? triggerTitle(draftTriggers[selectedNode.index])
+      : selectedNode.type === "step" && draftSteps[selectedNode.index]
+        ? draftSteps[selectedNode.index].label || stepTitle(draftSteps[selectedNode.index])
+        : selectedNode.type === "branchStep"
+          ? branchStepsFor(draftSteps[selectedNode.stepIndex], selectedNode.branch)[selectedNode.actionIndex]?.label ?? null
+          : null;
+  const copilotContext: CopilotContext = {
+    key: creating ? "new" : String(routeWorkflowId ?? "new"),
+    get: () => ({ name: draftName, description: draftDescription, triggers: draftTriggers, steps: draftSteps }),
+    selected: selectedNode as CopilotContext["selected"],
+    selectedLabel: copilotSelection ? String(copilotSelection) : null,
+    apply: (proposal) => {
+      setDraftName(proposal.name);
+      setDraftDescription(proposal.description ?? "");
+      setDraftTriggers(proposal.triggers as DraftTriggerList);
+      setDraftSteps(proposal.steps as Array<DraftStep>);
+      setSelectedNode(proposal.triggers.length ? { type: "trigger", index: 0 } : { type: "none" });
+      setStepPickerAfter(null);
+      setBranchStepPicker(null);
+      setTriggerPickerOpen(false);
+      setOpenNodeMenu({ type: "none" });
+      setWorkflowMove(null);
+      setGotoPickerFor(null);
+      setActiveTab("builder");
+    },
+  };
+
   return (
-    <WorkflowDraftContext.Provider value={{save:()=>saveBuilder(true),busy:busy!==null,savedTriggerIds:workflowTriggerList(selected).flatMap(t=>t.id?[t.id]:[])}}><FieldSourcesProvider triggers={draftTriggers} steps={draftSteps} selection={selectedNode}><div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] flex-col bg-ink">
+    <WorkflowDraftContext.Provider value={{save:()=>saveBuilder(true),busy:busy!==null,savedTriggerIds:workflowTriggerList(selected).flatMap(t=>t.id?[t.id]:[])}}><FieldSourcesProvider triggers={draftTriggers} steps={draftSteps} selection={selectedNode}><div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] bg-ink"><div className="flex min-w-0 flex-1 flex-col">
       {!creating && workflow === undefined ? (
         <main className="flex flex-1 items-center justify-center p-6">
           <Panel className="w-full max-w-md p-6 text-sm text-neutral-500">
@@ -1197,6 +1236,8 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
             activeTab={activeTab}
             onTab={setActiveTab}
             onRun={() => void startRun()}
+            copilotOpen={copilotOpen}
+            onCopilot={() => setCopilotOpen((open) => !open)}
             onSave={() => void saveBuilder()}
             onBack={() => navigate("/app/workflows")}
             onEditSettings={() => setActiveTab("settings")}
@@ -1278,6 +1319,15 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
           )}
         </main>
       )}
+    </div>
+      {copilotOpen && (
+        <>
+          <div className="fixed inset-0 z-[999] bg-black/40 xl:hidden" aria-hidden="true" onClick={() => setCopilotOpen(false)} />
+          <div className="fixed inset-y-0 right-0 z-[1000] w-full max-w-[420px] xl:sticky xl:top-0 xl:z-auto xl:h-[calc(100vh-48px)] xl:w-[380px] xl:max-w-none xl:shrink-0">
+            <CopilotPanel ctx={copilotContext} onClose={() => setCopilotOpen(false)} />
+          </div>
+        </>
+      )}
     </div></FieldSourcesProvider></WorkflowDraftContext.Provider>
   );
 }
@@ -1293,6 +1343,8 @@ function BuilderTopBar({
   activeTab,
   onTab,
   onRun,
+  copilotOpen,
+  onCopilot,
   onSave,
   onBack,
   onEditSettings,
@@ -1308,6 +1360,8 @@ function BuilderTopBar({
   activeTab: BuilderTab;
   onTab: (tab: BuilderTab) => void;
   onRun: () => void;
+  copilotOpen: boolean;
+  onCopilot: () => void;
   onSave: () => void;
   onBack: () => void;
   onEditSettings: () => void;
@@ -1355,6 +1409,18 @@ function BuilderTopBar({
             title="Refresh workflow builder"
           >
             ↻
+          </button>
+          <button
+            type="button"
+            onClick={onCopilot}
+            aria-pressed={copilotOpen}
+            aria-controls="copilot-title"
+            className={`flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm transition-colors ${
+              copilotOpen ? "border-accent text-accent" : "border-edge text-white hover:bg-raised"
+            }`}
+          >
+            <span aria-hidden="true">✦</span>
+            {__("AI assistant")}
           </button>
           <div className="relative">
             <Button variant="primary" onClick={onSave} disabled={busy !== null}>

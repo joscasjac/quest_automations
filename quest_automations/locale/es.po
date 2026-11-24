@@ -1,0 +1,259 @@
+msgid ""
+msgstr ""
+"Content-Type: text/plain; charset=UTF-8\n"
+"Language: es\n"
+
+msgid "AI assistant"
+msgstr "Asistente de IA"
+
+msgid "Working on"
+msgstr "Trabajando en"
+
+msgid "this workflow"
+msgstr "esta automatización"
+
+msgid "New conversation"
+msgstr "Nueva conversación"
+
+msgid "Close (Esc)"
+msgstr "Cerrar (Esc)"
+
+msgid "Close"
+msgstr "Cerrar"
+
+msgid "Conversation with the AI assistant"
+msgstr "Conversación con el asistente de IA"
+
+msgid "The assistant uses your AI models. No model is available to you yet."
+msgstr "El asistente usa sus modelos de IA. Todavía no tiene ningún modelo disponible."
+
+msgid "The assistant needs FAC Model Bridge. Ask your administrator to install it."
+msgstr "El asistente necesita FAC Model Bridge. Pida a su administrador que lo instale."
+
+msgid "Open AI Command Center"
+msgstr "Abrir Centro de IA"
+
+msgid "Describe it and I will build it"
+msgstr "Descríbala y yo la armo"
+
+msgid "Ask for any change to this workflow"
+msgstr "Pida cualquier cambio a esta automatización"
+
+msgid "Triggers, steps, wording, waits, conditions. You see the list of changes first, and one click on Undo takes the whole thing back. Nothing is saved until you press Save."
+msgstr "Disparadores, pasos, textos, esperas, condiciones. Primero ve la lista de cambios, y con un clic en Deshacer todo vuelve a como estaba. No se guarda nada hasta que pulse Guardar."
+
+msgid "Stopped, nothing changed"
+msgstr "Detenido, no cambió nada"
+
+msgid "A newer request replaced this question"
+msgstr "Una solicitud más reciente reemplazó esta pregunta"
+
+msgid "Apply ({0})"
+msgstr "Aplicar ({0})"
+
+msgid "Discard"
+msgstr "Descartar"
+
+msgid "The workflow changed since this was proposed. Ask again."
+msgstr "La automatización cambió desde esta propuesta. Pida de nuevo."
+
+msgid "Applied ({0})"
+msgstr "Aplicado ({0})"
+
+msgid "Undo"
+msgstr "Deshacer"
+
+msgid "Press Save to keep it."
+msgstr "Pulse Guardar para conservarlo."
+
+msgid "Discarded, nothing changed"
+msgstr "Descartado, no cambió nada"
+
+msgid "Undone, the workflow is back as it was"
+msgstr "Deshecho, la automatización volvió a como estaba"
+
+msgid "A newer request replaced this proposal, nothing changed"
+msgstr "Una solicitud más reciente reemplazó esta propuesta, no cambió nada"
+
+msgid "From an earlier visit, nothing changed"
+msgstr "De una visita anterior, no cambió nada"
+
+msgid "Cancel"
+msgstr "Cancelar"
+
+msgid "Message to the AI assistant"
+msgstr "Mensaje para el asistente de IA"
+
+msgid "Send (Enter)"
+msgstr "Enviar (Enter)"
+
+msgid "Type your answer…"
+msgstr "Escriba su respuesta…"
+
+msgid "What should change here?"
+msgstr "¿Qué debe cambiar aquí?"
+
+msgid "Describe the automation you want…"
+msgstr "Describa la automatización que quiere…"
+
+msgid "Ask for any change to this workflow…"
+msgstr "Pida cualquier cambio a esta automatización…"
+
+msgid "Something went wrong. Try again."
+msgstr "Algo salió mal. Intente de nuevo."
+
+msgid "The AI took too long. Try again."
+msgstr "La IA tardó demasiado. Intente de nuevo."
+
+msgid "Reading the workflow…"
+msgstr "Leyendo la automatización…"
+
+msgid "When a new lead comes in, create a call task for its owner"
+msgstr "Cuando entre un prospecto nuevo, crea una tarea de llamada para su responsable"
+
+msgid "Every Monday, remind me of deals with no activity"
+msgstr "Cada lunes, recuérdame los negocios sin actividad"
+
+msgid "When a booking is completed, have the AI summarize the notes"
+msgstr "Cuando se complete una reserva, que la IA resuma las notas"
+
+msgid "Explain what this workflow does"
+msgstr "Explica qué hace esta automatización"
+
+msgid "Add a reminder one day later"
+msgstr "Agrega un recordatorio un día después"
+
+msgid "Notify me when it finishes"
+msgstr "Avísame cuando termine"
+
+msgid "Make the messages friendlier"
+msgstr "Haz los mensajes más amables"
+
+msgid "Model"
+msgstr "Modelo"
+
+msgid "Model: {0}"
+msgstr "Modelo: {0}"
+
+msgid "Use the default model"
+msgstr "Usar el modelo predeterminado"
+
+msgid "Thinking"
+msgstr "Razonamiento"
+
+msgid "Could not switch models. Try again."
+msgstr "No se pudo cambiar de modelo. Intente de nuevo."
+
+msgid "Default"
+msgstr "Predeterminado"
+
+msgid "Minimal"
+msgstr "Mínimo"
+
+msgid "Light"
+msgstr "Ligero"
+
+msgid "Medium"
+msgstr "Medio"
+
+msgid "High"
+msgstr "Alto"
+
+msgid "Extra high"
+msgstr "Muy alto"
+
+msgid "Max"
+msgstr "Máximo"
+
+msgid "Shared with everyone"
+msgstr "Compartido con todos"
+
+msgid "Your connections"
+msgstr "Sus conexiones"
+
+msgid "Choose a model that is available to you."
+msgstr "Elija un modelo que tenga disponible."
+
+msgid "This model does not offer that thinking level."
+msgstr "Este modelo no ofrece ese nivel de razonamiento."
+
+msgid "Choose an AI model in the AI Command Center (/ai) first."
+msgstr "Primero elija un modelo de IA en el Centro de IA (/ai)."
+
+msgid "Your model provider says the usage limit is reached. Try again later or pick another model."
+msgstr "Su proveedor de modelos dice que se alcanzó el límite de uso. Intente más tarde o elija otro modelo."
+
+msgid "Your model provider rejected the connection. Reconnect it in the AI Command Center (/ai)."
+msgstr "Su proveedor de modelos rechazó la conexión. Vuelva a conectarla en el Centro de IA (/ai)."
+
+msgid "Your model provider did not answer. Wait a minute and try again."
+msgstr "Su proveedor de modelos no respondió. Espere un minuto e intente de nuevo."
+
+msgid "The AI returned an unreadable answer. Try rephrasing."
+msgstr "La IA devolvió una respuesta ilegible. Intente decirlo de otra forma."
+
+msgid "Added {0} steps"
+msgstr "Se agregaron {0} pasos"
+
+msgid "Changed a step"
+msgstr "Se cambió un paso"
+
+msgid "Changed {0}"
+msgstr "Se cambió {0}"
+
+msgid "Removed {0}"
+msgstr "Se quitó {0}"
+
+msgid "a step"
+msgstr "un paso"
+
+msgid "Moved {0}"
+msgstr "Se movió {0}"
+
+msgid "Some steps read fields that {0} does not have: {1}. Check those steps."
+msgstr "Algunos pasos leen campos que {0} no tiene: {1}. Revise esos pasos."
+
+msgid "Changed when it starts"
+msgstr "Se cambió cuándo empieza"
+
+msgid "Added another way to start it"
+msgstr "Se agregó otra forma de iniciarla"
+
+msgid "Removed a trigger"
+msgstr "Se quitó un disparador"
+
+msgid "Renamed it to {0}"
+msgstr "Se renombró a {0}"
+
+msgid "Changed the description"
+msgstr "Se cambió la descripción"
+
+msgid "Type a request first."
+msgstr "Primero escriba una solicitud."
+
+msgid "That message is too long. Keep it under 4,000 characters."
+msgstr "Ese mensaje es demasiado largo. Use menos de 4.000 caracteres."
+
+msgid "Writing…"
+msgstr "Escribiendo…"
+
+msgid "Thinking…"
+msgstr "Pensando…"
+
+msgid "Fixing the changes…"
+msgstr "Corrigiendo los cambios…"
+
+msgid "Checking the changes…"
+msgstr "Revisando los cambios…"
+
+msgid "Not done: {0}"
+msgstr "No se hizo: {0}"
+
+msgid "Waiting for the AI…"
+msgstr "Esperando a la IA…"
+
+msgid "This answer expired. Ask again."
+msgstr "Esta respuesta venció. Pida de nuevo."
+
+msgid "This proposal expired. Ask again."
+msgstr "Esta propuesta venció. Pida de nuevo."

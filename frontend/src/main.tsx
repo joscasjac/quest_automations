@@ -5,6 +5,7 @@ import {Workflows,WorkflowBuilderPage} from './app/Workflows';
 import {DescribePage} from './app/Describe';
 import {Input,Button} from './components/ui';
 import {request} from './adapter/api';
+import {loadTranslations} from './lib/i18n';
 import './index.css';
 function Appearance(){
  const [theme,setTheme]=useState<'light'|'dark'>(()=>{
@@ -24,4 +25,4 @@ function App(){
  if(!connected)return <main className="mx-auto mt-[15vh] max-w-md space-y-5 px-6"><h1 className="text-xl font-semibold text-white">ERPNext Automations</h1><form className="space-y-4" onSubmit={e=>{e.preventDefault();connect()}}><label className="block text-xs text-neutral-500">Automation API token<Input type="password" value={token} onChange={e=>setToken(e.target.value)} autoComplete="off"/></label><Button type="submit" variant="primary">Connect</Button></form>{error&&<p role="alert" className="text-sm text-red-400">{error}</p>}</main>;
  return <BrowserRouter basename={(window as any).automationFrappe?'/automations':undefined}>{error&&<div role="alert" className="fixed bottom-3 left-3 z-[10001] rounded-md border border-red-400 bg-panel p-3 text-sm text-red-400">{error}<Button onClick={()=>setError('')}>Dismiss</Button></div>}<div className="p-6"><Routes><Route path="/app/workflows" element={<Workflows/>}/><Route path="/app/workflows/describe" element={<DescribePage/>}/><Route path="/app/workflows/new" element={<WorkflowBuilderPage mode="new"/>}/><Route path="/app/workflows/:workflowId" element={<WorkflowBuilderPage mode="detail"/>}/><Route path="*" element={<Navigate to="/app/workflows" replace/>}/></Routes></div></BrowserRouter>
 }
-createRoot(document.getElementById('root')!).render(<><Appearance/><App/></>);
+loadTranslations().finally(()=>createRoot(document.getElementById('root')!).render(<><Appearance/><App/></>));
