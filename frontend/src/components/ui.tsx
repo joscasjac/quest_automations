@@ -2,7 +2,8 @@ import type { ReactNode } from "react";
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Link } from "react-router-dom";
-import { initials } from "../lib/format";
+import { initials, locale } from "../lib/format";
+import { __ } from "../lib/i18n";
 
 // Small shared primitives so every screen reads the same.
 
@@ -371,20 +372,15 @@ export function NumberInput({
 
 // A themed calendar popover so date picks stay in the app palette instead of
 // the OS date control. Value is a local YYYY-MM-DD string; empty means unset.
-const MONTH_NAMES = [
-  "January",
-  "February",
-  "March",
-  "April",
-  "May",
-  "June",
-  "July",
-  "August",
-  "September",
-  "October",
-  "November",
-  "December",
-];
+// Month and weekday names come from the browser in the user's language.
+const MONTH_NAMES = Array.from({ length: 12 }, (_, m) => {
+  const name = new Date(2000, m, 1).toLocaleDateString(locale, { month: "long" });
+  return name.charAt(0).toUpperCase() + name.slice(1);
+});
+// 2 January 2000 was a Sunday
+const WEEKDAY_INITIALS = Array.from({ length: 7 }, (_, d) =>
+  new Date(2000, 0, 2 + d).toLocaleDateString(locale, { weekday: "narrow" }).toUpperCase(),
+);
 
 const toDateString = (year: number, month: number, day: number) =>
   `${year}-${String(month + 1).padStart(2, "0")}-${String(day).padStart(2, "0")}`;
@@ -503,10 +499,12 @@ export function DateInput({
   ];
 
   const label = selected
-    ? `${MONTH_NAMES[selected.month].slice(0, 3)} ${selected.day}${
-        selected.year !== today.getFullYear() ? `, ${selected.year}` : ""
-      }`
-    : "Pick a date";
+    ? new Date(selected.year, selected.month, selected.day).toLocaleDateString(locale, {
+        month: "short",
+        day: "numeric",
+        ...(selected.year !== today.getFullYear() ? { year: "numeric" } : {}),
+      })
+    : __("Pick a date");
 
   const chevron = (left: boolean) => (
     <svg
@@ -566,7 +564,7 @@ export function DateInput({
             <button
               type="button"
               onClick={() => shiftMonth(-1)}
-              aria-label="Previous month"
+              aria-label={__("Previous month")}
               className="rounded p-1 text-neutral-500 transition-colors hover:bg-raised hover:text-white"
             >
               {chevron(true)}
@@ -577,14 +575,14 @@ export function DateInput({
             <button
               type="button"
               onClick={() => shiftMonth(1)}
-              aria-label="Next month"
+              aria-label={__("Next month")}
               className="rounded p-1 text-neutral-500 transition-colors hover:bg-raised hover:text-white"
             >
               {chevron(false)}
             </button>
           </div>
           <div className="grid grid-cols-7 text-center">
-            {["S", "M", "T", "W", "T", "F", "S"].map((d, i) => (
+            {WEEKDAY_INITIALS.map((d, i) => (
               <span key={i} className="py-1 text-[10px] text-neutral-600">
                 {d}
               </span>

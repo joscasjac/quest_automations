@@ -1,5 +1,6 @@
 """ERPNext calls use the current Frappe user, with no separate credentials."""
 import frappe
+from frappe import _
 import json
 def json_value(value):return json.loads(frappe.as_json(value))
 from .core.definition import DefinitionError
@@ -31,7 +32,7 @@ def erp_files():return frappe.get_list('File',filters={'is_folder':0},fields=['n
 def erp_doctypes():
     return frappe.get_list('DocType',fields=['name','module','istable','issingle','custom'],limit_page_length=20000,order_by='name')
 def erp_metadata(doctype):
-    if not frappe.has_permission('DocType','read',doc=doctype):frappe.throw('Not permitted to read this document type',frappe.PermissionError)
+    if not frappe.has_permission('DocType','read',doc=doctype):frappe.throw(_('Not permitted to read this document type'),frappe.PermissionError)
     meta=frappe.get_meta(doctype)
     fields=[{key:getattr(f,key,None) for key in ('fieldname','label','fieldtype','options','reqd','read_only','hidden')} for f in meta.fields if f.fieldtype!='Password']
     return {'name':doctype,'fields':fields,'is_submittable':meta.is_submittable}

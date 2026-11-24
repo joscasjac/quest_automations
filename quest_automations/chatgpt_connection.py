@@ -3,6 +3,7 @@ import json
 import time
 import uuid
 import frappe
+from frappe import _
 from .core import chatgpt
 
 OWNER = 'joseph@questmediahub.com'
@@ -10,7 +11,7 @@ CONNECTION = 'Quest ChatGPT Connection'
 
 def require_owner():
     if frappe.session.user != OWNER or 'System Manager' not in frappe.get_roles():
-        frappe.throw('Only Joseph can manage this connection and approve follow-ups.', frappe.PermissionError)
+        frappe.throw(_('Only Joseph can manage this connection and approve follow-ups.'), frappe.PermissionError)
 
 def has_permission(doc=None, ptype=None, user=None, **kwargs):
     return (user or frappe.session.user) == OWNER
@@ -37,20 +38,20 @@ def sign_in_options():
 def import_registration(registration):
     require_owner()
     if not isinstance(registration, str) or len(registration) > 50000:
-        frappe.throw('Provide the protected registration file produced by the sign-in helper.')
+        frappe.throw(_('Provide the protected registration file produced by the sign-in helper.'))
     with frappe.cache.lock('quest-chatgpt:' + frappe.local.site, timeout=90, blocking_timeout=2):
         doc = frappe.get_single(CONNECTION)
         if not doc.host_id:
-            frappe.throw('Prepare sign-in first.')
+            frappe.throw(_('Prepare sign-in first.'))
         try:
             bundle = chatgpt.validate_registration(json.loads(registration), doc.host_id, doc.account_subject, doc.client_id)
             available = chatgpt.models(bundle)
             if not available:
                 raise chatgpt.ConnectionError('This account has no available ChatGPT models for the connection.')
         except (ValueError, chatgpt.ConnectionError) as error:
-            frappe.throw(str(error) if isinstance(error, chatgpt.ConnectionError) else 'Invalid registration file.')
+            frappe.throw(str(error) if isinstance(error, chatgpt.ConnectionError) else _('Invalid registration file.'))
         except Exception:
-            frappe.throw('Registration could not be verified. Start a fresh sign-in attempt.')
+            frappe.throw(_('Registration could not be verified. Start a fresh sign-in attempt.'))
         doc.credential_bundle = json.dumps(bundle)
         doc.client_id = bundle['client_id']
         doc.account_subject = bundle['subject']
@@ -86,9 +87,9 @@ def available_models():
 
 @frappe.whitelist(methods=['POST'])
 def select_model(model):
-    bundle, _ = credentials()
+    bundle, _ignored = credentials()
     if model not in [m['slug'] for m in chatgpt.models(bundle)]:
-        frappe.throw('Choose a model available to your connected ChatGPT account.')
+        frappe.throw(_('Choose a model available to your connected ChatGPT account.'))
     doc = frappe.get_single(CONNECTION)
     doc.model = model
     save_connection(doc)

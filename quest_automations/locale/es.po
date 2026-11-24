@@ -150,9 +150,6 @@ msgstr "Predeterminado"
 msgid "Minimal"
 msgstr "Mínimo"
 
-msgid "Light"
-msgstr "Ligero"
-
 msgid "Medium"
 msgstr "Medio"
 
@@ -257,3 +254,3868 @@ msgstr "Esta respuesta venció. Pida de nuevo."
 
 msgid "This proposal expired. Ask again."
 msgstr "Esta propuesta venció. Pida de nuevo."
+
+msgid "Deal"
+msgstr "Negocio"
+
+msgid "Project"
+msgstr "Proyecto"
+
+msgid "Task"
+msgstr "Tarea"
+
+msgid "Company"
+msgstr "Empresa"
+
+msgid "Contact"
+msgstr "Contacto"
+
+msgid "Note"
+msgstr "Nota"
+
+msgid "Created"
+msgstr "Creado"
+
+msgid "Updated"
+msgstr "Actualizado"
+
+msgid "Stage changed"
+msgstr "Cambió de etapa"
+
+msgid "Status changed"
+msgstr "Cambió de estado"
+
+msgid "Qualified"
+msgstr "Calificado"
+
+msgid "Meeting"
+msgstr "Reunión"
+
+msgid "Proposal"
+msgstr "Propuesta"
+
+msgid "Negotiation"
+msgstr "Negociación"
+
+msgid "Closed won"
+msgstr "Cerrado ganado"
+
+msgid "Closed lost"
+msgstr "Cerrado perdido"
+
+msgid "Planned"
+msgstr "Planificado"
+
+msgid "Active"
+msgstr "Activo"
+
+msgid "On hold"
+msgstr "En espera"
+
+msgid "Completed"
+msgstr "Completado"
+
+msgid "Archived"
+msgstr "Archivado"
+
+msgid "Backlog"
+msgstr "Pendientes"
+
+msgid "To do"
+msgstr "Por hacer"
+
+msgid "In progress"
+msgstr "En curso"
+
+msgid "Blocked"
+msgstr "Bloqueado"
+
+msgid "Done"
+msgstr "Listo"
+
+msgid "Canceled"
+msgstr "Cancelado"
+
+msgid "Minutes"
+msgstr "Minutos"
+
+msgid "Hours"
+msgstr "Horas"
+
+msgid "Days"
+msgstr "Días"
+
+msgid "Company name"
+msgstr "Nombre de la empresa"
+
+msgid "Industry"
+msgstr "Industria"
+
+msgid "Description"
+msgstr "Descripción"
+
+msgid "Domain"
+msgstr "Dominio"
+
+msgid "Contact name"
+msgstr "Nombre del contacto"
+
+msgid "Email"
+msgstr "Correo electrónico"
+
+msgid "Title"
+msgstr "Título"
+
+msgid "Status"
+msgstr "Estado"
+
+msgid "Tags"
+msgstr "Etiquetas"
+
+msgid "Deal name"
+msgstr "Nombre del negocio"
+
+msgid "Stage"
+msgstr "Etapa"
+
+msgid "Amount"
+msgstr "Monto"
+
+msgid "Currency"
+msgstr "Divisa"
+
+msgid "Project name"
+msgstr "Nombre del proyecto"
+
+msgid "Task title"
+msgstr "Título de la tarea"
+
+msgid "Priority"
+msgstr "Prioridad"
+
+msgid "Note title"
+msgstr "Título de la nota"
+
+msgid "Body"
+msgstr "Cuerpo"
+
+msgid "ERPNext / Webhook Status"
+msgstr "Estado (ERPNext / Webhook)"
+
+msgid "ERPNext / Webhook Customer"
+msgstr "Cliente (ERPNext / Webhook)"
+
+msgid "ERPNext DocType"
+msgstr "DocType de ERPNext"
+
+msgid "Current Day of Week"
+msgstr "Día de la semana actual"
+
+msgid "Contact Name"
+msgstr "Nombre de contacto"
+
+msgid "Contact Email"
+msgstr "Correo electrónico de contacto"
+
+msgid "Contact Title"
+msgstr "Cargo del contacto"
+
+msgid "Company Name"
+msgstr "Nombre de compañía"
+
+msgid "Opportunity Stage"
+msgstr "Etapa de la oportunidad"
+
+msgid "Task Status"
+msgstr "Estado de la tarea"
+
+msgid "Is"
+msgstr "Es"
+
+msgid "Is not"
+msgstr "No es"
+
+msgid "Contains"
+msgstr "Contiene"
+
+msgid "Does not contain"
+msgstr "No contiene"
+
+msgid "Is empty"
+msgstr "Está vacío"
+
+msgid "Is not empty"
+msgstr "No está vacío"
+
+msgid "Run AI Capability"
+msgstr "Ejecutar capacidad de IA"
+
+msgid "Run a published AI capability with mapped inputs and a structured result."
+msgstr "Ejecuta una capacidad de IA publicada con entradas asignadas y un resultado estructurado."
+
+msgid "AI"
+msgstr "IA"
+
+msgid "API request"
+msgstr "Solicitud a API"
+
+msgid "Call an API with a URL, method, headers, and body."
+msgstr "Llama a una API con URL, método, encabezados y cuerpo."
+
+msgid "Get document"
+msgstr "Obtener documento"
+
+msgid "Fetch any ERPNext document and use its fields in later actions."
+msgstr "Obtiene cualquier documento de ERPNext y usa sus campos en acciones posteriores."
+
+msgid "Run Code"
+msgstr "Ejecutar código"
+
+msgid "Transform incoming data and return a result."
+msgstr "Transforma los datos recibidos y devuelve un resultado."
+
+msgid "Flow"
+msgstr "Flujo"
+
+msgid "ERPNext document"
+msgstr "Documento de ERPNext"
+
+msgid "Read, create, update, or approve a document."
+msgstr "Lee, crea, actualiza o aprueba un documento."
+
+msgid "Create note"
+msgstr "Crear nota"
+
+msgid "Write a CRM note linked to a record."
+msgstr "Escribe una nota del CRM vinculada a un registro."
+
+msgid "Records"
+msgstr "Registros"
+
+msgid "Create task"
+msgstr "Crear tarea"
+
+msgid "Open a follow-up task with an optional due offset."
+msgstr "Abre una tarea de seguimiento con un plazo opcional."
+
+msgid "Update record"
+msgstr "Actualizar registro"
+
+msgid "Change a safe whitelisted field on a CRM record."
+msgstr "Cambia un campo permitido de un registro del CRM."
+
+msgid "Send email"
+msgstr "Enviar correo"
+
+msgid "Send a one-recipient notification email."
+msgstr "Envía un correo de notificación a un destinatario."
+
+msgid "Communication"
+msgstr "Comunicaciones"
+
+msgid "Send notification"
+msgstr "Enviar notificación"
+
+msgid "Record an activity or queue a Slack alert."
+msgstr "Registra una actividad o pone en cola una alerta de Slack."
+
+msgid "Log event"
+msgstr "Registrar evento"
+
+msgid "Write an audit entry when the workflow runs."
+msgstr "Escribe una entrada de auditoría cuando se ejecuta la automatización."
+
+msgid "Condition (If / Else)"
+msgstr "Condición (Si / Si no)"
+
+msgid "Route documents through named branches."
+msgstr "Dirige los documentos por ramas con nombre."
+
+msgid "Wait"
+msgstr "Espera"
+
+msgid "Pause before continuing to the next action."
+msgstr "Hace una pausa antes de seguir con la siguiente acción."
+
+msgid "Go To"
+msgstr "Ir a"
+
+msgid "Jump to another action in this workflow."
+msgstr "Salta a otra acción de esta automatización."
+
+msgid "No operation"
+msgstr "Sin operación"
+
+msgid "Keep a placeholder step in the version."
+msgstr "Deja un paso de marcador en la versión."
+
+msgid "Pulse task created"
+msgstr "Tarea de Pulse creada"
+
+msgid "Start from a permission-checked Task event."
+msgstr "Inicia con un evento de Tarea con permisos verificados."
+
+msgid "Pulse task updated"
+msgstr "Tarea de Pulse actualizada"
+
+msgid "Pulse task completed"
+msgstr "Tarea de Pulse completada"
+
+msgid "Pulse project created"
+msgstr "Proyecto de Pulse creado"
+
+msgid "Start from a permission-checked Project event."
+msgstr "Inicia con un evento de Proyecto con permisos verificados."
+
+msgid "Pulse project updated"
+msgstr "Proyecto de Pulse actualizado"
+
+msgid "Pulse task assigned"
+msgstr "Tarea de Pulse asignada"
+
+msgid "Start from a permission-checked ToDo event."
+msgstr "Inicia con un evento de Pendiente (ToDo) con permisos verificados."
+
+msgid "Pulse due or overdue reminder"
+msgstr "Recordatorio de Pulse por vencer o vencido"
+
+msgid "Start from a permission-checked Pulse Notification event."
+msgstr "Inicia con un evento de Notificación de Pulse con permisos verificados."
+
+msgid "Pulse mention"
+msgstr "Mención en Pulse"
+
+msgid "Pulse task comment"
+msgstr "Comentario en tarea de Pulse"
+
+msgid "Start from a permission-checked Pulse Comment event."
+msgstr "Inicia con un evento de Comentario de Pulse con permisos verificados."
+
+msgid "Pulse module updated"
+msgstr "Módulo de Pulse actualizado"
+
+msgid "Start from a permission-checked Pulse Module event."
+msgstr "Inicia con un evento de Módulo de Pulse con permisos verificados."
+
+msgid "Pulse module membership changed"
+msgstr "Cambió la membresía de un módulo de Pulse"
+
+msgid "Start from a permission-checked Pulse Activity Log event."
+msgstr "Inicia con un evento del Registro de actividad de Pulse con permisos verificados."
+
+msgid "Pulse page updated"
+msgstr "Página de Pulse actualizada"
+
+msgid "Start from a permission-checked Pulse Document event."
+msgstr "Inicia con un evento de Documento de Pulse con permisos verificados."
+
+msgid "Pulse request submitted"
+msgstr "Solicitud de Pulse enviada"
+
+msgid "Start from a permission-checked Pulse Request event."
+msgstr "Inicia con un evento de Solicitud de Pulse con permisos verificados."
+
+msgid "Pulse request reviewed"
+msgstr "Solicitud de Pulse revisada"
+
+msgid "Pulse approval decision"
+msgstr "Decisión de aprobación en Pulse"
+
+msgid "Start from a permission-checked Pulse Task Approval event."
+msgstr "Inicia con un evento de Aprobación de tarea de Pulse con permisos verificados."
+
+msgid "Pulse delivery handoff"
+msgstr "Entrega de Pulse a operaciones"
+
+msgid "Start from a permission-checked Pulse Business Handoff event."
+msgstr "Inicia con un evento de Traspaso de negocio de Pulse con permisos verificados."
+
+msgid "Pulse external discussion"
+msgstr "Conversación externa en Pulse"
+
+msgid "Start from a permission-checked Pulse External Comment event."
+msgstr "Inicia con un evento de Comentario externo de Pulse con permisos verificados."
+
+msgid "Sales order submitted"
+msgstr "Orden de venta validada"
+
+msgid "Start from a permission-checked Sales Order event."
+msgstr "Inicia con un evento de Orden de venta con permisos verificados."
+
+msgid "CRM deal updated"
+msgstr "Negocio del CRM actualizado"
+
+msgid "Start from a permission-checked CRM Deal event."
+msgstr "Inicia con un evento de Negocio del CRM con permisos verificados."
+
+msgid "Incoming webhook"
+msgstr "Webhook entrante"
+
+msgid "Receive JSON from another app."
+msgstr "Recibe JSON desde otra aplicación."
+
+msgid "ERPNext document event"
+msgstr "Evento de documento de ERPNext"
+
+msgid "Start on an ERPNext document event."
+msgstr "Inicia con un evento de un documento de ERPNext."
+
+msgid "Contact Changed"
+msgstr "Contacto modificado"
+
+msgid "Runs when a contact record is updated."
+msgstr "Se ejecuta cuando se actualiza un contacto."
+
+msgid "Contact Created"
+msgstr "Contacto creado"
+
+msgid "Runs when a new contact is added."
+msgstr "Se ejecuta cuando se agrega un contacto nuevo."
+
+msgid "Note Added"
+msgstr "Nota agregada"
+
+msgid "Runs when a note is added."
+msgstr "Se ejecuta cuando se agrega una nota."
+
+msgid "Note Changed"
+msgstr "Nota modificada"
+
+msgid "Runs when a note is updated."
+msgstr "Se ejecuta cuando se actualiza una nota."
+
+msgid "Task Added"
+msgstr "Tarea agregada"
+
+msgid "Runs when a task is added."
+msgstr "Se ejecuta cuando se agrega una tarea."
+
+msgid "Task Completed"
+msgstr "Tarea completada"
+
+msgid "Runs when a task status changes."
+msgstr "Se ejecuta cuando cambia el estado de una tarea."
+
+msgid "Custom Date Reminder"
+msgstr "Recordatorio periódico"
+
+msgid "Run it on a recurring interval."
+msgstr "Se ejecuta en un intervalo que se repite."
+
+msgid "Date & time"
+msgstr "Fecha y hora"
+
+msgid "Launch manually"
+msgstr "Iniciar manualmente"
+
+msgid "Run it intentionally from the workflow page."
+msgstr "Se ejecuta a propósito desde la página de la automatización."
+
+msgid "Opportunity Created"
+msgstr "Oportunidad creada"
+
+msgid "Runs when an opportunity is created for a contact."
+msgstr "Se ejecuta cuando se crea una oportunidad para un contacto."
+
+msgid "Opportunities"
+msgstr "Oportunidades"
+
+msgid "Opportunity Stage Changed"
+msgstr "Cambió la etapa de la oportunidad"
+
+msgid "Runs when a deal moves to another stage."
+msgstr "Se ejecuta cuando un negocio pasa a otra etapa."
+
+msgid "Workflows"
+msgstr "Automatizaciones"
+
+msgid "Automations sorted by the last change."
+msgstr "Automatizaciones ordenadas por el último cambio."
+
+msgid "New Workflow"
+msgstr "Nueva automatización"
+
+msgid "Build with AI"
+msgstr "Crear con IA"
+
+msgid "Name"
+msgstr "Nombre"
+
+msgid "Trigger"
+msgstr "Disparador"
+
+msgid "Runs"
+msgstr "Ejecuciones"
+
+msgid "Last update"
+msgstr "Última actualización"
+
+msgid "Loading..."
+msgstr "Cargando..."
+
+msgid "No workflows yet"
+msgstr "Todavía no hay automatizaciones"
+
+msgid "No description"
+msgstr "Sin descripción"
+
+msgid "Workflow name is required."
+msgstr "El nombre de la automatización es obligatorio."
+
+msgid "Workflow trigger is required."
+msgstr "La automatización necesita un disparador."
+
+msgid "Workflow failed validation."
+msgstr "La automatización no pasó la validación."
+
+msgid "Could not change workflow status."
+msgstr "No se pudo cambiar el estado de la automatización."
+
+msgid "Could not start workflow run."
+msgstr "No se pudo iniciar la ejecución de la automatización."
+
+msgid "Loading workflow..."
+msgstr "Cargando automatización..."
+
+msgid "Workflow not found"
+msgstr "No se encontró la automatización"
+
+msgid "Back to Workflows"
+msgstr "Volver a automatizaciones"
+
+msgid "Deleting removes this workflow, its webhook endpoints, captured samples, schedules, versions, and run history."
+msgstr "Eliminarla borra esta automatización, sus webhooks, las muestras capturadas, las programaciones, las versiones y el historial de ejecuciones."
+
+msgid "Delete this workflow and all its stored automation records? This cannot be undone."
+msgstr "¿Eliminar esta automatización y todos sus registros guardados? No se puede deshacer."
+
+msgid "Delete workflow"
+msgstr "Eliminar automatización"
+
+msgid "Enrollment History"
+msgstr "Historial de inscripciones"
+
+msgid "Execution Logs"
+msgstr "Registros de ejecución"
+
+msgid "Untitled workflow"
+msgstr "Automatización sin título"
+
+msgid "Edit workflow settings"
+msgstr "Editar la configuración de la automatización"
+
+msgid "Refresh workflow builder"
+msgstr "Actualizar el editor de la automatización"
+
+msgid "Save"
+msgstr "Guardar"
+
+msgid "Builder"
+msgstr "Editor"
+
+msgid "Settings"
+msgstr "Configuración"
+
+msgid "Test Workflow"
+msgstr "Probar automatización"
+
+msgid "Draft"
+msgstr "Borrador"
+
+msgid "Publish"
+msgstr "Publicar"
+
+msgid "draft"
+msgstr "borrador"
+
+msgid "{0} options"
+msgstr "Opciones de {0}"
+
+msgid "Disconnect Go To"
+msgstr "Desconectar Ir a"
+
+msgid "Actions"
+msgstr "Acciones"
+
+msgid "Close actions menu"
+msgstr "Cerrar menú de acciones"
+
+msgid "Notes"
+msgstr "Notas"
+
+msgid "No notes yet"
+msgstr "Todavía no hay notas"
+
+msgid "Copy"
+msgstr "Copiar"
+
+msgid "Copy Action"
+msgstr "Copiar acción"
+
+msgid "Copy All Actions From Here"
+msgstr "Copiar todas las acciones desde aquí"
+
+msgid "Paste Below"
+msgstr "Pegar debajo"
+
+msgid "Move"
+msgstr "Mover"
+
+msgid "Move Action"
+msgstr "Mover acción"
+
+msgid "Move All Actions From Here"
+msgstr "Mover todas las acciones desde aquí"
+
+msgid "Set Go To Destination"
+msgstr "Elegir destino de Ir a"
+
+msgid "Disconnect Goto"
+msgstr "Desconectar Ir a"
+
+msgid "Delete"
+msgstr "Eliminar"
+
+msgid "Delete Action"
+msgstr "Eliminar acción"
+
+msgid "Delete Trigger"
+msgstr "Eliminar disparador"
+
+msgid "Move here after {0}"
+msgstr "Mover aquí, después de {0}"
+
+msgid "Move Here"
+msgstr "Mover aquí"
+
+msgid "Add step after {0}"
+msgstr "Agregar paso después de {0}"
+
+msgid "Paste after {0}"
+msgstr "Pegar después de {0}"
+
+msgid "Paste here"
+msgstr "Pegar aquí"
+
+msgid "Trigger {0}"
+msgstr "Disparador {0}"
+
+msgid "Add New Trigger"
+msgstr "Agregar disparador"
+
+msgid "Start this workflow another way"
+msgstr "Iniciar esta automatización de otra forma"
+
+msgid "Choose how this workflow starts"
+msgstr "Elija cómo empieza esta automatización"
+
+msgid "Action {0}"
+msgstr "Acción {0}"
+
+msgid "Branch"
+msgstr "Rama"
+
+msgid "None"
+msgstr "Ninguna"
+
+msgid "When none of the conditions are met"
+msgstr "Cuando no se cumple ninguna condición"
+
+msgid "Any of {0} conditions match"
+msgstr "Se cumple alguna de {0} condiciones"
+
+msgid "All of {0} conditions match"
+msgstr "Se cumplen las {0} condiciones"
+
+msgid "If {0} {1}"
+msgstr "Si {0} {1}"
+
+msgid "If {0} {1} \"{2}\""
+msgstr "Si {0} {1} \"{2}\""
+
+msgid "value"
+msgstr "valor"
+
+msgid "Search Actions"
+msgstr "Buscar acciones"
+
+msgid "Search Triggers"
+msgstr "Buscar disparadores"
+
+msgid "No matches"
+msgstr "Sin resultados"
+
+msgid "Soon"
+msgstr "Pronto"
+
+msgid "Workflow settings"
+msgstr "Configuración de la automatización"
+
+msgid "Select a trigger or action to edit its settings."
+msgstr "Seleccione un disparador o una acción para editar su configuración."
+
+msgid "Add action"
+msgstr "Agregar acción"
+
+msgid "Search actions and flow blocks."
+msgstr "Busque acciones y bloques de flujo."
+
+msgid "Workflow Trigger"
+msgstr "Disparador de la automatización"
+
+msgid "Adds a workflow trigger and enrolls matching records into the workflow."
+msgstr "Agrega un disparador e inscribe en la automatización los registros que coinciden."
+
+msgid "Trigger settings"
+msgstr "Configuración del disparador"
+
+msgid "Choose how the workflow starts."
+msgstr "Elija cómo empieza la automatización."
+
+msgid "Action settings"
+msgstr "Configuración de la acción"
+
+msgid "Configure the selected action."
+msgstr "Configure la acción seleccionada."
+
+msgid "Every"
+msgstr "Cada"
+
+msgid "Filters"
+msgstr "Filtros"
+
+msgid "AND filters: all conditions must match."
+msgstr "Filtros Y: deben cumplirse todas las condiciones."
+
+msgid "Add"
+msgstr "Agregar"
+
+msgid "No filters"
+msgstr "Sin filtros"
+
+msgid "Trigger filter field"
+msgstr "Campo del filtro del disparador"
+
+msgid "Remove trigger filter"
+msgstr "Quitar filtro del disparador"
+
+msgid "Trigger filter operator"
+msgstr "Operador del filtro del disparador"
+
+msgid "Value"
+msgstr "Valor"
+
+msgid "Trigger filter value"
+msgstr "Valor del filtro del disparador"
+
+msgid "Action"
+msgstr "Acción"
+
+msgid "Action type"
+msgstr "Tipo de acción"
+
+msgid "Step name"
+msgstr "Nombre del paso"
+
+msgid "Up"
+msgstr "Arriba"
+
+msgid "Down"
+msgstr "Bajar"
+
+msgid "Wait for"
+msgstr "Esperar"
+
+msgid "Unit"
+msgstr "Unidad"
+
+msgid "Wait unit"
+msgstr "Unidad de espera"
+
+msgid "Conditional logic"
+msgstr "Lógica condicional"
+
+msgid "Route actions using conditions"
+msgstr "Dirigir acciones con condiciones"
+
+msgid "Scenario recipe"
+msgstr "Receta del escenario"
+
+msgid "Branches"
+msgstr "Ramas"
+
+msgid "Branch {0} name"
+msgstr "Nombre de la rama {0}"
+
+msgid "Delete branch {0}"
+msgstr "Eliminar rama {0}"
+
+msgid "Add Branch"
+msgstr "Agregar rama"
+
+msgid "Else Branch"
+msgstr "Rama Si no"
+
+msgid "None branch label"
+msgstr "Nombre de la rama Ninguna"
+
+msgid "Destination"
+msgstr "Destino"
+
+msgid "Select destination"
+msgstr "Seleccione el destino"
+
+msgid "Action {0}: {1}"
+msgstr "Acción {0}: {1}"
+
+msgid "Go To destination"
+msgstr "Destino de Ir a"
+
+msgid "Message"
+msgstr "Mensaje"
+
+msgid "Log message"
+msgstr "Mensaje del registro"
+
+msgid "Note body"
+msgstr "Cuerpo de la nota"
+
+msgid "Task description"
+msgstr "Descripción de la tarea"
+
+msgid "Due offset"
+msgstr "Plazo"
+
+msgid "Days from run"
+msgstr "Días desde la ejecución"
+
+msgid "Object"
+msgstr "Objeto"
+
+msgid "Update record type"
+msgstr "Tipo de registro a actualizar"
+
+msgid "Field"
+msgstr "Campo"
+
+msgid "Update field"
+msgstr "Campo a actualizar"
+
+msgid "Fixed record id"
+msgstr "ID fijo del registro"
+
+msgid "Paste a Convex record id"
+msgstr "Pegue un ID de registro de Convex"
+
+msgid "Channel"
+msgstr "Canal"
+
+msgid "Activity"
+msgstr "Actividad"
+
+msgid "Notification channel"
+msgstr "Canal de notificación"
+
+msgid "Notification message"
+msgstr "Mensaje de la notificación"
+
+msgid "Deal stage"
+msgstr "Etapa del negocio"
+
+msgid "Project status"
+msgstr "Estado del proyecto"
+
+msgid "Task status"
+msgstr "Estado de la tarea"
+
+msgid "Name the recipe and keep a short internal note for the workflow list."
+msgstr "Ponga nombre a la receta y deje una nota interna breve para la lista de automatizaciones."
+
+msgid "Recipe name"
+msgstr "Nombre de la receta"
+
+msgid "What this workflow does"
+msgstr "Qué hace esta automatización"
+
+msgid "Select a workflow"
+msgstr "Seleccione una automatización"
+
+msgid "No runs recorded"
+msgstr "No hay ejecuciones registradas"
+
+msgid "{0} run"
+msgstr "Ejecución: {0}"
+
+msgid "No output"
+msgstr "Sin resultado"
+
+msgid "Versions"
+msgstr "Versiones"
+
+msgid "No versions recorded"
+msgstr "No hay versiones registradas"
+
+msgid "{0} actions"
+msgstr "{0} acciones"
+
+msgid "Paused"
+msgstr "Pausado"
+
+msgid "Queued"
+msgstr "En cola"
+
+msgid "Running"
+msgstr "En ejecución"
+
+msgid "Succeeded"
+msgstr "Correcto"
+
+msgid "Failed"
+msgstr "Falló"
+
+msgid "New Workflow : {0}"
+msgstr "Nueva automatización : {0}"
+
+msgid "Outgoing webhook"
+msgstr "Webhook saliente"
+
+msgid "Workflow note"
+msgstr "Nota de la automatización"
+
+msgid "Workflow task"
+msgstr "Tarea de la automatización"
+
+msgid "Workflow notification."
+msgstr "Notificación de la automatización."
+
+msgid "Workflow notification"
+msgstr "Notificación de la automatización"
+
+msgid "This workflow sent an email."
+msgstr "Esta automatización envió un correo."
+
+msgid "If / Else"
+msgstr "Si / Si no"
+
+msgid "Record workflow event"
+msgstr "Registrar evento de la automatización"
+
+msgid "Workflow executed."
+msgstr "Automatización ejecutada."
+
+msgid "1 day"
+msgstr "1 día"
+
+msgid "{0} days"
+msgstr "{0} días"
+
+msgid "1 hour"
+msgstr "1 hora"
+
+msgid "{0} hours"
+msgstr "{0} horas"
+
+msgid "1 minute"
+msgstr "1 minuto"
+
+msgid "{0} minutes"
+msgstr "{0} minutos"
+
+msgid "Workflow supports up to 8 triggers."
+msgstr "La automatización admite hasta 8 disparadores."
+
+msgid "{0} schedule interval must be at least 5 minutes."
+msgstr "{0}: el intervalo debe ser de al menos 5 minutos."
+
+msgid "{0} stage/status changes only apply to deals, projects, or tasks."
+msgstr "{0}: los cambios de etapa o estado solo aplican a negocios, proyectos o tareas."
+
+msgid "{0} supports up to 10 filters."
+msgstr "{0}: admite hasta 10 filtros."
+
+msgid "{0} filter {1} needs a field."
+msgstr "{0}: el filtro {1} necesita un campo."
+
+msgid "{0} filter {1} needs a value."
+msgstr "{0}: el filtro {1} necesita un valor."
+
+msgid "Add at least one action before testing or publishing."
+msgstr "Agregue al menos una acción antes de probar o publicar."
+
+msgid "{0} needs a name."
+msgstr "{0}: falta el nombre."
+
+msgid "{0} needs a log message."
+msgstr "{0}: falta el mensaje del registro."
+
+msgid "{0} needs note content."
+msgstr "{0}: falta el contenido de la nota."
+
+msgid "{0} needs a task title."
+msgstr "{0}: falta el título de la tarea."
+
+msgid "{0} due offset must be between 0 and 3650 days."
+msgstr "{0}: el plazo debe estar entre 0 y 3650 días."
+
+msgid "{0} targets an unsupported field."
+msgstr "{0}: apunta a un campo no admitido."
+
+msgid "{0} needs a record id."
+msgstr "{0}: falta el ID del registro."
+
+msgid "{0} needs a value."
+msgstr "{0}: falta el valor."
+
+msgid "{0} needs a notification message."
+msgstr "{0}: falta el mensaje de la notificación."
+
+msgid "{0} needs an email recipient."
+msgstr "{0}: falta el destinatario del correo."
+
+msgid "{0} needs an email subject."
+msgstr "{0}: falta el asunto del correo."
+
+msgid "{0} needs an email body."
+msgstr "{0}: falta el cuerpo del correo."
+
+msgid "{0} wait must be at least 1 minute."
+msgstr "{0}: la espera debe ser de al menos 1 minuto."
+
+msgid "{0} wait cannot be longer than 365 days."
+msgstr "{0}: la espera no puede pasar de 365 días."
+
+msgid "{0} needs at least one branch."
+msgstr "{0}: necesita al menos una rama."
+
+msgid "{0} supports up to 10 branches."
+msgstr "{0}: admite hasta 10 ramas."
+
+msgid "{0} branch {1} needs a name."
+msgstr "{0}: la rama {1} necesita un nombre."
+
+msgid "{0} branch {1} needs a field."
+msgstr "{0}: la rama {1} necesita un campo."
+
+msgid "{0} branch {1} needs a value."
+msgstr "{0}: la rama {1} necesita un valor."
+
+msgid "{0} branch {1}"
+msgstr "{0}, rama {1}"
+
+msgid "{0} needs a None branch label."
+msgstr "{0}: falta el nombre de la rama Ninguna."
+
+msgid "{0} None branch"
+msgstr "{0}, rama Ninguna"
+
+msgid "{0} needs a Go To destination."
+msgstr "{0}: falta el destino de Ir a."
+
+msgid "{0} has an invalid Go To destination."
+msgstr "{0}: el destino de Ir a no es válido."
+
+msgid "{0} cannot go to itself."
+msgstr "{0}: no puede ir a sí misma."
+
+msgid "{0} action {1}"
+msgstr "{0}, acción {1}"
+
+msgid "Select or create a workflow to test."
+msgstr "Seleccione o cree una automatización para probar."
+
+msgid "Update deal"
+msgstr "Actualizar negocio"
+
+msgid "Update project"
+msgstr "Actualizar proyecto"
+
+msgid "Update task"
+msgstr "Actualizar tarea"
+
+msgid "Update {0}"
+msgstr "Actualizar {0}"
+
+msgid "{0} event"
+msgstr "Evento de {0}"
+
+msgid "Add a Trigger"
+msgstr "Agregar un disparador"
+
+msgid "{0} Added"
+msgstr "{0}: agregado"
+
+msgid "{0} Changed"
+msgstr "{0}: modificado"
+
+msgid "{0} {1}"
+msgstr "{0} {1}"
+
+msgid "Receive a JSON payload"
+msgstr "Recibir datos JSON"
+
+msgid "Submitted"
+msgstr "Validado"
+
+msgid "Cancelled"
+msgstr "Cancelado"
+
+msgid "Updated after submission"
+msgstr "Actualizado después de validar"
+
+msgid "Every {0}m"
+msgstr "Cada {0} min"
+
+msgid "1 filter"
+msgstr "1 filtro"
+
+msgid "{0} filters"
+msgstr "{0} filtros"
+
+msgid "Manual"
+msgstr "Manual"
+
+msgid "Opportunity"
+msgstr "Oportunidad"
+
+msgid "Choose an AI capability"
+msgstr "Elija una capacidad de IA"
+
+msgid "Configure request"
+msgstr "Configurar solicitud"
+
+msgid "Configure API request"
+msgstr "Configurar solicitud a API"
+
+msgid "Transform data with JavaScript"
+msgstr "Transformar datos con JavaScript"
+
+msgid "Get {0}"
+msgstr "Obtener {0}"
+
+msgid "Get an ERPNext document"
+msgstr "Obtener un documento de ERPNext"
+
+msgid "Write the message"
+msgstr "Escriba el mensaje"
+
+msgid "This booking"
+msgstr "Esta reserva"
+
+msgid "Booking"
+msgstr "Reserva"
+
+msgid "ERPNext action"
+msgstr "Acción de ERPNext"
+
+msgid "Configure HTTP request"
+msgstr "Configurar solicitud HTTP"
+
+msgid "Untitled note"
+msgstr "Nota sin título"
+
+msgid "Untitled task"
+msgstr "Tarea sin título"
+
+msgid "1 branch + none"
+msgstr "1 rama + ninguna"
+
+msgid "{0} branches + none"
+msgstr "{0} ramas + ninguna"
+
+msgid "Choose destination"
+msgstr "Elija el destino"
+
+msgid "Go to Action {0}"
+msgstr "Ir a la acción {0}"
+
+msgid "Automation"
+msgstr "Automatización"
+
+msgid "Enter a key for each value."
+msgstr "Ingrese una clave para cada valor."
+
+msgid "Each key must be unique."
+msgstr "Cada clave debe ser única."
+
+msgid "{0} key {1}"
+msgstr "{0}: clave {1}"
+
+msgid "Key"
+msgstr "Clave"
+
+msgid "{0} value {1}"
+msgstr "{0}: valor {1}"
+
+msgid "Remove {0} {1}"
+msgstr "Quitar {0} {1}"
+
+msgid "Add another item"
+msgstr "Agregar otro elemento"
+
+msgid "Form field"
+msgstr "Campo del formulario"
+
+msgid "Raw body"
+msgstr "Cuerpo sin formato"
+
+msgid "Correct the JSON body before running this action."
+msgstr "Corrija el cuerpo JSON antes de ejecutar esta acción."
+
+msgid "Add a field to the incoming document"
+msgstr "Agregar un campo al documento entrante"
+
+msgid "Call an API"
+msgstr "Llamar a una API"
+
+msgid "Transform child table rows"
+msgstr "Transformar filas de una tabla secundaria"
+
+msgid "Use <code>input</code> for the incoming document and <code>steps</code> for earlier action results. Return a value for the next action."
+msgstr "Use <code>input</code> para el documento entrante y <code>steps</code> para los resultados de acciones anteriores. Devuelva un valor para la siguiente acción."
+
+msgid "Snippets"
+msgstr "Fragmentos"
+
+msgid "Code snippets"
+msgstr "Fragmentos de código"
+
+msgid "Code"
+msgstr "Código"
+
+msgid "API request example"
+msgstr "Ejemplo de solicitud a una API"
+
+msgid "2-second CPU limit, 32 MB memory, up to 5 HTTPS calls. No imports or filesystem access. Test Workflow does not send API requests. Use secret:ENV_NAME in headers for server-held credentials."
+msgstr "Límite de 2 segundos de CPU, 32 MB de memoria y hasta 5 llamadas HTTPS. Sin imports ni acceso al sistema de archivos. Probar automatización no envía solicitudes a APIs. Use secret:ENV_NAME en los encabezados para credenciales guardadas en el servidor."
+
+msgid "From name"
+msgstr "Nombre del remitente"
+
+msgid "From email"
+msgstr "Correo del remitente"
+
+msgid "Choose account"
+msgstr "Elegir cuenta"
+
+msgid "Custom values"
+msgstr "Valores personalizados"
+
+msgid "ERPNext default sender"
+msgstr "Remitente predeterminado de ERPNext"
+
+msgid "Saved selection · verify connection"
+msgstr "Selección guardada · verifique la conexión"
+
+msgid "Loading accounts…"
+msgstr "Cargando cuentas…"
+
+msgid "Refresh accounts"
+msgstr "Actualizar cuentas"
+
+msgid "Leave From name and From email empty to use ERPNext defaults."
+msgstr "Deje vacíos el nombre y el correo del remitente para usar los valores predeterminados de ERPNext."
+
+msgid "Connect the automation server to ERPNext to load outgoing email accounts. Set ERPNEXT_URL, ERPNEXT_API_KEY and ERPNEXT_API_SECRET on the server."
+msgstr "Conecte el servidor de automatizaciones a ERPNext para cargar las cuentas de correo saliente. Configure ERPNEXT_URL, ERPNEXT_API_KEY y ERPNEXT_API_SECRET en el servidor."
+
+msgid "To"
+msgstr "A"
+
+msgid "Subject"
+msgstr "Asunto"
+
+msgid "Pre-header (preview text)"
+msgstr "Preencabezado (texto de vista previa)"
+
+msgid "Shown as preview text in email clients that support it."
+msgstr "Se muestra como texto de vista previa en los clientes de correo que lo admiten."
+
+msgid "Add attachments"
+msgstr "Agregar adjuntos"
+
+msgid "ERPNext attachment"
+msgstr "Adjunto de ERPNext"
+
+msgid "Choose an ERPNext file…"
+msgstr "Elija un archivo de ERPNext…"
+
+msgid "Choose a file already uploaded to ERPNext."
+msgstr "Elija un archivo que ya esté subido a ERPNext."
+
+msgid "Attachment {0}"
+msgstr "Adjunto {0}"
+
+msgid "Remove attachment {0}"
+msgstr "Quitar adjunto {0}"
+
+msgid "Hide preview"
+msgstr "Ocultar vista previa"
+
+msgid "Preview email"
+msgstr "Vista previa del correo"
+
+msgid "Email preview"
+msgstr "Vista previa del correo"
+
+msgid "Email body"
+msgstr "Cuerpo del correo"
+
+msgid "Visual editor"
+msgstr "Editor visual"
+
+msgid "HTML source"
+msgstr "Código HTML"
+
+msgid "Email HTML"
+msgstr "HTML del correo"
+
+msgid "Bold"
+msgstr "Negrita"
+
+msgid "Italic"
+msgstr "Cursiva"
+
+msgid "Underline"
+msgstr "Subrayado"
+
+msgid "Strike"
+msgstr "Tachado"
+
+msgid "Bullets"
+msgstr "Viñetas"
+
+msgid "Numbered"
+msgstr "Numerada"
+
+msgid "Redo"
+msgstr "Rehacer"
+
+msgid "Align left"
+msgstr "Alinear a la izquierda"
+
+msgid "Center"
+msgstr "Centro"
+
+msgid "Link"
+msgstr "Enlace"
+
+msgid "Image"
+msgstr "Imagen"
+
+msgid "Email font"
+msgstr "Fuente del correo"
+
+msgid "Email font size"
+msgstr "Tamaño de fuente del correo"
+
+msgid "Small"
+msgstr "Pequeño"
+
+msgid "Normal"
+msgstr "Normal"
+
+msgid "Large"
+msgstr "Grande"
+
+msgid "Extra large"
+msgstr "Muy grande"
+
+msgid "Email paragraph style"
+msgstr "Estilo de párrafo del correo"
+
+msgid "Paragraph"
+msgstr "Párrafo"
+
+msgid "Text color"
+msgstr "Color del texto"
+
+msgid "Highlight"
+msgstr "Resaltar"
+
+msgid "Highlight color"
+msgstr "Color de resaltado"
+
+msgid "Image URL"
+msgstr "URL de la imagen"
+
+msgid "Link URL"
+msgstr "URL del enlace"
+
+msgid "Insert"
+msgstr "Insertar"
+
+msgid "Email body custom values"
+msgstr "Valores personalizados del cuerpo del correo"
+
+msgid "Email body editor"
+msgstr "Editor del cuerpo del correo"
+
+msgid "{0} characters · {1} words"
+msgstr "{0} caracteres · {1} palabras"
+
+msgid "Choose…"
+msgstr "Elegir…"
+
+msgid "Search {0}"
+msgstr "Buscar {0}"
+
+msgid "Search by name or module…"
+msgstr "Buscar por nombre o módulo…"
+
+msgid "No matches. Try a different name."
+msgstr "No hay coincidencias. Pruebe con otro nombre."
+
+msgid "{0} results"
+msgstr "{0} resultados"
+
+msgid "Could not generate the endpoint. Resolve the workflow validation message, then save."
+msgstr "No se pudo generar el endpoint. Resuelva el mensaje de validación de la automatización y luego guarde."
+
+msgid "Webhook URL & test event"
+msgstr "URL del webhook y evento de prueba"
+
+msgid "Generating your webhook URL…"
+msgstr "Generando la URL de su webhook…"
+
+msgid "Webhook URL"
+msgstr "URL de Webhook"
+
+msgid "Copy URL"
+msgstr "Copiar URL"
+
+msgid "Use this same URL for testing and live events. No custom headers are needed. Keep the URL private—it includes the webhook secret."
+msgstr "Use esta misma URL para pruebas y eventos reales. No se necesitan encabezados personalizados. Mantenga la URL privada: incluye el secreto del webhook."
+
+msgid "Capture a test event"
+msgstr "Capturar un evento de prueba"
+
+msgid "Click Listen, then send JSON to the URL above. The next event is captured without running actions, even if this workflow is published. After capture or five minutes, published workflows resume processing live events."
+msgstr "Haga clic en Escuchar y luego envíe JSON a la URL de arriba. El siguiente evento se captura sin ejecutar acciones, aunque esta automatización esté publicada. Después de la captura o de cinco minutos, las automatizaciones publicadas vuelven a procesar eventos reales."
+
+msgid "Waiting for a test event…"
+msgstr "Esperando un evento de prueba…"
+
+msgid "Listen for test event"
+msgstr "Escuchar evento de prueba"
+
+msgid "Listening for 5 minutes."
+msgstr "Escuchando durante 5 minutos."
+
+msgid "Test event received. Its fields are available in the data picker."
+msgstr "Se recibió el evento de prueba. Sus campos están disponibles en el selector de datos."
+
+msgid "View captured payload"
+msgstr "Ver datos capturados"
+
+msgid "Save any new trigger before capturing a test event."
+msgstr "Guarde cualquier disparador nuevo antes de capturar un evento de prueba."
+
+msgid "Custom values for {0}"
+msgstr "Valores personalizados para {0}"
+
+msgid "Choose custom value for {0}"
+msgstr "Elegir valor personalizado para {0}"
+
+msgid "Choose a custom value…"
+msgstr "Elija un valor personalizado…"
+
+msgid "Incoming trigger data"
+msgstr "Datos entrantes del disparador"
+
+msgid "Earlier action results"
+msgstr "Resultados de acciones anteriores"
+
+msgid "Call an HTTPS API"
+msgstr "Llamar a una API HTTPS"
+
+msgid "Formatting…"
+msgstr "Dando formato…"
+
+msgid "Format code"
+msgstr "Dar formato al código"
+
+msgid "Heading"
+msgstr "Encabezado"
+
+msgid "List"
+msgstr "Lista"
+
+msgid "Choose a field…"
+msgstr "Elija un campo…"
+
+msgid "Tab indents · Shift+Tab outdents · Ctrl/⌘+F searches · Alt+Shift+F formats. Press Esc then Tab to leave the editor."
+msgstr "Tab aplica sangría · Shift+Tab la quita · Ctrl/⌘+F busca · Alt+Shift+F da formato. Pulse Esc y luego Tab para salir del editor."
+
+msgid "CRM: send campaign email"
+msgstr "CRM: enviar correo de campaña"
+
+msgid "Email the lead or deal, as a campaign or from the owner’s mailbox. Opens, clicks and replies can steer later steps."
+msgstr "Envíe un correo al prospecto o negocio, como campaña o desde el buzón del responsable. Las aperturas, los clics y las respuestas pueden guiar los pasos siguientes."
+
+msgid "CRM: send WhatsApp template"
+msgstr "CRM: enviar plantilla de WhatsApp"
+
+msgid "Send an approved WhatsApp template. It shows in the lead’s Conversations."
+msgstr "Envíe una plantilla de WhatsApp aprobada. Se muestra en las Conversaciones del prospecto."
+
+msgid "Send WhatsApp"
+msgstr "Enviar WhatsApp"
+
+msgid "CRM: send SMS"
+msgstr "CRM: enviar SMS"
+
+msgid "Send an SMS with the opt-out line. It shows in the lead’s Conversations."
+msgstr "Envíe un SMS con la línea para darse de baja. Se muestra en las Conversaciones del prospecto."
+
+msgid "Send SMS"
+msgstr "Enviar mensaje SMS"
+
+msgid "Lead added from the CRM"
+msgstr "Prospecto agregado desde el CRM"
+
+msgid "Start when someone adds a lead from the CRM, an agent or the API."
+msgstr "Empieza cuando alguien agrega un prospecto desde el CRM, un agente o la API."
+
+msgid "Deal added from the CRM"
+msgstr "Negocio agregado desde el CRM"
+
+msgid "Start when someone adds a deal from the CRM, an agent or the API."
+msgstr "Empieza cuando alguien agrega un negocio desde el CRM, un agente o la API."
+
+msgid "Write the person’s fields the ERPNext way, such as {{ first_name }}, or pick them from Custom values."
+msgstr "Escriba los campos de la persona al estilo de ERPNext, como {{ first_name }}, o elíjalos en Valores personalizados."
+
+msgid "Send as"
+msgstr "Enviar como"
+
+msgid "From the owner’s own mailbox (Gmail, Outlook or the ERP account), like a one-to-one email. No campaign layout; a small unsubscribe line is added."
+msgstr "Desde el buzón del propio responsable (Gmail, Outlook o la cuenta del ERP), como un correo personal. Sin diseño de campaña; se agrega una pequeña línea para darse de baja."
+
+msgid "As a campaign, with the campaign email provider. Your business address and an unsubscribe link are added."
+msgstr "Como campaña, con el proveedor de correo de campañas. Se agregan la dirección de su negocio y un enlace para darse de baja."
+
+msgid "As a campaign, with {0} from {1}. Your business address and an unsubscribe link are added."
+msgstr "Como campaña, con {0} desde {1}. Se agregan la dirección de su negocio y un enlace para darse de baja."
+
+msgid "As a campaign, with {0}. Your business address and an unsubscribe link are added."
+msgstr "Como campaña, con {0}. Se agregan la dirección de su negocio y un enlace para darse de baja."
+
+msgid "the ERP email account"
+msgstr "la cuenta de correo del ERP"
+
+msgid "Campaign email"
+msgstr "Correo de campaña"
+
+msgid "Personal email from the owner"
+msgstr "Correo personal del responsable"
+
+msgid "Designed with blocks in the CRM (Campaigns → Templates). Each email uses the template as it is when it is sent, so edits there apply to the next emails."
+msgstr "Diseñado con bloques en el CRM (Campañas → Plantillas). Cada correo usa la plantilla tal como está al enviarse, así que los cambios allí se aplican a los siguientes correos."
+
+msgid "A regular email saved in the CRM. Each email uses the template as it is when it is sent."
+msgstr "Un correo normal guardado en el CRM. Cada correo usa la plantilla tal como está al enviarse."
+
+msgid "Write it here, or pick a template made in the CRM: Campaigns → Templates, where emails can also be designed by dragging blocks."
+msgstr "Escríbalo aquí o elija una plantilla hecha en el CRM: Campañas → Plantillas, donde también puede diseñar correos arrastrando bloques."
+
+msgid "Email template"
+msgstr "Plantilla de correo"
+
+msgid "Free text"
+msgstr "Texto libre"
+
+msgid "{0} · designed"
+msgstr "{0} · diseñada"
+
+msgid "The template “{0}” is no longer in the CRM. Pick another one or write the email."
+msgstr "La plantilla “{0}” ya no está en el CRM. Elija otra o escriba el correo."
+
+msgid "Subject (optional: empty uses the template’s)"
+msgstr "Asunto (opcional: si lo deja vacío se usa el de la plantilla)"
+
+msgid "Template subject: {0}"
+msgstr "Asunto de la plantilla: {0}"
+
+msgid "Preview text (optional)"
+msgstr "Texto de vista previa (opcional)"
+
+msgid "People who unsubscribed from email are skipped."
+msgstr "Se omite a quienes se dieron de baja del correo."
+
+msgid "Choose a field"
+msgstr "Elija un campo"
+
+msgid "Template"
+msgstr "Plantilla"
+
+msgid "Only templates Meta approved can start a WhatsApp conversation. Create them in the CRM: Campaigns → Templates."
+msgstr "Solo las plantillas aprobadas por Meta pueden iniciar una conversación de WhatsApp. Créelas en el CRM: Campañas → Plantillas."
+
+msgid "WhatsApp template"
+msgstr "Plantilla de WhatsApp"
+
+msgid "Choose a template"
+msgstr "Elija una plantilla"
+
+msgid "No approved templates yet"
+msgstr "Todavía no hay plantillas aprobadas"
+
+msgid "Fill {0} with"
+msgstr "Llenar {0} con"
+
+msgid "Field for {0}"
+msgstr "Campo para {0}"
+
+msgid "It shows in the lead’s Conversations. People who opted out of WhatsApp are skipped."
+msgstr "Se muestra en las Conversaciones del prospecto. Se omite a quienes se dieron de baja de WhatsApp."
+
+msgid "The line “{0}” is added at the end."
+msgstr "Al final se agrega la línea “{0}”."
+
+msgid "About {0} characters ({1} SMS per person). It shows in the lead’s Conversations."
+msgstr "Unos {0} caracteres ({1} SMS por persona). Se muestra en las Conversaciones del prospecto."
+
+msgid "Who can be added"
+msgstr "Quién se puede agregar"
+
+msgid "Record type"
+msgstr "Tipo de registro"
+
+msgid "Leads"
+msgstr "Clientes potenciales"
+
+msgid "Deals"
+msgstr "Negocios"
+
+msgid "People join from the CRM (a lead or deal, ticked rows or a filtered list), from an agent (FAC) or the API. Someone already in this workflow is not added twice."
+msgstr "Las personas entran desde el CRM (un prospecto o negocio, filas marcadas o una lista filtrada), desde un agente (FAC) o la API. Nadie que ya esté en esta automatización se agrega dos veces."
+
+msgid "Leave the workflow"
+msgstr "Salir de la automatización"
+
+msgid "When they reply"
+msgstr "Cuando respondan"
+
+msgid "A WhatsApp, SMS or email from them ends it, even during a wait, so a person takes over."
+msgstr "Un WhatsApp, SMS o correo de su parte la termina, incluso durante una espera, para que una persona tome el control."
+
+msgid "Always: when they unsubscribe, their email bounces, or someone takes them out from the CRM."
+msgstr "Siempre: cuando se dan de baja, su correo rebota o alguien los saca desde el CRM."
+
+msgid "When the record matches"
+msgstr "Cuando el registro cumpla"
+
+msgid "For example: status is Qualified. Checked before every step."
+msgstr "Por ejemplo: el estado es Calificado. Se revisa antes de cada paso."
+
+msgid "When the lead or deal matches, it leaves before its next step."
+msgstr "Cuando el prospecto o negocio cumpla, sale antes de su siguiente paso."
+
+msgid "Keeps going after a reply"
+msgstr "Sigue después de una respuesta"
+
+msgid "Leaves when they reply"
+msgstr "Sale cuando responden"
+
+msgid "exit condition"
+msgstr "condición de salida"
+
+msgid "Delivered"
+msgstr "Entregado"
+
+msgid "Opened"
+msgstr "Abierto"
+
+msgid "Clicked a link"
+msgstr "Hizo clic en un enlace"
+
+msgid "Replied"
+msgstr "Respondido"
+
+msgid "Bounced"
+msgstr "Rebotados"
+
+msgid "Skipped (no address or opted out)"
+msgstr "Omitido (sin dirección o dado de baja)"
+
+msgid "Sent, Delivered, Read, Clicked, Replied, Failed or Skipped"
+msgstr "Enviado, Entregado, Leído, Clic, Respondió, Falló u Omitido"
+
+msgid "true or false"
+msgstr "verdadero o falso"
+
+msgid "Opted out of any channel"
+msgstr "Se dio de baja de algún canal"
+
+msgid "Opted out of email"
+msgstr "Se dio de baja del correo"
+
+msgid "Opted out of WhatsApp"
+msgstr "Se dio de baja de WhatsApp"
+
+msgid "Opted out of SMS"
+msgstr "Se dio de baja de SMS"
+
+msgid "Replied since joining"
+msgstr "Respondió desde que entró"
+
+msgid "Person (CRM)"
+msgstr "Persona (CRM)"
+
+msgid "Trigger · {0}"
+msgstr "Disparador · {0}"
+
+msgid "Entire incoming document"
+msgstr "Documento entrante completo"
+
+msgid "Data received by the trigger"
+msgstr "Datos recibidos por el disparador"
+
+msgid "Document ID"
+msgstr "ID del documento"
+
+msgid "Name of the incoming document"
+msgstr "Nombre del documento entrante"
+
+msgid "Document type"
+msgstr "Tipo de documento"
+
+msgid "Incoming document type"
+msgstr "Tipo del documento entrante"
+
+msgid "Webhook · {0}"
+msgstr "Webhook · {0}"
+
+msgid "Empty value"
+msgstr "Valor vacío"
+
+msgid "Entire {0} document"
+msgstr "Documento {0} completo"
+
+msgid "Document data"
+msgstr "Datos del documento"
+
+msgid "Custom field"
+msgstr "Campo personalizado"
+
+msgid "{0} HTTP status"
+msgstr "{0}: estado HTTP"
+
+msgid "HTTP status code"
+msgstr "Código de estado HTTP"
+
+msgid "{0} response body"
+msgstr "{0}: cuerpo de la respuesta"
+
+msgid "Entire saved API response"
+msgstr "Respuesta completa guardada de la API"
+
+msgid "{0} response"
+msgstr "{0}: respuesta"
+
+msgid "Empty"
+msgstr "Vacío"
+
+msgid "{0} result"
+msgstr "{0}: resultado"
+
+msgid "Validated AI result"
+msgstr "Resultado validado de la IA"
+
+msgid "Previous actions"
+msgstr "Acciones anteriores"
+
+msgid "Value returned by JavaScript"
+msgstr "Valor devuelto por JavaScript"
+
+msgid "Workflow name"
+msgstr "Nombre de la automatización"
+
+msgid "Current workflow"
+msgstr "Automatización actual"
+
+msgid "Today"
+msgstr "Hoy"
+
+msgid "System"
+msgstr "Sistema"
+
+msgid "Current date"
+msgstr "Fecha actual"
+
+msgid "API request failed"
+msgstr "Falló la solicitud a la API"
+
+msgid "Child table"
+msgstr "Tabla secundaria"
+
+msgid "Custom"
+msgstr "Personalizado"
+
+msgid "Could not load the catalog."
+msgstr "No se pudo cargar el catálogo."
+
+msgid "Row {0}"
+msgstr "Fila {0}"
+
+msgid "Remove row"
+msgstr "Quitar fila"
+
+msgid "Add row"
+msgstr "Añadir fila"
+
+msgid "Item {0}"
+msgstr "Elemento {0}"
+
+msgid "Add item"
+msgstr "Agregar elemento"
+
+msgid "Enter value"
+msgstr "Ingresar valor"
+
+msgid "Use trigger data"
+msgstr "Usar datos del disparador"
+
+msgid "Data for {0}"
+msgstr "Datos para {0}"
+
+msgid "Choose an incoming field…"
+msgstr "Elija un campo entrante…"
+
+msgid "Choose a field above or insert a merge field"
+msgstr "Elija un campo arriba o inserte un campo combinado"
+
+msgid "No"
+msgstr "No"
+
+msgid "Yes"
+msgstr "Sí"
+
+msgid "Choose {0} using trigger data, or enter its ID"
+msgstr "Elija {0} con datos del disparador o ingrese su ID"
+
+msgid "Remove field"
+msgstr "Eliminar campo"
+
+msgid "Add a field"
+msgstr "Agregar un campo"
+
+msgid "Search fields"
+msgstr "Busca campos"
+
+msgid "Search by field label…"
+msgstr "Buscar por etiqueta del campo…"
+
+msgid "Field to add"
+msgstr "Campo a agregar"
+
+msgid "Connect the ERPNext server to load fields for this document type."
+msgstr "Conecte el servidor de ERPNext para cargar los campos de este tipo de documento."
+
+msgid "Remove {0}"
+msgstr "Quitar {0}"
+
+msgid "New field name"
+msgstr "Nombre del campo nuevo"
+
+msgid "Field name"
+msgstr "Nombre del campo"
+
+msgid "Add field"
+msgstr "Agregar campo"
+
+msgid "Starts when another app sends JSON. Its URL is generated automatically. Capture a test event to map incoming fields."
+msgstr "Empieza cuando otra aplicación envía JSON. Su URL se genera automáticamente. Capture un evento de prueba para asignar los campos entrantes."
+
+msgid "Webhook name"
+msgstr "Nombre del webhook"
+
+msgid "For example, Website enquiries"
+msgstr "Por ejemplo, Consultas del sitio web"
+
+msgid "Start when the document is"
+msgstr "Empezar cuando el documento sea"
+
+msgid "Document event"
+msgstr "Evento del documento"
+
+msgid "Runs only when these fields change: {0}. Creating a record or editing other fields does not enroll it."
+msgstr "Solo se ejecuta cuando cambian estos campos: {0}. Crear un registro o editar otros campos no lo inscribe."
+
+msgid "This action has an unreadable configuration. Its content is preserved below so you can repair it."
+msgstr "Esta acción tiene una configuración ilegible. Su contenido se conserva abajo para que pueda repararla."
+
+msgid "What should happen?"
+msgstr "¿Qué quiere que pase?"
+
+msgid "Find a document"
+msgstr "Buscar un documento"
+
+msgid "Create a document"
+msgstr "Crear un documento"
+
+msgid "Update a document"
+msgstr "Actualizar un documento"
+
+msgid "Apply an approval action"
+msgstr "Aplicar una acción de aprobación"
+
+msgid "Check a condition"
+msgstr "Revisar una condición"
+
+msgid "Uses Pulse on this ERPNext site. Permissions and assignment rules apply. Use native record IDs."
+msgstr "Usa Pulse en este sitio de ERPNext. Se aplican los permisos y las reglas de asignación. Use los ID nativos de los registros."
+
+msgid "Which document?"
+msgstr "¿Qué documento?"
+
+msgid "Use trigger data to use the document that started this workflow."
+msgstr "Use datos del disparador para usar el documento que inició esta automatización."
+
+msgid "Approval action"
+msgstr "Acción de aprobación"
+
+msgid "Advanced: view or edit JSON"
+msgstr "Avanzado: ver o editar JSON"
+
+msgid "Save this workflow to get webhook endpoints."
+msgstr "Guarde esta automatización para obtener los endpoints del webhook."
+
+msgid "Trigger endpoint"
+msgstr "Endpoint del disparador"
+
+msgid "Show webhook details"
+msgstr "Mostrar detalles del webhook"
+
+msgid "Document events are connected directly inside ERPNext. Publishing enables the selected trigger."
+msgstr "Los eventos de documentos se conectan directamente dentro de ERPNext. Al publicar se activa el disparador seleccionado."
+
+msgid "Webhook endpoint"
+msgstr "Endpoint del webhook"
+
+msgid "Test payload"
+msgstr "Datos de prueba"
+
+msgid "Test payload must be valid JSON"
+msgstr "Los datos de prueba deben ser JSON válido"
+
+msgid "Test Workflow previews the full graph without sending external requests. Results appear in Enrollment History."
+msgstr "Probar automatización muestra todo el flujo sin enviar solicitudes externas. Los resultados aparecen en el Historial de inscripciones."
+
+msgid "Equals"
+msgstr "Es igual a"
+
+msgid "Does not equal"
+msgstr "No es igual a"
+
+msgid "Match"
+msgstr "Coincidencia"
+
+msgid "Condition matching"
+msgstr "Coincidencia de condiciones"
+
+msgid "All conditions (AND)"
+msgstr "Todas las condiciones (Y)"
+
+msgid "Any condition (OR)"
+msgstr "Cualquier condición (O)"
+
+msgid "Condition {0}"
+msgstr "Condición {0}"
+
+msgid "Remove condition"
+msgstr "Quitar condición"
+
+msgid "Condition {0} field"
+msgstr "Campo de la condición {0}"
+
+msgid "Current day of week"
+msgstr "Día actual de la semana"
+
+msgid "Trigger data"
+msgstr "Datos del disparador"
+
+msgid "Condition {0} operator"
+msgstr "Operador de la condición {0}"
+
+msgid "Condition {0} value"
+msgstr "Valor de la condición {0}"
+
+msgid "Value to compare"
+msgstr "Valor a comparar"
+
+msgid "Add condition"
+msgstr "Agregar condición"
+
+msgid "Only matching documents start a run. Other events are ignored."
+msgstr "Solo los documentos que cumplen inician una ejecución. Los demás eventos se ignoran."
+
+msgid "The first matching branch runs. Otherwise, the Else branch runs."
+msgstr "Se ejecuta la primera rama que cumpla. Si ninguna cumple, se ejecuta la rama Si no."
+
+msgid "Trigger filters"
+msgstr "Filtros del disparador"
+
+msgid "Clear all"
+msgstr "Borrar todo"
+
+msgid "Choose which {0} can start this workflow."
+msgstr "Elija qué registros de {0} pueden iniciar esta automatización."
+
+msgid "Choose which documents can start this workflow."
+msgstr "Elija qué documentos pueden iniciar esta automatización."
+
+msgid "Add filters"
+msgstr "Agregar filtros"
+
+msgid "Filter matching"
+msgstr "Coincidencia de filtros"
+
+msgid "Match all filters (AND)"
+msgstr "Cumplir todos los filtros (Y)"
+
+msgid "Match any filter (OR)"
+msgstr "Cumplir cualquier filtro (O)"
+
+msgid "Filter {0}"
+msgstr "Filtro {0}"
+
+msgid "Remove filter {0}"
+msgstr "Quitar filtro {0}"
+
+msgid "Remove filter"
+msgstr "Quitar filtro"
+
+msgid "Filter {0} field"
+msgstr "Campo del filtro {0}"
+
+msgid "Comparison"
+msgstr "Comparación"
+
+msgid "Filter {0} comparison"
+msgstr "Comparación del filtro {0}"
+
+msgid "Filter {0} value"
+msgstr "Valor del filtro {0}"
+
+msgid "Enter a value"
+msgstr "Ingrese un valor"
+
+msgid "Add filter"
+msgstr "Agregar filtro"
+
+msgid "Only documents matching at least one filter start a run."
+msgstr "Solo los documentos que cumplen al menos un filtro inician una ejecución."
+
+msgid "Only documents matching every filter start a run."
+msgstr "Solo los documentos que cumplen todos los filtros inician una ejecución."
+
+msgid "Request URL"
+msgstr "URL de Solicitud"
+
+msgid "Method"
+msgstr "Método"
+
+msgid "HTTP method"
+msgstr "Método HTTP"
+
+msgid "Authorization"
+msgstr "Autorización"
+
+msgid "Authorization type"
+msgstr "Tipo de autorización"
+
+msgid "Basic Auth"
+msgstr "Autenticación básica"
+
+msgid "Bearer Token"
+msgstr "Token Bearer"
+
+msgid "API Key"
+msgstr "Clave de API"
+
+msgid "Token"
+msgstr "Token"
+
+msgid "Bearer token"
+msgstr "Token Bearer"
+
+msgid "Username"
+msgstr "Nombre de usuario"
+
+msgid "Authorization username"
+msgstr "Usuario de autorización"
+
+msgid "Password"
+msgstr "Contraseña"
+
+msgid "Authorization password"
+msgstr "Contraseña de autorización"
+
+msgid "Send API key in"
+msgstr "Enviar la clave de API en"
+
+msgid "API key location"
+msgstr "Ubicación de la clave de API"
+
+msgid "Header"
+msgstr "Encabezado"
+
+msgid "Query parameter"
+msgstr "Parámetro de consulta"
+
+msgid "Key name"
+msgstr "Nombre de la clave"
+
+msgid "API key name"
+msgstr "Nombre de la clave de API"
+
+msgid "Key value"
+msgstr "Valor de la clave"
+
+msgid "API key value"
+msgstr "Valor de la clave de API"
+
+msgid "Use secret:VARIABLE_NAME to read a credential stored on the server."
+msgstr "Use secret:VARIABLE_NAME para leer una credencial guardada en el servidor."
+
+msgid "Query parameters"
+msgstr "Parámetros de consulta"
+
+msgid "Headers"
+msgstr "Encabezados"
+
+msgid "Content type"
+msgstr "Tipo de contenido"
+
+msgid "Plain text"
+msgstr "Texto sin formato"
+
+msgid "Save response"
+msgstr "Guardar respuesta"
+
+msgid "Use the response body and its fields in later actions. Fields are discovered after a successful live run, or from an example response below."
+msgstr "Use el cuerpo de la respuesta y sus campos en acciones posteriores. Los campos se descubren tras una ejecución real exitosa o a partir de una respuesta de ejemplo abajo."
+
+msgid "Only the HTTP status will be kept. The response body will not be available to later actions."
+msgstr "Solo se conservará el estado HTTP. El cuerpo de la respuesta no estará disponible para acciones posteriores."
+
+msgid "Add an example response"
+msgstr "Agregar una respuesta de ejemplo"
+
+msgid "Paste an example JSON response to make its fields available before running the API."
+msgstr "Pegue una respuesta JSON de ejemplo para que sus campos estén disponibles antes de llamar a la API."
+
+msgid "Example API response"
+msgstr "Respuesta de ejemplo de la API"
+
+msgid "Enter valid JSON for the example response."
+msgstr "Ingrese JSON válido para la respuesta de ejemplo."
+
+msgid "AI capability"
+msgstr "Capacidad de IA"
+
+msgid "Published revision {0}"
+msgstr "Revisión publicada {0}"
+
+msgid "Loading published capabilities…"
+msgstr "Cargando capacidades publicadas…"
+
+msgid "Publish a capability in ERPNext to make it available here."
+msgstr "Publique una capacidad en ERPNext para que esté disponible aquí."
+
+msgid "This capability is unpublished, disabled or unavailable. Publish and enable it before running."
+msgstr "Esta capacidad no está publicada, está desactivada o no está disponible. Publíquela y actívela antes de ejecutar."
+
+msgid "Refresh capabilities"
+msgstr "Actualizar capacidades"
+
+msgid "Manage capabilities"
+msgstr "Administrar capacidades"
+
+msgid "Uses the connected ChatGPT account. Map only the data this job needs. New published instructions apply to future runs."
+msgstr "Usa la cuenta de ChatGPT conectada. Asigne solo los datos que necesita esta tarea. Las nuevas instrucciones publicadas se aplican a ejecuciones futuras."
+
+msgid "Inputs"
+msgstr "Entradas"
+
+msgid "Result fields"
+msgstr "Campos del resultado"
+
+msgid "Use the result in later actions through the data picker. This action produces data; it does not send email or change CRM records. Use Test draft on the capability to run AI without follow-on actions."
+msgstr "Use el resultado en acciones posteriores con el selector de datos. Esta acción produce datos; no envía correos ni cambia registros del CRM. Use Probar borrador en la capacidad para ejecutar la IA sin acciones posteriores."
+
+msgid "Advanced: inputs and optional revision pin"
+msgstr "Avanzado: entradas y revisión fija opcional"
+
+msgid "This Pulse operation is unavailable in this editor version. Its JSON is preserved below."
+msgstr "Esta operación de Pulse no está disponible en esta versión del editor. Su JSON se conserva abajo."
+
+msgid "{0} (required)"
+msgstr "{0} (obligatorio)"
+
+msgid "This action requires no inputs."
+msgstr "Esta acción no requiere entradas."
+
+msgid "Optional input"
+msgstr "Entrada opcional"
+
+msgid "Optional Pulse input"
+msgstr "Entrada opcional de Pulse"
+
+msgid "Choose an optional input…"
+msgstr "Elija una entrada opcional…"
+
+msgid "Add input"
+msgstr "Agregar entrada"
+
+msgid "Use native IDs for records. Objects contain field names and values; arrays contain IDs or rule objects. Advanced JSON supports structured inputs and data references."
+msgstr "Use los ID nativos de los registros. Los objetos contienen nombres de campos y valores; las listas contienen ID u objetos de reglas. El JSON avanzado admite entradas estructuradas y referencias a datos."
+
+msgid "Remove rule {0}"
+msgstr "Quitar regla {0}"
+
+msgid "Add field rule"
+msgstr "Agregar regla de campo"
+
+msgid "Reservas: booking page link"
+msgstr "Reservas: enlace a la página de reservas"
+
+msgid "Get the link where the customer picks a time, to send in an email or WhatsApp."
+msgstr "Obtenga el enlace donde el cliente elige un horario, para enviarlo por correo o WhatsApp."
+
+msgid "Booking link"
+msgstr "Enlace de reserva"
+
+msgid "Reservas: find free times"
+msgstr "Reservas: buscar horarios libres"
+
+msgid "Look up open times for a service. Later steps can use the earliest one."
+msgstr "Busque horarios disponibles para un servicio. Los pasos siguientes pueden usar el más próximo."
+
+msgid "Find free times"
+msgstr "Buscar horarios libres"
+
+msgid "Reservas: book a time"
+msgstr "Reservas: reservar un horario"
+
+msgid "Book a service for someone. Paid services hold the time and return a payment link."
+msgstr "Reserve un servicio para alguien. Los servicios pagados apartan el horario y devuelven un enlace de pago."
+
+msgid "Book a time"
+msgstr "Reservar un horario"
+
+msgid "Reservas: move a booking"
+msgstr "Reservas: mover una reserva"
+
+msgid "Move a booking to another time. The customer is emailed the change."
+msgstr "Mueva una reserva a otro horario. Se avisa al cliente por correo."
+
+msgid "Move booking"
+msgstr "Mover reserva"
+
+msgid "Reservas: cancel a booking"
+msgstr "Reservas: cancelar una reserva"
+
+msgid "Cancel a booking. A paid one is flagged so someone decides the refund."
+msgstr "Cancele una reserva. Si está pagada, se marca para que alguien decida el reembolso."
+
+msgid "Cancel booking"
+msgstr "Cancelar reserva"
+
+msgid "Reservas: mark completed or no-show"
+msgstr "Reservas: marcar como completada o no se presentó"
+
+msgid "Close a confirmed booking as completed or as a no-show."
+msgstr "Cierre una reserva confirmada como completada o como no se presentó."
+
+msgid "Mark booking"
+msgstr "Marcar reserva"
+
+msgid "Booking made"
+msgstr "Reserva hecha"
+
+msgid "Someone booked, on the page, through an agent, in Desk or from a workflow. Paid services are still awaiting payment."
+msgstr "Alguien reservó, en la página, con un agente, en Desk o desde una automatización. Los servicios pagados todavía esperan el pago."
+
+msgid "Booking confirmed"
+msgstr "Reserva confirmada"
+
+msgid "Free bookings right away; paid ones once the bank approves."
+msgstr "Las reservas gratuitas, de inmediato; las pagadas, cuando el banco aprueba."
+
+msgid "Booking moved"
+msgstr "Reserva movida"
+
+msgid "The customer or staff moved it to another time."
+msgstr "El cliente o el personal la movió a otro horario."
+
+msgid "Booking cancelled"
+msgstr "Reserva cancelada"
+
+msgid "The customer or staff cancelled it."
+msgstr "El cliente o el personal la canceló."
+
+msgid "Hold expired"
+msgstr "Apartado vencido"
+
+msgid "The customer did not pay in time and the time was released."
+msgstr "El cliente no pagó a tiempo y se liberó el horario."
+
+msgid "Reminder sent"
+msgstr "Recordatorio enviado"
+
+msgid "The reminder email went out, before the booking."
+msgstr "Se envió el correo de recordatorio antes de la reserva."
+
+msgid "Booking completed"
+msgstr "Reserva completada"
+
+msgid "The booking took place (marked by staff, or 12 hours after it ended)."
+msgstr "La reserva se realizó (marcada por el personal, o 12 horas después de terminar)."
+
+msgid "Customer did not show"
+msgstr "El cliente no se presentó"
+
+msgid "Staff marked it as a no-show."
+msgstr "El personal la marcó como no se presentó."
+
+msgid "Booking needs attention"
+msgstr "La reserva necesita atención"
+
+msgid "Paid after the hold ran out, or cancelled after paying: someone has to decide."
+msgstr "Se pagó después de vencer el apartado, o se canceló después de pagar: alguien tiene que decidir."
+
+msgid "Reservas booking event"
+msgstr "Evento de reserva de Reservas"
+
+msgid "Reservas · any booking page"
+msgstr "Reservas · cualquier página de reservas"
+
+msgid "Booking page"
+msgstr "Página de reservas"
+
+msgid "Choose a booking page"
+msgstr "Elija una página de reservas"
+
+msgid "{0} (off)"
+msgstr "{0} (desactivada)"
+
+msgid "{0} (not found)"
+msgstr "{0} (no encontrada)"
+
+msgid "When"
+msgstr "Cuándo"
+
+msgid "Booking event"
+msgstr "Evento de la reserva"
+
+msgid "Only bookings for this page, or any."
+msgstr "Solo las reservas de esta página, o de cualquiera."
+
+msgid "Any booking page"
+msgstr "Cualquier página de reservas"
+
+msgid "Later steps can use the booking’s fields: {0}. Use {1} for “this booking” in Reservas steps."
+msgstr "Los pasos siguientes pueden usar los campos de la reserva: {0}. Use {1} para “esta reserva” en los pasos de Reservas."
+
+msgid "Which booking"
+msgstr "Qué reserva"
+
+msgid "The booking that started this workflow, or another booking ID from an earlier step."
+msgstr "La reserva que inició esta automatización, u otro ID de reserva de un paso anterior."
+
+msgid "The booking that started the workflow"
+msgstr "La reserva que inició la automatización"
+
+msgid "Another booking"
+msgstr "Otra reserva"
+
+msgid "Use the link in a later step as {0}."
+msgstr "Use el enlace en un paso posterior como {0}."
+
+msgid "All booking pages"
+msgstr "Todas las páginas de reservas"
+
+msgid "From date (YYYY-MM-DD, empty for today)"
+msgstr "Desde la fecha (AAAA-MM-DD, vacío para hoy)"
+
+msgid "Days to look ahead"
+msgstr "Días hacia adelante"
+
+msgid "Returns first (the earliest start), count and days. If nothing is free, next_free has the next day with times."
+msgstr "Devuelve first (el inicio más próximo), count y days. Si no hay nada libre, next_free tiene el siguiente día con horarios."
+
+msgid "Start (YYYY-MM-DD HH:MM, site time)"
+msgstr "Inicio (AAAA-MM-DD HH:MM, hora del sitio)"
+
+msgid "Customer name"
+msgstr "Nombre del cliente"
+
+msgid "Phone (WhatsApp)"
+msgstr "Teléfono (WhatsApp)"
+
+msgid "Notes (optional)"
+msgstr "Notas (opcional)"
+
+msgid "The time must be free, exactly like on the booking page. A paid service holds the time; send payment_url to the customer. url is their booking page."
+msgstr "El horario debe estar libre, igual que en la página de reservas. Un servicio pagado aparta el horario; envíe payment_url al cliente. url es su página de reserva."
+
+msgid "Booking ID"
+msgstr "ID de la reserva"
+
+msgid "New start (YYYY-MM-DD HH:MM, site time)"
+msgstr "Nuevo inicio (AAAA-MM-DD HH:MM, hora del sitio)"
+
+msgid "Reason (optional, shown on the booking)"
+msgstr "Motivo (opcional, se muestra en la reserva)"
+
+msgid "Mark as"
+msgstr "Marcar como"
+
+msgid "No-show"
+msgstr "No se presentó"
+
+msgid "Document name"
+msgstr "Nombre del documento"
+
+msgid "ERPNext / Webhook"
+msgstr "ERPNext / Webhook"
+
+msgid "Name from the incoming payload"
+msgstr "Nombre de los datos entrantes"
+
+msgid "Customer"
+msgstr "Cliente"
+
+msgid "Customer from the incoming payload"
+msgstr "Cliente de los datos entrantes"
+
+msgid "DocType"
+msgstr "DocType"
+
+msgid "Incoming document status"
+msgstr "Estado del documento entrante"
+
+msgid "Full contact name"
+msgstr "Nombre completo del contacto"
+
+msgid "Contact first name"
+msgstr "Nombre de pila del contacto"
+
+msgid "First word of the contact name"
+msgstr "Primera palabra del nombre del contacto"
+
+msgid "Contact last name"
+msgstr "Apellido del contacto"
+
+msgid "Remaining contact name"
+msgstr "Resto del nombre del contacto"
+
+msgid "Contact email"
+msgstr "Correo del contacto"
+
+msgid "Primary email address"
+msgstr "Correo principal"
+
+msgid "Contact title"
+msgstr "Cargo del contacto"
+
+msgid "Role or job title"
+msgstr "Puesto o cargo"
+
+msgid "Contact custom field"
+msgstr "Campo personalizado del contacto"
+
+msgid "Replace FIELD_KEY with the custom field key"
+msgstr "Reemplace FIELD_KEY por la clave del campo personalizado"
+
+msgid "Linked company name"
+msgstr "Nombre de la empresa vinculada"
+
+msgid "Company domain"
+msgstr "Dominio de la empresa"
+
+msgid "Website domain"
+msgstr "Dominio del sitio web"
+
+msgid "Company industry"
+msgstr "Industria de la empresa"
+
+msgid "Industry value"
+msgstr "Valor de la industria"
+
+msgid "Company custom field"
+msgstr "Campo personalizado de la empresa"
+
+msgid "Opportunity name"
+msgstr "Nombre de la oportunidad"
+
+msgid "Current deal stage"
+msgstr "Etapa actual del negocio"
+
+msgid "Deal amount"
+msgstr "Monto del negocio"
+
+msgid "Formatted amount and currency"
+msgstr "Monto con formato y moneda"
+
+msgid "Current task title"
+msgstr "Título actual de la tarea"
+
+msgid "Task due date"
+msgstr "Fecha de vencimiento de la tarea"
+
+msgid "Due date when set"
+msgstr "Fecha de vencimiento, si la tiene"
+
+msgid "Current task status"
+msgstr "Estado actual de la tarea"
+
+msgid "Owner name"
+msgstr "Nombre del responsable"
+
+msgid "Owner"
+msgstr "Propietario"
+
+msgid "Assigned teammate name"
+msgstr "Nombre del compañero asignado"
+
+msgid "Owner email"
+msgstr "Correo del responsable"
+
+msgid "Assigned teammate email"
+msgstr "Correo del compañero asignado"
+
+msgid "Running workflow name"
+msgstr "Nombre de la automatización en ejecución"
+
+msgid "just now"
+msgstr "justo ahora"
+
+msgid "{0}m ago"
+msgstr "hace {0} min"
+
+msgid "{0}h ago"
+msgstr "hace {0} h"
+
+msgid "{0}d ago"
+msgstr "hace {0} d"
+
+msgid "Pick a date"
+msgstr "Elija una fecha"
+
+msgid "Previous month"
+msgstr "Mes anterior"
+
+msgid "Next month"
+msgstr "Mes siguiente"
+
+msgid "Insert custom value"
+msgstr "Insertar valor personalizado"
+
+msgid "Choose custom value"
+msgstr "Elegir valor personalizado"
+
+msgid "Use native ERPNext records with Pulse permissions and validation."
+msgstr "Usa registros nativos de ERPNext con los permisos y validaciones de Pulse."
+
+msgid "Back to ERPNext"
+msgstr "Volver a ERPNext"
+
+msgid "Quest Automations"
+msgstr "Quest Automations"
+
+msgid "Appearance"
+msgstr "Apariencia"
+
+msgid "ERPNext Automations"
+msgstr "Automatizaciones de ERPNext"
+
+msgid "Automation API token"
+msgstr "Token de la API de automatizaciones"
+
+msgid "Connect"
+msgstr "Conectar"
+
+msgid "Dismiss"
+msgstr "Descartar"
+
+msgid "Light mode"
+msgstr "Modo claro"
+
+msgid "Dark mode"
+msgstr "Modo oscuro"
+
+msgid "Pulse: create project"
+msgstr "Pulse: crear proyecto"
+
+msgid "Pulse: create task"
+msgstr "Pulse: crear tarea"
+
+msgid "Pulse: get task"
+msgstr "Pulse: obtener tarea"
+
+msgid "Pulse: update task"
+msgstr "Pulse: actualizar tarea"
+
+msgid "Pulse: set status"
+msgstr "Pulse: cambiar estado"
+
+msgid "Pulse: assign task"
+msgstr "Pulse: asignar tarea"
+
+msgid "Pulse: unassign task"
+msgstr "Pulse: quitar asignación de tarea"
+
+msgid "Pulse: add comment"
+msgstr "Pulse: agregar comentario"
+
+msgid "Pulse: add dependency"
+msgstr "Pulse: agregar dependencia"
+
+msgid "Pulse: create module"
+msgstr "Pulse: crear módulo"
+
+msgid "Pulse: find tasks"
+msgstr "Pulse: buscar tareas"
+
+msgid "Pulse: get project"
+msgstr "Pulse: obtener proyecto"
+
+msgid "Pulse: update project"
+msgstr "Pulse: actualizar proyecto"
+
+msgid "Pulse: archive task"
+msgstr "Pulse: archivar tarea"
+
+msgid "Pulse: restore task"
+msgstr "Pulse: restaurar tarea"
+
+msgid "Pulse: add subtask"
+msgstr "Pulse: agregar subtarea"
+
+msgid "Pulse: remove dependency"
+msgstr "Pulse: quitar dependencia"
+
+msgid "Pulse: add checklist item"
+msgstr "Pulse: agregar elemento de lista de verificación"
+
+msgid "Pulse: set checklist item"
+msgstr "Pulse: marcar elemento de lista de verificación"
+
+msgid "Pulse: bulk update tasks"
+msgstr "Pulse: actualizar tareas en lote"
+
+msgid "Pulse: list modules"
+msgstr "Pulse: listar módulos"
+
+msgid "Pulse: get module"
+msgstr "Pulse: obtener módulo"
+
+msgid "Pulse: update module"
+msgstr "Pulse: actualizar módulo"
+
+msgid "Pulse: add module tasks"
+msgstr "Pulse: agregar tareas al módulo"
+
+msgid "Pulse: remove module tasks"
+msgstr "Pulse: quitar tareas del módulo"
+
+msgid "Pulse: list pages"
+msgstr "Pulse: listar páginas"
+
+msgid "Pulse: get page"
+msgstr "Pulse: obtener página"
+
+msgid "Pulse: create page"
+msgstr "Pulse: crear página"
+
+msgid "Pulse: update page"
+msgstr "Pulse: actualizar página"
+
+msgid "Pulse: add page comment"
+msgstr "Pulse: agregar comentario a la página"
+
+msgid "Pulse: list requests"
+msgstr "Pulse: listar solicitudes"
+
+msgid "Pulse: get request"
+msgstr "Pulse: obtener solicitud"
+
+msgid "Pulse: create request"
+msgstr "Pulse: crear solicitud"
+
+msgid "Pulse: review request"
+msgstr "Pulse: revisar solicitud"
+
+msgid "Pulse: accept request"
+msgstr "Pulse: aceptar solicitud"
+
+msgid "Pulse: clone project template"
+msgstr "Pulse: clonar plantilla de proyecto"
+
+msgid "Pulse: get project team"
+msgstr "Pulse: obtener equipo del proyecto"
+
+msgid "Pulse: add project member"
+msgstr "Pulse: agregar miembro al proyecto"
+
+msgid "Pulse: remove project member"
+msgstr "Pulse: quitar miembro del proyecto"
+
+msgid "Pulse: transfer project owner"
+msgstr "Pulse: transferir responsable del proyecto"
+
+msgid "Pulse: invite project member"
+msgstr "Pulse: invitar miembro al proyecto"
+
+msgid "Pulse: preview offboarding"
+msgstr "Pulse: vista previa de la baja"
+
+msgid "Pulse: offboard user"
+msgstr "Pulse: dar de baja a un usuario"
+
+msgid "Pulse: create delivery handoff"
+msgstr "Pulse: crear traspaso de entrega"
+
+msgid "Pulse: get delivery handoff"
+msgstr "Pulse: obtener traspaso de entrega"
+
+msgid "Pulse: share task external"
+msgstr "Pulse: compartir tarea externamente"
+
+msgid "Pulse: revoke task external"
+msgstr "Pulse: revocar acceso externo a la tarea"
+
+msgid "Pulse: reply external"
+msgstr "Pulse: responder externamente"
+
+msgid "Pulse: get task fields"
+msgstr "Pulse: obtener campos de la tarea"
+
+msgid "Pulse: update task fields"
+msgstr "Pulse: actualizar campos de la tarea"
+
+msgid "Pulse: get project field config"
+msgstr "Pulse: obtener configuración de campos del proyecto"
+
+msgid "Pulse: save project field config"
+msgstr "Pulse: guardar configuración de campos del proyecto"
+
+msgid "Pulse: create custom task field"
+msgstr "Pulse: crear campo personalizado de tarea"
+
+msgid "Pulse: get task approvals"
+msgstr "Pulse: obtener aprobaciones de la tarea"
+
+msgid "Pulse: request task approval"
+msgstr "Pulse: solicitar aprobación de la tarea"
+
+msgid "Pulse: decide task approval"
+msgstr "Pulse: decidir aprobación de la tarea"
+
+msgid "Pulse: preview task import"
+msgstr "Pulse: vista previa de la importación de tareas"
+
+msgid "Pulse: import tasks"
+msgstr "Pulse: importar tareas"
+
+msgid "Pulse: export tasks"
+msgstr "Pulse: exportar tareas"
+
+msgid "Pulse: describe operations"
+msgstr "Pulse: describir operaciones"
+
+msgid "Pulse: get task creation fields"
+msgstr "Pulse: obtener campos para crear tareas"
+
+msgid "Cc"
+msgstr "CC"
+
+msgid "Bcc"
+msgstr "CCO"
+
+msgid "ERPNext & Webhooks"
+msgstr "ERPNext y webhooks"
+
+msgid "Say what should happen. The AI builds the automation; you review and test it before turning it on."
+msgstr "Cuéntele qué quiere que pase. La IA arma la automatización, usted la revisa y la prueba antes de activarla."
+
+msgid "E.g. When a new lead comes in, create a call task for the lead owner and let me know if it came from the website."
+msgstr "Ej.: Cuando entre un prospecto nuevo, crea una tarea de llamada para su responsable y avísame si viene de la web."
+
+msgid "Or start from one of these"
+msgstr "O empiece con una de estas"
+
+msgid "Build the plan"
+msgstr "Armar el plan"
+
+msgid "Building the plan…"
+msgstr "Armando el plan…"
+
+msgid "A couple of questions first"
+msgstr "Un par de preguntas antes"
+
+msgid "So the automation does exactly what you want."
+msgstr "Así la automatización hace exactamente lo que usted quiere."
+
+msgid "Another answer…"
+msgstr "Otra respuesta…"
+
+msgid "Continue"
+msgstr "Continuar"
+
+msgid "Here’s how it would work"
+msgstr "Así funcionaría"
+
+msgid "Anything to change?"
+msgstr "¿Algo que cambiar?"
+
+msgid "E.g. also let Maria know"
+msgstr "Ej.: también avísale a María"
+
+msgid "Change"
+msgstr "Cambio"
+
+msgid "Changing…"
+msgstr "Cambiando…"
+
+msgid "Try it on a real record"
+msgstr "Probar con un registro real"
+
+msgid "Trying…"
+msgstr "Probando…"
+
+msgid "Save without turning on"
+msgstr "Guardar sin activar"
+
+msgid "Turn on"
+msgstr "Activar"
+
+msgid "Turning on…"
+msgstr "Activando…"
+
+msgid "Start over"
+msgstr "Empezar de nuevo"
+
+msgid "Tried with"
+msgstr "Prueba con"
+
+msgid "Trial"
+msgstr "Prueba"
+
+msgid "Nothing was created, changed or sent. AI steps did run so you can see what they would write."
+msgstr "No se creó, cambió ni envió nada. Los pasos de IA sí se ejecutaron para que vea lo que escribirían."
+
+msgid "Yes:"
+msgstr "Sí:"
+
+msgid "Otherwise:"
+msgstr "Si no:"
+
+msgid "would take this path"
+msgstr "tomaría este camino"
+
+msgid "doesn’t apply"
+msgstr "no aplica"
+
+msgid "Done and turned on!"
+msgstr "¡Lista y activa!"
+
+msgid "It starts with the next record that matches. Every run shows in its history."
+msgstr "Empieza a funcionar con el próximo registro que cumpla la condición. Puede ver cada ejecución en el historial."
+
+msgid "Saved, not turned on"
+msgstr "Guardada sin activar"
+
+msgid "Turn it on whenever you like, here or from the list."
+msgstr "Actívela cuando quiera desde aquí o desde la lista."
+
+msgid "Open in the advanced editor"
+msgstr "Ver en el editor avanzado"
+
+msgid "Back to my automations"
+msgstr "Volver a mis automatizaciones"
+
+msgid "Build another"
+msgstr "Crear otra"
+
+msgid "Choose an AI model first"
+msgstr "Elija un modelo de IA primero"
+
+msgid "This automation was edited in the advanced editor. Open it there to change it."
+msgstr "Esta automatización se editó en el editor avanzado. Ábrala allí para cambiarla."
+
+msgid "Uses"
+msgstr "Usa"
+
+msgid "Nothing was created, changed or sent."
+msgstr "No se creó, cambió ni envió nada."
+
+msgid "Notice"
+msgstr "Aviso"
+
+msgid "SMS"
+msgstr "SMS"
+
+msgid "If"
+msgstr "Si"
+
+msgid "Step"
+msgstr "Paso"
+
+msgid "Install FAC Model Bridge and choose a model in the AI Command Center (/ai)."
+msgstr "Instale FAC Model Bridge y elija un modelo en el Centro de IA (/ai)."
+
+msgid "Choose a default model in the AI Command Center (/ai) first."
+msgstr "Primero elija un modelo predeterminado en el Centro de IA (/ai)."
+
+msgid "Your {0} account is the default, but no model is picked for it yet. Choose one in the AI Command Center → Models and spending."
+msgstr "Su cuenta de {0} es la predeterminada, pero aún no tiene un modelo elegido. Elíjalo en Centro de IA → Modelos y gasto."
+
+msgid "The model connection {0} is private. Share it with everyone in the AI Command Center (/ai)."
+msgstr "La conexión de modelo {0} es privada. Compártala con todos en el Centro de IA (/ai)."
+
+msgid "The AI did not answer properly. Try again."
+msgstr "La IA no respondió bien. Intente de nuevo."
+
+msgid "Describe what should happen in a sentence or two."
+msgstr "Describa en una o dos frases qué debe pasar."
+
+msgid "I couldn’t turn that into an automation ({0}). Try describing it differently."
+msgstr "No pude convertir eso en una automatización ({0}). Intente describirlo de otra forma."
+
+msgid "There are no «{0}» records yet to try this on. Create one and try again."
+msgstr "Aún no hay registros de «{0}» para probar. Cree uno e intente de nuevo."
+
+msgid "{0} needs a trigger that starts from a record."
+msgstr "{0} necesita un disparador que empiece desde un registro."
+
+msgid "The field \"{0}\" does not exist on {1}."
+msgstr "El campo \"{0}\" no existe en {1}."
+
+msgid "The AI step \"{1}\" has no result called \"{0}\"."
+msgstr "El paso de IA \"{1}\" no tiene un resultado llamado \"{0}\"."
+
+msgid "{0} is not a record field, AI result or link."
+msgstr "{0} no es un campo del registro, un resultado de IA ni un enlace."
+
+msgid "{0} is not a team member on this site."
+msgstr "{0} no es parte del equipo en este sitio."
+
+msgid "{0} is not available on this site."
+msgstr "{0} no está disponible en este sitio."
+
+msgid "Unknown comparison \"{0}\"."
+msgstr "Comparación desconocida \"{0}\"."
+
+msgid "Unknown trigger \"{0}\"."
+msgstr "Disparador desconocido \"{0}\"."
+
+msgid "Unknown booking event \"{0}\"."
+msgstr "Evento de reserva desconocido \"{0}\"."
+
+msgid "Unknown step \"{0}\"."
+msgstr "Paso desconocido \"{0}\"."
+
+msgid "\"{0}\" must be a short lowercase name (letters, digits, _)."
+msgstr "\"{0}\" debe ser un nombre corto en minúsculas (letras, dígitos, _)."
+
+msgid "AI steps can't go inside an \"if\"."
+msgstr "Los pasos de IA no pueden ir dentro de un \"si\"."
+
+msgid "An \"if\" can't go inside another \"if\"."
+msgstr "Un \"si\" no puede ir dentro de otro \"si\"."
+
+msgid "An AI step needs 1-20 inputs in \"give\"."
+msgstr "Un paso de IA necesita de 1 a 20 entradas en \"give\"."
+
+msgid "An AI step needs 1-20 results in \"get\"."
+msgstr "Un paso de IA necesita de 1 a 20 resultados en \"get\"."
+
+msgid "The choice result \"{0}\" needs its choices."
+msgstr "El resultado de opciones \"{0}\" necesita sus opciones."
+
+msgid "{0} has no email field to send to."
+msgstr "{0} no tiene un campo de correo al cual enviar."
+
+msgid "SMS can only be sent to CRM leads or deals."
+msgstr "Los SMS solo se pueden enviar a prospectos o negocios del CRM."
+
+msgid "AI never emails customers on its own: AI-written messages become a task with the draft, for someone to review and send."
+msgstr "La IA nunca escribe a clientes por su cuenta: los mensajes que redacta quedan como tarea con el borrador, para que alguien los revise y envíe."
+
+msgid "Review and send: {0}"
+msgstr "Revisar y enviar: {0}"
+
+msgid "Create a task for {0} to review and send the draft «{1}»"
+msgstr "Crear una tarea para que {0} revise y envíe el borrador «{1}»"
+
+msgid "Can’t do that yet"
+msgstr "No se pudo"
+
+msgid "Created by the automation builder for one workflow step."
+msgstr "Creada por el asistente de automatizaciones para un paso de un flujo."
+
+msgid "AI steps need the latest Quest Automations (with Model Connections). You can try this plan, but update Automations before saving it."
+msgstr "Los pasos de IA necesitan la versión más reciente de Automatizaciones (con conexiones de modelo). Puede probar este plan, pero actualice Automatizaciones antes de guardarlo."
+
+msgid "Otherwise"
+msgstr "Si no"
+
+msgid "Check condition"
+msgstr "Revisar"
+
+msgid "When {0} is created"
+msgstr "Cuando se crea {0}"
+
+msgid "When {0} is changed"
+msgstr "Cuando cambia {0}"
+
+msgid " (only {0})"
+msgstr " (solo {0})"
+
+msgid "When the status of {0} becomes «{1}»"
+msgstr "Cuando el estado de {0} pasa a «{1}»"
+
+msgid "When a booking {0}"
+msgstr "Cuando una reserva {0}"
+
+msgid "Every {0} {1}"
+msgstr "Cada {0} {1}"
+
+msgid "When someone runs it by hand"
+msgstr "Cuando alguien la ejecuta a mano"
+
+msgid ", only if {0}"
+msgstr ", solo si {0}"
+
+msgid "AI: {0} → gives {1}"
+msgstr "IA: {0} → devuelve {1}"
+
+msgid "Create the task «{0}» for {1}"
+msgstr "Crear la tarea «{0}» para {1}"
+
+msgid "Add the note «{0}» to the record"
+msgstr "Agregar la nota «{0}» al registro"
+
+msgid "Notify {0}: «{1}»"
+msgstr "Avisar a {0}: «{1}»"
+
+msgid "Email {0}: «{1}»"
+msgstr "Enviar correo a {0}: «{1}»"
+
+msgid "Send an SMS: «{0}»"
+msgstr "Enviar SMS: «{0}»"
+
+msgid "Set {0} to «{1}»"
+msgstr "Cambiar {0} a «{1}»"
+
+msgid "Wait {0} {1}"
+msgstr "Esperar {0} {1}"
+
+msgid "Get the booking link ({0})"
+msgstr "Obtener el enlace para reservar ({0})"
+
+msgid "If {0}"
+msgstr "Si {0}"
+
+msgid "any service"
+msgstr "cualquier servicio"
+
+msgid "the record’s owner"
+msgstr "el responsable del registro"
+
+msgid "the customer"
+msgstr "el cliente"
+
+msgid "{0} is «{1}»"
+msgstr "{0} es «{1}»"
+
+msgid "{0} is not «{1}»"
+msgstr "{0} no es «{1}»"
+
+msgid "{0} contains «{1}»"
+msgstr "{0} contiene «{1}»"
+
+msgid "{0} doesn’t contain «{1}»"
+msgstr "{0} no contiene «{1}»"
+
+msgid "{0} is empty"
+msgstr "{0} está vacío"
+
+msgid "{0} is filled in"
+msgstr "{0} tiene valor"
+
+msgid "minutes"
+msgstr "minutos"
+
+msgid "hours"
+msgstr "horas"
+
+msgid "days"
+msgstr "días"
+
+msgid "weeks"
+msgstr "semanas"
+
+msgid "minute"
+msgstr "minuto"
+
+msgid "hour"
+msgstr "hora"
+
+msgid "day"
+msgstr "día"
+
+msgid "week"
+msgstr "semana"
+
+msgid "is made"
+msgstr "se agenda"
+
+msgid "is confirmed"
+msgstr "se confirma"
+
+msgid "is moved"
+msgstr "se mueve"
+
+msgid "is cancelled"
+msgstr "se cancela"
+
+msgid "expires unpaid"
+msgstr "vence sin pago"
+
+msgid "is completed"
+msgstr "se completa"
+
+msgid "is a no-show"
+msgstr "queda como no asistió"
+
+msgid "needs attention"
+msgstr "necesita atención"
+
+msgid "gets its reminder"
+msgstr "recibe su recordatorio"
+
+msgid "a lead"
+msgstr "un prospecto"
+
+msgid "a deal"
+msgstr "un negocio"
+
+msgid "a booking"
+msgstr "una reserva"
+
+msgid "a customer"
+msgstr "un cliente"
+
+msgid "a contact"
+msgstr "un contacto"
+
+msgid "a quotation"
+msgstr "una cotización"
+
+msgid "a sales order"
+msgstr "una orden de venta"
+
+msgid "an invoice"
+msgstr "una factura"
+
+msgid "a payment"
+msgstr "un pago"
+
+msgid "a task"
+msgstr "una tarea"
+
+msgid "a support ticket"
+msgstr "un ticket de soporte"
+
+msgid "Welcome new leads"
+msgstr "Dar la bienvenida a prospectos"
+
+msgid "When a new lead comes in, assign a call task to the lead owner for today and email the lead a short welcome from the owner."
+msgstr "Cuando entre un prospecto nuevo, crea una tarea de llamada para su responsable y envíale al prospecto un correo corto de bienvenida."
+
+msgid "Sort incoming leads"
+msgstr "Clasificar prospectos"
+
+msgid "When a new lead comes in, have the AI read their message and decide if it is urgent. If it is urgent, notify the lead owner right away."
+msgstr "Cuando entre un prospecto nuevo, que la IA lea su mensaje y decida si es urgente. Si es urgente, avisa de inmediato a su responsable."
+
+msgid "After a meeting"
+msgstr "Después de una reunión"
+
+msgid "When a booking is completed, have the AI summarize the notes into decisions and to-dos, and add the summary as a note."
+msgstr "Cuando se complete una reserva, que la IA resuma las notas en decisiones y pendientes, y agrega el resumen como nota."
+
+msgid "Win back no-shows"
+msgstr "Recuperar inasistencias"
+
+msgid "When someone doesn’t show up to their booking, wait one hour and send them the link to book again."
+msgstr "Cuando alguien no asista a su reserva, espera una hora y envíale el enlace para volver a reservar."
+
+msgid "Follow up on deals"
+msgstr "Dar seguimiento a negocios"
+
+msgid "When a deal moves to Proposal, wait 3 days and create a follow-up task for the deal owner."
+msgstr "Cuando un negocio pase a Propuesta, espera 3 días y crea una tarea de seguimiento para su responsable."
+
+msgid "Expected a ready plan."
+msgstr "Se esperaba un plan listo."
+
+msgid "A booking link step only has \"url\"."
+msgstr "Un paso de enlace para reservar solo tiene \"url\"."
+
+msgid "Schedule needs every.amount and every.unit."
+msgstr "La programación necesita every.amount y every.unit."
+
+msgid "Booking links can't go inside an \"if\"."
+msgstr "Los enlaces para reservar no pueden ir dentro de un \"si\"."
+
+msgid "An email needs a subject and a body."
+msgstr "Un correo necesita asunto y cuerpo."
+
+msgid "A wait needs amount and unit."
+msgstr "Una espera necesita cantidad y unidad."
+
+msgid "An \"if\" needs steps in then or else."
+msgstr "Un \"si\" necesita pasos en \"sí\" o en \"si no\"."
+
+msgid "The plan needs a name."
+msgstr "El plan necesita un nombre."
+
+msgid "Give the plan 1-40 steps."
+msgstr "El plan debe tener de 1 a 40 pasos."
+
+msgid "Apply change"
+msgstr "Cambiar"
+
+msgid "Mail"
+msgstr "Correo"
+
+msgid "Apply"
+msgstr "Aplicar"
+
+msgid "System Manager or Sales Manager access is required"
+msgstr "Se requiere acceso de System Manager o Sales Manager"
+
+msgid "Unsupported method"
+msgstr "Método no admitido"
+
+msgid "Mutations require POST"
+msgstr "Los cambios requieren POST"
+
+msgid "Request body must be an object"
+msgstr "El cuerpo de la solicitud debe ser un objeto"
+
+msgid "Request exceeds 1 MB"
+msgstr "La solicitud supera 1 MB"
+
+msgid "Only Joseph can manage this connection and approve follow-ups."
+msgstr "Solo Joseph puede administrar esta conexión y aprobar seguimientos."
+
+msgid "Provide the protected registration file produced by the sign-in helper."
+msgstr "Proporcione el archivo de registro protegido que generó el asistente de inicio de sesión."
+
+msgid "Prepare sign-in first."
+msgstr "Primero prepare el inicio de sesión."
+
+msgid "Invalid registration file."
+msgstr "Archivo de registro no válido."
+
+msgid "Registration could not be verified. Start a fresh sign-in attempt."
+msgstr "No se pudo verificar el registro. Inicie un nuevo intento de inicio de sesión."
+
+msgid "Choose a model available to your connected ChatGPT account."
+msgstr "Elija un modelo disponible en su cuenta de ChatGPT conectada."
+
+msgid "Provide a test scenario under 12,000 characters."
+msgstr "Proporcione un escenario de prueba de menos de 12.000 caracteres."
+
+msgid "This cancellation is no longer current. Review the meeting before following up."
+msgstr "Esta cancelación ya no está vigente. Revise la reunión antes de dar seguimiento."
+
+msgid "The meeting must link to a CRM Lead or Contact."
+msgstr "La reunión debe estar vinculada a un prospecto o contacto del CRM."
+
+msgid "Internal bookings do not receive customer cancellation follow-ups."
+msgstr "Las reservas internas no reciben seguimientos de cancelación para clientes."
+
+msgid "CRM email changed. Review the cancellation record before generating a draft."
+msgstr "El correo del CRM cambió. Revise el registro de cancelación antes de generar un borrador."
+
+msgid "This draft is not available for sending."
+msgstr "Este borrador no está disponible para enviarse."
+
+msgid "The approved email needs a subject and message."
+msgstr "El correo aprobado necesita asunto y mensaje."
+
+msgid "The draft changed. Review the current recipient and message again."
+msgstr "El borrador cambió. Revise de nuevo el destinatario y el mensaje actuales."
+
+msgid "The CRM email changed. Review the recipient before approving."
+msgstr "El correo del CRM cambió. Revise el destinatario antes de aprobar."
+
+msgid "The Joseph email account must be enabled before sending."
+msgstr "La cuenta de correo de Joseph debe estar habilitada antes de enviar."
+
+msgid "This message has already been queued."
+msgstr "Este mensaje ya está en cola."
+
+msgid "Not permitted to read this document type"
+msgstr "No tiene permiso para leer este tipo de documento"
+
+msgid "Saving updates future drafts immediately. Existing drafts keep their original policy. Use Test instructions to try unsaved changes without sending email."
+msgstr "Al guardar se actualizan de inmediato los borradores futuros. Los borradores existentes conservan su política original. Use Probar instrucciones para probar cambios sin guardar sin enviar correos."
+
+msgid "Test instructions"
+msgstr "Probar instrucciones"
+
+msgid "Try a cancellation scenario"
+msgstr "Pruebe un escenario de cancelación"
+
+msgid "Scenario"
+msgstr "Escenario"
+
+msgid "Alex is interested in a website redesign but cancelled because of an urgent deadline. They asked for our booking link to choose a time next week. No scope or pricing has been agreed."
+msgstr "Alex está interesado en rediseñar su sitio web, pero canceló por una entrega urgente. Pidió nuestro enlace de reservas para elegir un horario la próxima semana. No se ha acordado alcance ni precio."
+
+msgid "Generate test draft"
+msgstr "Generar borrador de prueba"
+
+msgid "Test result — nothing sent"
+msgstr "Resultado de prueba: no se envió nada"
+
+msgid "Policy {0}"
+msgstr "Política {0}"
+
+msgid "Review and approve sending"
+msgstr "Revisar y aprobar envío"
+
+msgid "To:"
+msgstr "Para:"
+
+msgid "From:"
+msgstr "De:"
+
+msgid "Subject:"
+msgstr "Asunto:"
+
+msgid "Approve sending this exact email?"
+msgstr "¿Aprobar el envío de este correo tal como está?"
+
+msgid "Approved email queued for delivery."
+msgstr "El correo aprobado quedó en cola para entrega."
+
+msgid "Prepare AI draft"
+msgstr "Preparar borrador con IA"
+
+msgid "Draft preparation queued."
+msgstr "Preparación del borrador en cola."
+
+msgid "Dismiss follow-up"
+msgstr "Descartar seguimiento"
+
+msgid "Close this follow-up without sending an email?"
+msgstr "¿Cerrar este seguimiento sin enviar un correo?"
+
+msgid "Provide a valid Cal.com booking UID."
+msgstr "Proporcione un UID de reserva de Cal.com válido."
+
+msgid "Use the follow-up actions to change {0}."
+msgstr "Use las acciones del seguimiento para cambiar {0}."
+
+msgid "Only drafts awaiting review can be edited."
+msgstr "Solo se pueden editar los borradores pendientes de revisión."
+
+msgid "Provide a single-line email subject up to 140 characters."
+msgstr "Escriba un asunto de una sola línea de hasta 140 caracteres."
+
+msgid "The draft must be under 12,000 characters."
+msgstr "El borrador debe tener menos de 12.000 caracteres."
+
+msgid "Continue with ChatGPT"
+msgstr "Continuar con ChatGPT"
+
+msgid "Connect your ChatGPT plan"
+msgstr "Conecte su plan de ChatGPT"
+
+msgid "Complete the Quest Automations sign-in helper on your computer, then import its protected registration file here. AI requests run on your Frappe Cloud site after sign-in; your computer can be turned off."
+msgstr "Complete el asistente de inicio de sesión de Quest Automations en su computadora y luego importe aquí su archivo de registro protegido. Después de iniciar sesión, las solicitudes de IA se ejecutan en su sitio de Frappe Cloud; puede apagar su computadora."
+
+msgid "Host ID:"
+msgstr "ID del host:"
+
+msgid "Registration ID:"
+msgstr "ID de registro:"
+
+msgid "(first sign-in)"
+msgstr "(primer inicio de sesión)"
+
+msgid "This connects ChatGPT plan usage. It does not provide access to your ChatGPT conversations. Manage access and limits in {0}."
+msgstr "Esto conecta el uso de su plan de ChatGPT. No da acceso a sus conversaciones de ChatGPT. Administre el acceso y los límites en {0}."
+
+msgid "ChatGPT Settings"
+msgstr "Configuración de ChatGPT"
+
+msgid "Import protected registration"
+msgstr "Importar registro protegido"
+
+msgid "Choose the protected registration JSON file (under 50 KB)."
+msgstr "Elija el archivo JSON de registro protegido (menos de 50 KB)."
+
+msgid "ChatGPT connected. Credentials are encrypted in ERPNext. Remove the temporary registration file from your computer after verification."
+msgstr "ChatGPT conectado. Las credenciales están cifradas en ERPNext. Después de la verificación, borre de su computadora el archivo de registro temporal."
+
+msgid "Choose AI model"
+msgstr "Elegir modelo de IA"
+
+msgid "Prepare waiting follow-ups"
+msgstr "Preparar seguimientos pendientes"
+
+msgid "{0} follow-ups queued for drafting."
+msgstr "{0} seguimientos en cola para redactar."
+
+msgid "Disconnect ChatGPT"
+msgstr "Desconectar ChatGPT"
+
+msgid "Disconnect this ChatGPT session?"
+msgstr "¿Desconectar esta sesión de ChatGPT?"
+
+msgid "Remote revocation was not confirmed. Disconnect the app in ChatGPT Settings too."
+msgstr "No se confirmó la revocación remota. Desconecte la app también en la configuración de ChatGPT."
+
+msgid "Use the connection buttons to change ChatGPT settings."
+msgstr "Use los botones de conexión para cambiar la configuración de ChatGPT."
+
+msgid "Workflows use published revision {0}. Save keeps your edits as a draft; Publish makes them live. Test draft runs AI only and records a debug result."
+msgstr "Las automatizaciones usan la revisión publicada {0}. Guardar conserva sus cambios como borrador; Publicar los pone en uso. Probar borrador solo ejecuta la IA y registra un resultado de depuración."
+
+msgid "Define the inputs and result, test with sample data, then publish. Testing does not run CRM or email actions."
+msgstr "Defina las entradas y el resultado, pruebe con datos de ejemplo y luego publique. Las pruebas no ejecutan acciones del CRM ni de correo."
+
+msgid "Test draft"
+msgstr "Probar borrador"
+
+msgid "Test this capability"
+msgstr "Probar esta capacidad"
+
+msgid "Test input (JSON)"
+msgstr "Entrada de prueba (JSON)"
+
+msgid "Run AI test"
+msgstr "Ejecutar prueba de IA"
+
+msgid "AI test queued"
+msgstr "Prueba de IA en cola"
+
+msgid "A debug run was queued. It uses your connected ChatGPT allowance and runs no follow-on actions."
+msgstr "Se puso en cola una ejecución de depuración. Usa la cuota de su ChatGPT conectado y no ejecuta acciones posteriores."
+
+msgid "Open test result"
+msgstr "Abrir resultado de la prueba"
+
+msgid "Publish capability"
+msgstr "Publicar capacidad"
+
+msgid "Publish these instructions and formats for future workflow runs?"
+msgstr "¿Publicar estas instrucciones y formatos para las próximas ejecuciones de automatizaciones?"
+
+msgid "Run history"
+msgstr "Historial de ejecuciones"
+
+msgid "The result below passed the declared output format. Test runs do not execute CRM or email actions."
+msgstr "El resultado de abajo cumplió el formato de salida declarado. Las ejecuciones de prueba no ejecutan acciones del CRM ni de correo."
+
+msgid "This run stopped. Read the notice and inspect the saved input and definition before starting a new test."
+msgstr "Esta ejecución se detuvo. Lea el aviso y revise la entrada y la definición guardadas antes de iniciar una nueva prueba."
+
+msgid "This run is queued or processing. Refresh shortly to see the result."
+msgstr "Esta ejecución está en cola o en proceso. Actualice en un momento para ver el resultado."
+
+msgid "Refresh result"
+msgstr "Actualizar resultado"
+
+msgid "Open capability"
+msgstr "Abrir capacidad"
+
+msgid "Invite them to reschedule"
+msgstr "Invitarlo a reprogramar"
+
+msgid "Ask a clarifying question"
+msgstr "Hacer una pregunta para aclarar"
+
+msgid "Propose the next project step"
+msgstr "Proponer el siguiente paso del proyecto"
+
+msgid "No email recommended"
+msgstr "No se recomienda enviar correo"
+
+msgid "Ready for your review"
+msgstr "Listo para su revisión"
+
+msgid "Check the context and adjust the email. You choose when it sends."
+msgstr "Revise el contexto y ajuste el correo. Usted decide cuándo se envía."
+
+msgid "Approved and queued"
+msgstr "Aprobado y en cola"
+
+msgid "You approved this message. It has been queued for delivery; this does not confirm inbox delivery."
+msgstr "Usted aprobó este mensaje. Quedó en cola para entrega; esto no confirma que haya llegado a la bandeja de entrada."
+
+msgid "Read the recommendation below. You can close this follow-up without contacting them."
+msgstr "Lea la recomendación de abajo. Puede cerrar este seguimiento sin contactar a la persona."
+
+msgid "Closed without sending"
+msgstr "Cerrado sin enviar"
+
+msgid "This follow-up was dismissed."
+msgstr "Este seguimiento se descartó."
+
+msgid "Draft needs attention"
+msgstr "El borrador necesita atención"
+
+msgid "Check the notice below, then try preparing the draft again."
+msgstr "Revise el aviso de abajo y luego intente preparar el borrador de nuevo."
+
+msgid "Preparing the draft"
+msgstr "Preparando el borrador"
+
+msgid "Refresh this record shortly to see the recommendation."
+msgstr "Actualice este registro en un momento para ver la recomendación."
+
+msgid "Email to your contact"
+msgstr "Correo para su contacto"
+
+msgid "From"
+msgstr "Desde"
+
+msgid "See the outgoing email record"
+msgstr "Vea el registro del correo enviado"
+
+msgid "Review & send"
+msgstr "Revisar y enviar"
+
+msgid "Save draft"
+msgstr "Guardar borrador"
+
+msgid "Prepare draft again"
+msgstr "Preparar borrador de nuevo"
+
+msgid "Refresh"
+msgstr "Actualizar"
+
+msgid "Close without sending"
+msgstr "Cerrar sin enviar"
+
+msgid "Edits stay here until you save. Review & send saves first and shows a final confirmation."
+msgstr "Los cambios se quedan aquí hasta que guarde. Revisar y enviar guarda primero y muestra una confirmación final."
+
+msgid "This message cannot be edited in its current state."
+msgstr "Este mensaje no se puede editar en su estado actual."
+
+msgid "Meeting context"
+msgstr "Contexto de la reunión"
+
+msgid "Recommended next step"
+msgstr "Siguiente paso recomendado"
+
+msgid "Waiting for a recommendation"
+msgstr "Esperando una recomendación"
+
+msgid "The recommendation will appear after the draft is ready."
+msgstr "La recomendación aparecerá cuando el borrador esté listo."
+
+msgid "Why they cancelled"
+msgstr "Por qué canceló"
+
+msgid "No cancellation reason was provided."
+msgstr "No se indicó un motivo de cancelación."
+
+msgid "Open meeting"
+msgstr "Abrir reunión"
+
+msgid "Review task"
+msgstr "Tarea de revisión"
+
+msgid "Evidence behind the draft"
+msgstr "Evidencia detrás del borrador"
+
+msgid "No supporting records were provided."
+msgstr "No se proporcionaron registros de respaldo."
+
+msgid "Details & troubleshooting"
+msgstr "Detalles y solución de problemas"
+
+msgid "Not yet selected"
+msgstr "Aún no seleccionado"
+
+msgid "Booking: {0}"
+msgstr "Reserva: {0}"
+
+msgid "Review notification: {0}"
+msgstr "Notificación de revisión: {0}"
+
+msgid "Not yet queued"
+msgstr "Aún no está en cola"
+
+msgid "Approved: {0}"
+msgstr "Aprobado: {0}"
+
+msgid "Open outgoing email"
+msgstr "Abrir correo enviado"
+
+msgid "Notifications to you come from {0}."
+msgstr "Las notificaciones para usted llegan desde {0}."
+
+msgid "Edit drafting playbook"
+msgstr "Editar guía de redacción"
+
+msgid "Edit this interface"
+msgstr "Editar esta interfaz"
+
+msgid "No email to send"
+msgstr "No hay correo que enviar"
+
+msgid "The AI recommends closing this follow-up. Read the reasoning and supporting records alongside, then choose Close without sending."
+msgstr "La IA recomienda cerrar este seguimiento. Lea el razonamiento y los registros de respaldo al lado y luego elija Cerrar sin enviar."
+
+msgid "Drafting policy: {0}"
+msgstr "Política de redacción: {0}"
+
+msgid "Drafting policy details unavailable"
+msgstr "Detalles de la política de redacción no disponibles"
+
+msgid "Prepared before playbook version tracking"
+msgstr "Preparado antes del control de versiones de la guía"
+
+msgid "Unsaved changes"
+msgstr "Cambios sin guardar"
+
+msgid "Draft saved"
+msgstr "Borrador guardado"
+
+msgid "Draft preparation queued. Refresh shortly."
+msgstr "Preparación del borrador en cola. Actualice en un momento."
+
+msgid "This draft is no longer available for sending. Refresh to see its current state."
+msgstr "Este borrador ya no está disponible para enviarse. Actualice para ver su estado actual."
+
+msgid "Approve this email"
+msgstr "Aprobar este correo"
+
+msgid "Approve & send"
+msgstr "Aprobar y enviar"
+
+msgid "Approve & send queues this exact email to the recipient above."
+msgstr "Aprobar y enviar pone en cola este correo tal como está para el destinatario de arriba."
+
+msgid "AI model"
+msgstr "Modelo de IA"
+
+msgid "Approved at"
+msgstr "Aprobado el"
+
+msgid "Approved by"
+msgstr "Aprobado por"
+
+msgid "Approved email"
+msgstr "Correo aprobado"
+
+msgid "Automation Record"
+msgstr "Registro de automatización"
+
+msgid "Cal.com booking UID"
+msgstr "UID de reserva de Cal.com"
+
+msgid "Cancellation reason"
+msgstr "Motivo de cancelación"
+
+msgid "Capability"
+msgstr "Capacidad"
+
+msgid "Capability key"
+msgstr "Clave de la capacidad"
+
+msgid "Capability name"
+msgstr "Nombre de la capacidad"
+
+msgid "ChatGPT account"
+msgstr "Cuenta de ChatGPT"
+
+msgid "Connected"
+msgstr "Conectado"
+
+msgid "Connection notice"
+msgstr "Aviso de conexión"
+
+msgid "Definition fingerprint"
+msgstr "Huella de la definición"
+
+msgid "Definition used"
+msgstr "Definición usada"
+
+msgid "Disconnected"
+msgstr "Desconectado"
+
+msgid "Dismissed"
+msgstr "Descartado"
+
+msgid "Draft failed"
+msgstr "Falló el borrador"
+
+msgid "Draft notice"
+msgstr "Aviso del borrador"
+
+msgid "Draft playbook snapshot"
+msgstr "Copia de la guía usada en el borrador"
+
+msgid "Drafting instructions"
+msgstr "Instrucciones de redacción"
+
+msgid "Due"
+msgstr "Vence"
+
+msgid "Email draft"
+msgstr "Borrador de correo"
+
+msgid "Email signature"
+msgstr "Firma de correo"
+
+msgid "Enabled for workflows"
+msgstr "Habilitada para automatizaciones"
+
+msgid "Host ID"
+msgstr "ID del host"
+
+msgid "How to write follow-ups"
+msgstr "Cómo redactar seguimientos"
+
+msgid "Input"
+msgstr "Entrada"
+
+msgid "Input format"
+msgstr "Formato de entrada"
+
+msgid "Inputs and results"
+msgstr "Entradas y resultados"
+
+msgid "Kind"
+msgstr "Tipo"
+
+msgid "Last published"
+msgstr "Última publicación"
+
+msgid "Live version"
+msgstr "Versión en uso"
+
+msgid "Needs review"
+msgstr "Necesita revisión"
+
+msgid "No follow-up"
+msgstr "Sin seguimiento"
+
+msgid "Output format"
+msgstr "Formato de salida"
+
+msgid "Parent Record"
+msgstr "Registro principal"
+
+msgid "Payload"
+msgstr "Datos"
+
+msgid "Protected credentials"
+msgstr "Credenciales protegidas"
+
+msgid "Published definition"
+msgstr "Definición publicada"
+
+msgid "Published revision"
+msgstr "Revisión publicada"
+
+msgid "Publishing status"
+msgstr "Estado de publicación"
+
+msgid "Quest AI Capability"
+msgstr "Capacidad de IA de Quest"
+
+msgid "Quest AI Run"
+msgstr "Ejecución de IA de Quest"
+
+msgid "Quest ChatGPT Connection"
+msgstr "Conexión de ChatGPT de Quest"
+
+msgid "Quest Followup Playbook"
+msgstr "Guía de seguimientos de Quest"
+
+msgid "Quest Meeting Followup"
+msgstr "Seguimiento de reunión de Quest"
+
+msgid "Registration ID"
+msgstr "ID de registro"
+
+msgid "Review email queued"
+msgstr "Correo de revisión en cola"
+
+msgid "Review notification introduction"
+msgstr "Introducción de la notificación de revisión"
+
+msgid "Run"
+msgstr "Ejecución"
+
+msgid "Run type"
+msgstr "Tipo de ejecución"
+
+msgid "Saved capability"
+msgstr "Capacidad guardada"
+
+msgid "Secret"
+msgstr "Secreto"
+
+msgid "Supporting CRM records"
+msgstr "Registros del CRM de respaldo"
+
+msgid "Test"
+msgstr "Prueba"
+
+msgid "Test input"
+msgstr "Entrada de prueba"
+
+msgid "Tone, decision guidance and business context. Approval and safety checks stay enforced in code."
+msgstr "Tono, criterios de decisión y contexto del negocio. Las verificaciones de aprobación y seguridad siguen aplicándose en el código."
+
+msgid "Verified account ID"
+msgstr "ID de cuenta verificado"
+
+msgid "Waiting for ChatGPT"
+msgstr "Esperando a ChatGPT"
+
+msgid "What this capability does"
+msgstr "Qué hace esta capacidad"
+
+msgid "Why this follow-up"
+msgstr "Por qué este seguimiento"
+
+msgid "Workflow run"
+msgstr "Ejecución de automatización"
+
+msgid "Workflow step"
+msgstr "Paso de automatización"
+
+msgid "reschedule"
+msgstr "Invitar a reprogramar"
+
+msgid "clarify"
+msgstr "Pedir aclaración"
+
+msgid "commercial_proposal"
+msgstr "Propuesta comercial"
+
+msgid "no_follow_up"
+msgstr "Sin seguimiento"
+
+msgctxt "Thinking level"
+msgid "Light"
+msgstr "Ligero"

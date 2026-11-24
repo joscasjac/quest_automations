@@ -175,118 +175,118 @@ type ActionCatalogOption = CatalogOption<ActionKind> & {
 };
 
 const ENTITY_OPTIONS = [
-  { value: "deal", label: "Deal" },
-  { value: "project", label: "Project" },
-  { value: "task", label: "Task" },
-  { value: "company", label: "Company" },
-  { value: "contact", label: "Contact" },
-  { value: "note", label: "Note" },
+  { value: "deal", label: __("Deal") },
+  { value: "project", label: __("Project") },
+  { value: "task", label: __("Task") },
+  { value: "company", label: __("Company") },
+  { value: "contact", label: __("Contact") },
+  { value: "note", label: __("Note") },
 ];
 
 const EVENT_OPTIONS = [
-  { value: "created", label: "Created" },
-  { value: "updated", label: "Updated" },
-  { value: "stage_changed", label: "Stage changed" },
-  { value: "status_changed", label: "Status changed" },
+  { value: "created", label: __("Created") },
+  { value: "updated", label: __("Updated") },
+  { value: "stage_changed", label: __("Stage changed") },
+  { value: "status_changed", label: __("Status changed") },
 ];
 
 const UPDATE_ENTITY_OPTIONS = [
-  { value: "deal", label: "Deal" },
-  { value: "project", label: "Project" },
-  { value: "task", label: "Task" },
-  { value: "company", label: "Company" },
-  { value: "contact", label: "Contact" },
+  { value: "deal", label: __("Deal") },
+  { value: "project", label: __("Project") },
+  { value: "task", label: __("Task") },
+  { value: "company", label: __("Company") },
+  { value: "contact", label: __("Contact") },
 ];
 
 const DEAL_STAGE_OPTIONS = [
-  { value: "QUALIFIED", label: "Qualified" },
-  { value: "MEETING", label: "Meeting" },
-  { value: "PROPOSAL", label: "Proposal" },
-  { value: "NEGOTIATION", label: "Negotiation" },
-  { value: "CLOSED_WON", label: "Closed won" },
-  { value: "CLOSED_LOST", label: "Closed lost" },
+  { value: "QUALIFIED", label: __("Qualified") },
+  { value: "MEETING", label: __("Meeting") },
+  { value: "PROPOSAL", label: __("Proposal") },
+  { value: "NEGOTIATION", label: __("Negotiation") },
+  { value: "CLOSED_WON", label: __("Closed won") },
+  { value: "CLOSED_LOST", label: __("Closed lost") },
 ];
 
 const PROJECT_STATUS_OPTIONS = [
-  { value: "planned", label: "Planned" },
-  { value: "active", label: "Active" },
-  { value: "on_hold", label: "On hold" },
-  { value: "completed", label: "Completed" },
-  { value: "archived", label: "Archived" },
+  { value: "planned", label: __("Planned") },
+  { value: "active", label: __("Active") },
+  { value: "on_hold", label: __("On hold") },
+  { value: "completed", label: __("Completed") },
+  { value: "archived", label: __("Archived") },
 ];
 
 const TASK_STATUS_OPTIONS = [
-  { value: "backlog", label: "Backlog" },
-  { value: "todo", label: "To do" },
-  { value: "in_progress", label: "In progress" },
-  { value: "blocked", label: "Blocked" },
-  { value: "done", label: "Done" },
-  { value: "canceled", label: "Canceled" },
+  { value: "backlog", label: __("Backlog") },
+  { value: "todo", label: __("To do") },
+  { value: "in_progress", label: __("In progress") },
+  { value: "blocked", label: __("Blocked") },
+  { value: "done", label: __("Done") },
+  { value: "canceled", label: __("Canceled") },
 ];
 
 const WAIT_UNIT_OPTIONS = [
-  { value: "minutes", label: "Minutes" },
-  { value: "hours", label: "Hours" },
-  { value: "days", label: "Days" },
+  { value: "minutes", label: __("Minutes") },
+  { value: "hours", label: __("Hours") },
+  { value: "days", label: __("Days") },
 ];
 
 const TRIGGER_FILTER_FIELDS: Record<EntityType, Array<{ value: string; label: string }>> = {
   company: [
-    { value: "name", label: "Company name" },
-    { value: "industry", label: "Industry" },
-    { value: "description", label: "Description" },
-    { value: "domain", label: "Domain" },
+    { value: "name", label: __("Company name") },
+    { value: "industry", label: __("Industry") },
+    { value: "description", label: __("Description") },
+    { value: "domain", label: __("Domain") },
   ],
   contact: [
-    { value: "name", label: "Contact name" },
-    { value: "email", label: "Email" },
-    { value: "title", label: "Title" },
-    { value: "status", label: "Status" },
-    { value: "tags", label: "Tags" },
+    { value: "name", label: __("Contact name") },
+    { value: "email", label: __("Email") },
+    { value: "title", label: __("Title") },
+    { value: "status", label: __("Status") },
+    { value: "tags", label: __("Tags") },
   ],
   deal: [
-    { value: "name", label: "Deal name" },
-    { value: "stage", label: "Stage" },
-    { value: "amountMinor", label: "Amount" },
-    { value: "currency", label: "Currency" },
+    { value: "name", label: __("Deal name") },
+    { value: "stage", label: __("Stage") },
+    { value: "amountMinor", label: __("Amount") },
+    { value: "currency", label: __("Currency") },
   ],
   project: [
-    { value: "name", label: "Project name" },
-    { value: "status", label: "Status" },
-    { value: "description", label: "Description" },
+    { value: "name", label: __("Project name") },
+    { value: "status", label: __("Status") },
+    { value: "description", label: __("Description") },
   ],
   task: [
-    { value: "title", label: "Task title" },
-    { value: "status", label: "Status" },
-    { value: "priority", label: "Priority" },
-    { value: "description", label: "Description" },
+    { value: "title", label: __("Task title") },
+    { value: "status", label: __("Status") },
+    { value: "priority", label: __("Priority") },
+    { value: "description", label: __("Description") },
   ],
   note: [
-    { value: "title", label: "Note title" },
-    { value: "body", label: "Body" },
+    { value: "title", label: __("Note title") },
+    { value: "body", label: __("Body") },
   ],
 };
 
 const IF_ELSE_FIELD_OPTIONS = [
-  {value:"trigger.status",label:"ERPNext / Webhook Status"},
-  {value:"trigger.customer",label:"ERPNext / Webhook Customer"},
-  {value:"trigger.doctype",label:"ERPNext DocType"},
-  { value: "current_day_of_week", label: "Current Day of Week" },
-  { value: "contact.name", label: "Contact Name" },
-  { value: "contact.email", label: "Contact Email" },
-  { value: "contact.title", label: "Contact Title" },
-  { value: "company.name", label: "Company Name" },
-  { value: "deal.stage", label: "Opportunity Stage" },
-  { value: "task.status", label: "Task Status" },
+  {value:"trigger.status",label:__("ERPNext / Webhook Status")},
+  {value:"trigger.customer",label:__("ERPNext / Webhook Customer")},
+  {value:"trigger.doctype",label:__("ERPNext DocType")},
+  { value: "current_day_of_week", label: __("Current Day of Week") },
+  { value: "contact.name", label: __("Contact Name") },
+  { value: "contact.email", label: __("Contact Email") },
+  { value: "contact.title", label: __("Contact Title") },
+  { value: "company.name", label: __("Company Name") },
+  { value: "deal.stage", label: __("Opportunity Stage") },
+  { value: "task.status", label: __("Task Status") },
 ];
 
 const IF_ELSE_OPERATOR_OPTIONS = [
-  { value: "is", label: "Is" },
-  { value: "is_not", label: "Is not" },
-  { value: "contains", label: "Contains" },
-  { value: "does_not_contain", label: "Does not contain" },
-  { value: "is_empty", label: "Is empty" },
-  { value: "is_not_empty", label: "Is not empty" },
+  { value: "is", label: __("Is") },
+  { value: "is_not", label: __("Is not") },
+  { value: "contains", label: __("Contains") },
+  { value: "does_not_contain", label: __("Does not contain") },
+  { value: "is_empty", label: __("Is empty") },
+  { value: "is_not_empty", label: __("Is not empty") },
 ];
 
 const ACTION_LIBRARY: Array<{
@@ -299,80 +299,80 @@ const ACTION_LIBRARY: Array<{
   ...CRM_ACTION_LIBRARY,
   ...RESERVAS_ACTION_LIBRARY,
   ...PULSE_ACTION_LIBRARY,
-  {kind:"run_ai_capability",title:"Run AI Capability",description:"Run a published AI capability with mapped inputs and a structured result.",group:"AI",icon:"log"},
-  {kind:"api_request",title:"API request",description:"Call an API with a URL, method, headers, and body.",group:"Webhooks",icon:"go_to"},
-  {kind:"get_document",title:"Get document",description:"Fetch any ERPNext document and use its fields in later actions.",group:"ERPNext",icon:"record"},
-  {kind:"custom_code",title:"Run Code",description:"Transform incoming data and return a result.",group:"Flow",icon:"log"},
-  {kind:"erpnext",title:"ERPNext document",description:"Read, create, update, or approve a document.",group:"ERPNext",icon:"record"},
+  {kind:"run_ai_capability",title:__("Run AI Capability"),description:__("Run a published AI capability with mapped inputs and a structured result."),group:__("AI"),icon:"log"},
+  {kind:"api_request",title:__("API request"),description:__("Call an API with a URL, method, headers, and body."),group:"Webhooks",icon:"go_to"},
+  {kind:"get_document",title:__("Get document"),description:__("Fetch any ERPNext document and use its fields in later actions."),group:"ERPNext",icon:"record"},
+  {kind:"custom_code",title:__("Run Code"),description:__("Transform incoming data and return a result."),group:__("Flow"),icon:"log"},
+  {kind:"erpnext",title:__("ERPNext document"),description:__("Read, create, update, or approve a document."),group:"ERPNext",icon:"record"},
 
   {
     kind: "create_note",
-    title: "Create note",
-    description: "Write a CRM note linked to a record.",
-    group: "Records",
+    title: __("Create note"),
+    description: __("Write a CRM note linked to a record."),
+    group: __("Records"),
     icon: "note",
   },
   {
     kind: "create_task",
-    title: "Create task",
-    description: "Open a follow-up task with an optional due offset.",
-    group: "Records",
+    title: __("Create task"),
+    description: __("Open a follow-up task with an optional due offset."),
+    group: __("Records"),
     icon: "task",
   },
   {
     kind: "update_record",
-    title: "Update record",
-    description: "Change a safe whitelisted field on a CRM record.",
-    group: "Records",
+    title: __("Update record"),
+    description: __("Change a safe whitelisted field on a CRM record."),
+    group: __("Records"),
     icon: "record",
   },
   {
     kind: "send_email",
-    title: "Send email",
-    description: "Send a one-recipient notification email.",
-    group: "Communication",
+    title: __("Send email"),
+    description: __("Send a one-recipient notification email."),
+    group: __("Communication"),
     icon: "email",
   },
   {
     kind: "send_notification",
-    title: "Send notification",
-    description: "Record an activity or queue a Slack alert.",
-    group: "Communication",
+    title: __("Send notification"),
+    description: __("Record an activity or queue a Slack alert."),
+    group: __("Communication"),
     icon: "bell",
   },
   {
     kind: "log",
-    title: "Log event",
-    description: "Write an audit entry when the workflow runs.",
-    group: "Flow",
+    title: __("Log event"),
+    description: __("Write an audit entry when the workflow runs."),
+    group: __("Flow"),
     icon: "log",
   },
   {
     kind: "if_else",
-    title: "Condition (If / Else)",
-    description: "Route documents through named branches.",
-    group: "Flow",
+    title: __("Condition (If / Else)"),
+    description: __("Route documents through named branches."),
+    group: __("Flow"),
     icon: "branch",
   },
   {
     kind: "wait",
-    title: "Wait",
-    description: "Pause before continuing to the next action.",
-    group: "Flow",
+    title: __("Wait"),
+    description: __("Pause before continuing to the next action."),
+    group: __("Flow"),
     icon: "wait",
   },
   {
     kind: "go_to",
-    title: "Go To",
-    description: "Jump to another action in this workflow.",
-    group: "Flow",
+    title: __("Go To"),
+    description: __("Jump to another action in this workflow."),
+    group: __("Flow"),
     icon: "go_to",
   },
   {
     kind: "noop",
-    title: "No operation",
-    description: "Keep a placeholder step in the version.",
-    group: "Flow",
+    title: __("No operation"),
+    description: __("Keep a placeholder step in the version."),
+    group: __("Flow"),
     icon: "noop",
   },
 ];
@@ -395,9 +395,9 @@ const BRANCH_ACTION_KINDS: ReadonlyArray<BranchActionKind> = [
   "noop",
 ];
 
-const TRIGGER_LIBRARY: Array<TriggerCatalogOption> = [
-  ...(CRM_TRIGGER_LIBRARY as Array<TriggerCatalogOption>),
-  ...(RESERVAS_TRIGGER_LIBRARY as unknown as Array<TriggerCatalogOption>),
+// Pulse event presets mirror quest_automations/core/pulse_events.py line for line (tests/pulse-triggers.test.mjs);
+// their titles are translated here, at display time.
+const PULSE_EVENT_TRIGGERS = [
 {"value": "pulse_event_task_created", "title": "Pulse task created", "description": "Start from a permission-checked Task event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Task", "event": "after_insert"}},
 {"value": "pulse_event_task_updated", "title": "Pulse task updated", "description": "Start from a permission-checked Task event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Task", "event": "on_update"}},
 {"value": "pulse_event_task_completed", "title": "Pulse task completed", "description": "Start from a permission-checked Task event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Task", "event": "on_update", "condition": {"field": "status", "operator": "is", "value": "Completed", "match": "all", "conditions": [{"field": "trigger.previous.status", "operator": "is_not", "value": "Completed"}]}}},
@@ -417,85 +417,91 @@ const TRIGGER_LIBRARY: Array<TriggerCatalogOption> = [
 {"value": "pulse_event_external_discussion", "title": "Pulse external discussion", "description": "Start from a permission-checked Pulse External Comment event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Pulse External Comment", "event": "after_insert"}},
 {"value": "pulse_event_order", "title": "Sales order submitted", "description": "Start from a permission-checked Sales Order event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "Sales Order", "event": "on_submit"}},
 {"value": "pulse_event_crm_deal", "title": "CRM deal updated", "description": "Start from a permission-checked CRM Deal event.", "group": "Pulse", "icon": "record", "trigger": {"kind": "document_event", "doctype": "CRM Deal", "event": "on_update"}},
-  {value:"incoming_webhook",title:"Incoming webhook",description:"Receive JSON from another app.",group:"Webhooks",icon:"go_to",trigger:{kind:"incoming_webhook"}},
-  {value:"document_event",title:"ERPNext document event",description:"Start on an ERPNext document event.",group:"ERPNext",icon:"record",trigger:{kind:"document_event",doctype:"Sales Order",event:"on_submit"}},
+].map(row => ({ ...row, title: __(row.title), description: __(row.description) }));
+
+const TRIGGER_LIBRARY: Array<TriggerCatalogOption> = [
+  ...(CRM_TRIGGER_LIBRARY as Array<TriggerCatalogOption>),
+  ...(RESERVAS_TRIGGER_LIBRARY as unknown as Array<TriggerCatalogOption>),
+  ...(PULSE_EVENT_TRIGGERS as Array<TriggerCatalogOption>),
+  {value:"incoming_webhook",title:__("Incoming webhook"),description:__("Receive JSON from another app."),group:"Webhooks",icon:"go_to",trigger:{kind:"incoming_webhook"}},
+  {value:"document_event",title:__("ERPNext document event"),description:__("Start on an ERPNext document event."),group:"ERPNext",icon:"record",trigger:{kind:"document_event",doctype:"Sales Order",event:"on_submit"}},
   {
     value: "contact_changed",
-    title: "Contact Changed",
-    description: "Runs when a contact record is updated.",
-    group: "Contact",
+    title: __("Contact Changed"),
+    description: __("Runs when a contact record is updated."),
+    group: __("Contact"),
     icon: "contact",
     trigger: { kind: "record", entityType: "contact", event: "updated" },
   },
   {
     value: "contact_created",
-    title: "Contact Created",
-    description: "Runs when a new contact is added.",
-    group: "Contact",
+    title: __("Contact Created"),
+    description: __("Runs when a new contact is added."),
+    group: __("Contact"),
     icon: "contact",
     trigger: { kind: "record", entityType: "contact", event: "created" },
   },
   {
     value: "note_added",
-    title: "Note Added",
-    description: "Runs when a note is added.",
-    group: "Contact",
+    title: __("Note Added"),
+    description: __("Runs when a note is added."),
+    group: __("Contact"),
     icon: "note",
     trigger: { kind: "record", entityType: "note", event: "created" },
   },
   {
     value: "note_changed",
-    title: "Note Changed",
-    description: "Runs when a note is updated.",
-    group: "Contact",
+    title: __("Note Changed"),
+    description: __("Runs when a note is updated."),
+    group: __("Contact"),
     icon: "note",
     trigger: { kind: "record", entityType: "note", event: "updated" },
   },
   {
     value: "task_added",
-    title: "Task Added",
-    description: "Runs when a task is added.",
-    group: "Contact",
+    title: __("Task Added"),
+    description: __("Runs when a task is added."),
+    group: __("Contact"),
     icon: "task",
     trigger: { kind: "record", entityType: "task", event: "created" },
   },
   {
     value: "task_completed",
-    title: "Task Completed",
-    description: "Runs when a task status changes.",
-    group: "Contact",
+    title: __("Task Completed"),
+    description: __("Runs when a task status changes."),
+    group: __("Contact"),
     icon: "check",
     trigger: { kind: "record", entityType: "task", event: "status_changed" },
   },
   {
     value: "schedule",
-    title: "Custom Date Reminder",
-    description: "Run it on a recurring interval.",
-    group: "Date & time",
+    title: __("Custom Date Reminder"),
+    description: __("Run it on a recurring interval."),
+    group: __("Date & time"),
     icon: "calendar",
     trigger: { kind: "schedule", intervalMinutes: 1440 },
   },
   {
     value: "manual",
-    title: "Launch manually",
-    description: "Run it intentionally from the workflow page.",
-    group: "Workflow",
+    title: __("Launch manually"),
+    description: __("Run it intentionally from the workflow page."),
+    group: __("Automation"),
     icon: "manual",
     trigger: { kind: "manual" },
   },
   {
     value: "deal_created",
-    title: "Opportunity Created",
-    description: "Runs when an opportunity is created for a contact.",
-    group: "Opportunities",
+    title: __("Opportunity Created"),
+    description: __("Runs when an opportunity is created for a contact."),
+    group: __("Opportunities"),
     icon: "deal",
     trigger: { kind: "record", entityType: "deal", event: "created" },
   },
   {
     value: "deal_stage_changed",
-    title: "Opportunity Stage Changed",
-    description: "Runs when a deal moves to another stage.",
-    group: "Opportunities",
+    title: __("Opportunity Stage Changed"),
+    description: __("Runs when a deal moves to another stage."),
+    group: __("Opportunities"),
     icon: "deal",
     trigger: { kind: "record", entityType: "deal", event: "stage_changed" },
   },
@@ -512,18 +518,18 @@ export function Workflows() {
     <div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] flex-col bg-ink">
       <div className="border-b border-edge px-6 py-4">
         <PageHeader
-          title="Workflows"
-          subtitle="Automations sorted by the last change."
+          title={__("Workflows")}
+          subtitle={__("Automations sorted by the last change.")}
           action={
             <div className="flex gap-2">
               <Button onClick={() => navigate("/app/workflows/new")}>
-                + New Workflow
+                + {__("New Workflow")}
               </Button>
               <Button
                 variant="primary"
                 onClick={() => navigate("/app/workflows/describe")}
               >
-                ✦ Build with AI
+                ✦ {__("Build with AI")}
               </Button>
             </div>
           }
@@ -533,26 +539,26 @@ export function Workflows() {
       <main className="min-h-0 flex-1 overflow-auto p-6">
         <Panel className="overflow-hidden">
           <div className="grid grid-cols-[minmax(220px,1.3fr)_130px_180px_110px_150px] border-b border-edge px-4 py-2 text-xs font-medium text-neutral-500 max-lg:hidden">
-            <span>Name</span>
-            <span>Status</span>
-            <span>Trigger</span>
-            <span>Runs</span>
-            <span>Last update</span>
+            <span>{__("Name")}</span>
+            <span>{__("Status")}</span>
+            <span>{__("Trigger")}</span>
+            <span>{__("Runs")}</span>
+            <span>{__("Last update")}</span>
           </div>
           {workflows === undefined ? (
-            <div className="p-4 text-sm text-neutral-500">Loading...</div>
+            <div className="p-4 text-sm text-neutral-500">{__("Loading...")}</div>
           ) : rows.length === 0 ? (
             <div className="p-6">
-              <EmptyState message="No workflows yet" />
+              <EmptyState message={__("No workflows yet")} />
               <div className="mt-4 flex justify-center gap-2">
                 <Button onClick={() => navigate("/app/workflows/new")}>
-                  + New Workflow
+                  + {__("New Workflow")}
                 </Button>
                 <Button
                   variant="primary"
                   onClick={() => navigate("/app/workflows/describe")}
                 >
-                  ✦ Build with AI
+                  ✦ {__("Build with AI")}
                 </Button>
               </div>
             </div>
@@ -570,7 +576,7 @@ export function Workflows() {
                       {workflow.name}
                     </span>
                     <span className="mt-0.5 block truncate text-xs text-neutral-500">
-                      {workflow.description ?? "No description"}
+                      {workflow.description ?? __("No description")}
                     </span>
                   </span>
                   <span>
@@ -1082,7 +1088,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
   const saveBuilder = async (draftOnly = false): Promise<Id<"workflowDefinitions"> | null> => {
     const name = draftName.trim();
     if (!name) {
-      setFormError("Workflow name is required.");
+      setFormError(__("Workflow name is required."));
       return null;
     }
     const primaryTrigger = draftTriggers[0];
@@ -1092,7 +1098,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
       return null;
     }
     if (!primaryTrigger) {
-      setFormError("Workflow trigger is required.");
+      setFormError(__("Workflow trigger is required."));
       return null;
     }
     setBusy("save");
@@ -1128,7 +1134,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
       }
       return selected._id;
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Workflow failed validation.");
+      setFormError(err instanceof Error ? err.message : __("Workflow failed validation."));
       return null;
     } finally {
       setBusy(null);
@@ -1149,7 +1155,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
     try {
       await setStatus({ definitionId, status });
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Could not change workflow status.");
+      setFormError(err instanceof Error ? err.message : __("Could not change workflow status."));
     } finally {
       setBusy(null);
     }
@@ -1165,7 +1171,7 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
       await runManual({ definitionId });
       setActiveTab("enrollment");
     } catch (err) {
-      setFormError(err instanceof Error ? err.message : "Could not start workflow run.");
+      setFormError(err instanceof Error ? err.message : __("Could not start workflow run."));
       setActiveTab("builder");
     } finally {
       setBusy(null);
@@ -1206,19 +1212,19 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
       {!creating && workflow === undefined ? (
         <main className="flex flex-1 items-center justify-center p-6">
           <Panel className="w-full max-w-md p-6 text-sm text-neutral-500">
-            Loading workflow...
+            {__("Loading workflow...")}
           </Panel>
         </main>
       ) : !creating && workflow === null ? (
         <main className="flex flex-1 items-center justify-center p-6">
           <Panel className="w-full max-w-md p-6 text-center">
-            <EmptyState message="Workflow not found" />
+            <EmptyState message={__("Workflow not found")} />
             <div className="mt-4">
               <Button
                 variant="primary"
                 onClick={() => navigate("/app/workflows")}
               >
-                Back to Workflows
+                {__("Back to Workflows")}
               </Button>
             </div>
           </Panel>
@@ -1306,15 +1312,15 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
               formError={formError}
               onName={setDraftName}
               onDescription={setDraftDescription}
-            />{selected&&<div className="border-t border-edge px-6 py-4"><p className="mb-3 text-sm text-neutral-500">Deleting removes this workflow, its webhook endpoints, captured samples, schedules, versions, and run history.</p><Button variant="danger" disabled={busy!==null} onClick={async()=>{if(!window.confirm('Delete this workflow and all its stored automation records? This cannot be undone.'))return;setBusy('delete');try{await deleteWorkflow({definitionId:selected._id});navigate('/app/workflows')}catch(error){setFormError((error as Error).message)}finally{setBusy(null)}}}>Delete workflow</Button></div>}</>
+            />{selected&&<div className="border-t border-edge px-6 py-4"><p className="mb-3 text-sm text-neutral-500">{__("Deleting removes this workflow, its webhook endpoints, captured samples, schedules, versions, and run history.")}</p><Button variant="danger" disabled={busy!==null} onClick={async()=>{if(!window.confirm(__('Delete this workflow and all its stored automation records? This cannot be undone.')))return;setBusy('delete');try{await deleteWorkflow({definitionId:selected._id});navigate('/app/workflows')}catch(error){setFormError((error as Error).message)}finally{setBusy(null)}}}>{__("Delete workflow")}</Button></div>}</>
           ) : activeTab === "enrollment" ? (
-            <RunHistory workflow={selected} runs={runs} title="Enrollment History" />
+            <RunHistory workflow={selected} runs={runs} title={__("Enrollment History")} />
           ) : (
             <VersionHistory
               workflow={selected}
               versions={versions}
               currentVersionId={selected?.currentVersionId}
-              title="Execution Logs"
+              title={__("Execution Logs")}
             />
           )}
         </main>
@@ -1369,7 +1375,7 @@ function BuilderTopBar({
 }) {
   const versionNumber = workflow?.currentVersion?.number ?? 0;
   const canChangeStatus = Boolean(workflow) && !statusDisabledReason && busy === null;
-  const workflowTitle = name.trim() || workflow?.name || "Untitled workflow";
+  const workflowTitle = name.trim() || workflow?.name || __("Untitled workflow");
   const published = workflow?.status === "active";
   return (
     <div className="border-b border-edge bg-ink">
@@ -1381,7 +1387,7 @@ function BuilderTopBar({
             className="flex items-center gap-2 rounded-md px-2 py-1 text-sm font-medium text-white transition-colors hover:bg-raised"
           >
             <span className="text-2xl leading-none">‹</span>
-            Back to Workflows
+            {__("Back to Workflows")}
           </button>
         </div>
 
@@ -1393,8 +1399,8 @@ function BuilderTopBar({
             type="button"
             onClick={onEditSettings}
             className="flex h-8 w-8 items-center justify-center rounded-md text-neutral-500 transition-colors hover:bg-raised hover:text-white"
-            aria-label="Edit workflow settings"
-            title="Edit workflow settings"
+            aria-label={__("Edit workflow settings")}
+            title={__("Edit workflow settings")}
           >
             ✎
           </button>
@@ -1405,8 +1411,8 @@ function BuilderTopBar({
             type="button"
             onClick={() => window.location.reload()}
             className="flex h-9 w-9 items-center justify-center rounded-md text-neutral-400 transition-colors hover:bg-raised hover:text-white"
-            aria-label="Refresh workflow builder"
-            title="Refresh workflow builder"
+            aria-label={__("Refresh workflow builder")}
+            title={__("Refresh workflow builder")}
           >
             ↻
           </button>
@@ -1424,7 +1430,7 @@ function BuilderTopBar({
           </button>
           <div className="relative">
             <Button variant="primary" onClick={onSave} disabled={busy !== null}>
-              Save
+              {__("Save")}
             </Button>
             {dirty ? (
               <span className="absolute -right-1 -top-1 h-2.5 w-2.5 rounded-full bg-red-500" />
@@ -1436,28 +1442,28 @@ function BuilderTopBar({
       <div className="grid min-h-14 grid-cols-[minmax(0,1fr)_auto] items-center gap-4 border-t border-edge px-4 max-lg:grid-cols-1 max-lg:py-2">
         <div className="flex min-w-0 items-center justify-center gap-6 overflow-x-auto max-md:gap-4 max-md:justify-start">
           <TabButton active={activeTab === "builder"} onClick={() => onTab("builder")}>
-            Builder
+            {__("Builder")}
           </TabButton>
           <TabButton active={activeTab === "settings"} onClick={() => onTab("settings")}>
-            Settings
+            {__("Settings")}
           </TabButton>
           <TabButton
             active={activeTab === "enrollment"}
             onClick={() => onTab("enrollment")}
           >
-            Enrollment History
+            {__("Enrollment History")}
           </TabButton>
           <TabButton active={activeTab === "logs"} onClick={() => onTab("logs")}>
-            Execution Logs
+            {__("Execution Logs")}
           </TabButton>
         </div>
 
         <div className="flex items-center justify-end gap-2 max-lg:justify-center">
           <Button variant="secondary" onClick={onRun} disabled={!canRun || busy !== null}>
-            Test Workflow
+            {__("Test Workflow")}
           </Button>
           <div className="flex items-center gap-2 text-sm font-medium">
-            <span className={published ? "text-neutral-500" : "text-white"}>Draft</span>
+            <span className={published ? "text-neutral-500" : "text-white"}>{__("Draft")}</span>
             <button
               type="button"
               role="switch"
@@ -1483,11 +1489,11 @@ function BuilderTopBar({
               />
             </button>
             <span className={published ? "text-white" : "text-neutral-500"}>
-              Publish
+              {__("Publish")}
             </span>
           </div>
           <span className="text-xs text-neutral-500">
-            {workflow ? `v${versionNumber}` : "draft"}
+            {workflow ? `v${versionNumber}` : __("draft")}
           </span>
         </div>
       </div>
@@ -1823,7 +1829,7 @@ function WorkflowFlowNode({ data }: NodeProps<Node<WorkflowNodeData>>) {
             data.onMenuToggle();
           }}
           className="flex h-7 w-7 items-center justify-center rounded-md text-neutral-600 transition-colors hover:bg-raised hover:text-white"
-          aria-label={`${data.title} options`}
+          aria-label={__("{0} options", [data.title])}
         >
           ...
         </button>
@@ -1845,8 +1851,8 @@ function WorkflowFlowNode({ data }: NodeProps<Node<WorkflowNodeData>>) {
               ? "border-pink-400/40 bg-pink-500/15 text-pink-200 hover:bg-pink-500 hover:text-white"
               : "border-edge bg-panel text-neutral-400 hover:border-pink-400/50 hover:bg-pink-500/15 hover:text-pink-200"
           }`}
-          aria-label="Disconnect Go To"
-          title="Disconnect Go To"
+          aria-label={__("Disconnect Go To")}
+          title={__("Disconnect Go To")}
         >
           <DisconnectIcon />
         </button>
@@ -1890,28 +1896,28 @@ function WorkflowNodeMenu({ data }: { data: WorkflowNodeData }) {
       onPointerDown={(event) => event.stopPropagation()}
     >
       <div className="flex h-9 items-center justify-between border-b border-edge px-3 text-xs font-medium text-neutral-400">
-        <span>Actions</span>
+        <span>{__("Actions")}</span>
         <button
           type="button"
           onClick={data.onCloseMenu}
           className="flex h-6 w-6 items-center justify-center rounded text-lg leading-none text-neutral-500 transition-colors hover:bg-raised hover:text-white"
-          aria-label="Close actions menu"
+          aria-label={__("Close actions menu")}
         >
           ×
         </button>
       </div>
 
       {isAction ? (
-        <MenuFlyout label="Notes">
-          <MenuItem disabled>No notes yet</MenuItem>
+        <MenuFlyout label={__("Notes")}>
+          <MenuItem disabled>{__("No notes yet")}</MenuItem>
         </MenuFlyout>
       ) : null}
 
       {isAction ? (
-        <MenuFlyout label="Copy">
-          <MenuItem onSelect={data.onCopy}>Copy Action</MenuItem>
+        <MenuFlyout label={__("Copy")}>
+          <MenuItem onSelect={data.onCopy}>{__("Copy Action")}</MenuItem>
           <MenuItem onSelect={data.onCopyFromHere}>
-            Copy All Actions From Here
+            {__("Copy All Actions From Here")}
           </MenuItem>
         </MenuFlyout>
       ) : null}
@@ -1921,39 +1927,39 @@ function WorkflowNodeMenu({ data }: { data: WorkflowNodeData }) {
           onSelect={data.onPasteBelow}
           disabled={!data.canPasteBelow}
         >
-          Paste Below
+          {__("Paste Below")}
         </MenuItem>
       ) : null}
 
       {isAction ? (
-        <MenuFlyout label="Move">
+        <MenuFlyout label={__("Move")}>
           <MenuItem onSelect={data.onMove} disabled={!data.canMove}>
-            Move Action
+            {__("Move Action")}
           </MenuItem>
           <MenuItem onSelect={data.onMoveFromHere} disabled={!data.canMove}>
-            Move All Actions From Here
+            {__("Move All Actions From Here")}
           </MenuItem>
         </MenuFlyout>
       ) : null}
 
       {data.canSetGoto ? (
-        <MenuFlyout label="Go To">
+        <MenuFlyout label={__("Go To")}>
           <MenuItem onSelect={data.onSetGotoDestination}>
-            Set Go To Destination
+            {__("Set Go To Destination")}
           </MenuItem>
           <MenuItem
             onSelect={data.onDisconnectGoto}
             disabled={!data.gotoTargetLabel}
             tone="danger"
           >
-            Disconnect Goto
+            {__("Disconnect Goto")}
           </MenuItem>
         </MenuFlyout>
       ) : null}
 
-      <MenuFlyout label="Delete">
+      <MenuFlyout label={__("Delete")}>
         <MenuItem onSelect={data.onDelete} tone="danger">
-          {isAction ? "Delete Action" : "Delete Trigger"}
+          {isAction ? __("Delete Action") : __("Delete Trigger")}
         </MenuItem>
       </MenuFlyout>
     </div>
@@ -1973,7 +1979,7 @@ function MenuFlyout({
       <button
         type="button"
         onClick={() => setOpen((value) => !value)}
-        className={`flex h-9 w-full cursor-pointer items-center justify-between px-3 text-left transition-colors hover:bg-raised ${label === "Delete" ? "text-red-400 hover:text-red-500" : "text-neutral-300 hover:text-white"}`}
+        className={`flex h-9 w-full cursor-pointer items-center justify-between px-3 text-left transition-colors hover:bg-raised ${label === __("Delete") ? "text-red-400 hover:text-red-500" : "text-neutral-300 hover:text-white"}`}
       >
         <span>{label}</span>
         <span className="text-lg leading-none text-neutral-500">›</span>
@@ -2033,9 +2039,9 @@ function ConnectorFlowNode({ data }: NodeProps<Node<ConnectorNodeData>>) {
               data.onMoveHere();
             }}
             className="h-7 rounded border border-edge-strong bg-panel px-2 text-xs font-medium text-neutral-200 shadow-sm transition-colors hover:border-accent hover:text-white"
-            aria-label={`Move here after ${data.afterIndex + 1}`}
+            aria-label={__("Move here after {0}", [data.afterIndex + 1])}
           >
-            Move Here
+            {__("Move Here")}
           </button>
         ) : (
           <>
@@ -2050,7 +2056,7 @@ function ConnectorFlowNode({ data }: NodeProps<Node<ConnectorNodeData>>) {
                   ? "border-accent text-white shadow-[0_0_0_3px_color-mix(in_srgb,var(--color-accent)_16%,transparent)]"
                   : "border-edge-strong text-neutral-300"
               }`}
-              aria-label={`Add step after ${data.afterIndex + 1}`}
+              aria-label={__("Add step after {0}", [data.afterIndex + 1])}
             >
               +
             </button>
@@ -2062,8 +2068,8 @@ function ConnectorFlowNode({ data }: NodeProps<Node<ConnectorNodeData>>) {
                   data.onPasteHere();
                 }}
                 className="flex h-7 w-7 items-center justify-center rounded-full border border-edge-strong bg-panel text-neutral-300 shadow-sm transition-colors hover:border-accent hover:text-white"
-                aria-label={`Paste after ${data.afterIndex + 1}`}
-                title="Paste here"
+                aria-label={__("Paste after {0}", [data.afterIndex + 1])}
+                title={__("Paste here")}
               >
                 <TriggerPresetIcon icon="clipboard" />
               </button>
@@ -2310,7 +2316,7 @@ function buildCanvasNodes({
         canMove: false,
         canPasteBelow: false,
         canSetGoto: false,
-        eyebrow: index === 0 ? "Trigger" : `Trigger ${index + 1}`,
+        eyebrow: index === 0 ? __("Trigger") : __("Trigger {0}", [index + 1]),
         gotoCandidate: false,
         gotoConnectionActive: false,
         gotoConnectionHighlighted: false,
@@ -2359,17 +2365,17 @@ function buildCanvasNodes({
       canMove: false,
       canPasteBelow: false,
       canSetGoto: false,
-      eyebrow: "Trigger",
+      eyebrow: __("Trigger"),
       gotoCandidate: false,
       gotoConnectionActive: false,
       gotoConnectionHighlighted: false,
       gotoSource: false,
       gotoTargetLabel: "",
       menuOpen: false,
-      title: "Add New Trigger",
+      title: __("Add New Trigger"),
       subtitle: triggers.length
-        ? "Start this workflow another way"
-        : "Choose how this workflow starts",
+        ? __("Start this workflow another way")
+        : __("Choose how this workflow starts"),
       tone: "trigger",
       variant: "add-trigger",
       onClick: () => {
@@ -2425,7 +2431,7 @@ function buildCanvasNodes({
         canMove: true,
         canPasteBelow: Boolean(workflowClipboard?.steps.length),
         canSetGoto: step.kind === "go_to",
-        eyebrow: `Action ${index + 1}`,
+        eyebrow: __("Action {0}", [index + 1]),
         gotoCandidate:
           isGotoDestinationCandidate(gotoPickerFor, index),
         gotoConnectionActive:
@@ -2439,7 +2445,7 @@ function buildCanvasNodes({
         gotoSource: isGotoPickerSource(gotoPickerFor, stepNode),
         gotoTargetLabel:
           step.kind === "go_to" && step.targetStepIndex !== undefined
-            ? `Action ${step.targetStepIndex + 1}`
+            ? __("Action {0}", [step.targetStepIndex + 1])
             : "",
         menuOpen: isSameSelectedNode(openNodeMenu, stepNode),
         title: stepTitle(step),
@@ -2554,7 +2560,7 @@ function buildCanvasNodes({
             canMove: false,
             canPasteBelow: false,
             canSetGoto: branchStep.kind === "go_to",
-            eyebrow: `Action ${branchStepIndex + 1}`,
+            eyebrow: __("Action {0}", [branchStepIndex + 1]),
             gotoCandidate: false,
             gotoConnectionActive:
               branchStep.kind === "go_to" &&
@@ -2568,7 +2574,7 @@ function buildCanvasNodes({
             gotoTargetLabel:
               branchStep.kind === "go_to" &&
               branchStep.targetStepIndex !== undefined
-                ? `Action ${branchStep.targetStepIndex + 1}`
+                ? __("Action {0}", [branchStep.targetStepIndex + 1])
                 : "",
             menuOpen: isSameSelectedNode(openNodeMenu, branchStepNode),
             title: stepTitle(branchStep),
@@ -2886,7 +2892,7 @@ function ifElseBranchItems(step: IfElseStep, stepIndex: number) {
     ...step.branches.map((branch, index) => ({
       branch: { type: "branch" as const, index },
       id: `step-${stepIndex}-branch-${index}`,
-      label: branch.name || "Branch",
+      label: branch.name || __("Branch"),
       description: branchConditionLabel(branch),
       steps: (branch.steps ?? []) as Array<BranchActionStep>,
       tone: "branch" as const,
@@ -2894,8 +2900,8 @@ function ifElseBranchItems(step: IfElseStep, stepIndex: number) {
     {
       branch: { type: "else" as const },
       id: `step-${stepIndex}-branch-none`,
-      label: step.elseLabel || "None",
-      description: "When none of the conditions are met",
+      label: step.elseLabel || __("None"),
+      description: __("When none of the conditions are met"),
       steps: (step.elseSteps ?? []) as Array<BranchActionStep>,
       tone: "none" as const,
     },
@@ -2903,7 +2909,7 @@ function ifElseBranchItems(step: IfElseStep, stepIndex: number) {
 }
 
 function branchConditionLabel(branch: IfElseStep["branches"][number]) {
-  if (branch.conditions?.length) return `${branch.match === "any" ? "Any" : "All"} of ${branch.conditions.length + 1} conditions match`;
+  if (branch.conditions?.length) return branch.match === "any" ? __("Any of {0} conditions match", [branch.conditions.length + 1]) : __("All of {0} conditions match", [branch.conditions.length + 1]);
   const field =
     IF_ELSE_FIELD_OPTIONS.find((option) => option.value === branch.field)?.label ??
     branch.field;
@@ -2911,9 +2917,9 @@ function branchConditionLabel(branch: IfElseStep["branches"][number]) {
     IF_ELSE_OPERATOR_OPTIONS.find((option) => option.value === branch.operator)
       ?.label ?? branch.operator;
   if (branch.operator === "is_empty" || branch.operator === "is_not_empty") {
-    return `If ${field} ${operator.toLowerCase()}`;
+    return __("If {0} {1}", [field, operator.toLowerCase()]);
   }
-  return `If ${field} ${operator.toLowerCase()} "${branch.value || "value"}"`;
+  return __('If {0} {1} "{2}"', [field, operator.toLowerCase(), branch.value || __("value")]);
 }
 
 function SidebarActionCatalog({
@@ -2934,7 +2940,7 @@ function SidebarActionCatalog({
     }));
   return (
     <SidebarCatalogList
-      searchLabel="Search Actions"
+      searchLabel={__("Search Actions")}
       options={actionOptions}
       onSelect={(value) => onSelect(value as ActionKind)}
     />
@@ -2963,7 +2969,7 @@ function SidebarTriggerList({
 }) {
   return (
     <SidebarCatalogList
-      searchLabel="Search Triggers"
+      searchLabel={__("Search Triggers")}
       options={options}
       onSelect={(value) => {
         const option = options.find((item) => item.value === value);
@@ -3003,7 +3009,7 @@ function SidebarCatalogList({
       <div className="min-h-0 flex-1 overflow-y-auto rounded-md border border-edge bg-ink/30 p-2">
         {groups.length === 0 ? (
           <div className="px-2 py-8 text-center text-sm text-neutral-500">
-            No matches
+            {__("No matches")}
           </div>
         ) : (
           groups.map((group) => (
@@ -3033,7 +3039,7 @@ function SidebarCatalogList({
                         </span>
                         {item.disabled ? (
                           <span className="shrink-0 rounded border border-edge px-1.5 py-0.5 text-[10px] font-normal uppercase text-neutral-500">
-                            Soon
+                            {__("Soon")}
                           </span>
                         ) : null}
                       </span>
@@ -3278,21 +3284,21 @@ function BuilderInspector({
     selectedNode.type === "trigger" ? triggers[selectedNode.index] : undefined;
   const choosingAction = stepPickerAfter !== null || branchStepPicker !== null;
   const choosingTrigger = triggerPickerOpen;
-  let inspectorTitle = "Workflow settings";
-  let inspectorDescription = "Select a trigger or action to edit its settings.";
+  let inspectorTitle = __("Workflow settings");
+  let inspectorDescription = __("Select a trigger or action to edit its settings.");
   if (choosingAction) {
-    inspectorTitle = "Add action";
-    inspectorDescription = "Search actions and flow blocks.";
+    inspectorTitle = __("Add action");
+    inspectorDescription = __("Search actions and flow blocks.");
   } else if (choosingTrigger) {
-    inspectorTitle = "Workflow Trigger";
+    inspectorTitle = __("Workflow Trigger");
     inspectorDescription =
-      "Adds a workflow trigger and enrolls matching records into the workflow.";
+      __("Adds a workflow trigger and enrolls matching records into the workflow.");
   } else if (selectedNode.type === "trigger") {
-    inspectorTitle = "Trigger settings";
-    inspectorDescription = "Choose how the workflow starts.";
+    inspectorTitle = __("Trigger settings");
+    inspectorDescription = __("Choose how the workflow starts.");
   } else if (selectedNode.type === "step" || selectedNode.type === "branchStep") {
-    inspectorTitle = "Action settings";
-    inspectorDescription = "Configure the selected action.";
+    inspectorTitle = __("Action settings");
+    inspectorDescription = __("Configure the selected action.");
   }
   const body = choosingAction ? (
     <SidebarActionCatalog
@@ -3391,7 +3397,7 @@ function TriggerEditor({
     <div className="h-full space-y-3 overflow-y-auto">
       {trigger && <ErpTriggerFields trigger={trigger} onChange={onChange}/>}
       {trigger?.kind === "schedule" ? (
-        <Field label="Every">
+        <Field label={__("Every")}>
           <div className="grid grid-cols-[minmax(0,1fr)_90px] gap-2">
             <NumberInput
               value={String(trigger.intervalMinutes)}
@@ -3415,10 +3421,10 @@ function TriggerEditor({
           <div className="flex items-center justify-between">
             <div>
               <div className="text-xs font-semibold uppercase text-neutral-500">
-                Filters
+                {__("Filters")}
               </div>
               <div className="mt-1 text-xs text-neutral-500">
-                AND filters: all conditions must match.
+                {__("AND filters: all conditions must match.")}
               </div>
             </div>
             <Button
@@ -3434,12 +3440,12 @@ function TriggerEditor({
               }
               disabled={(trigger.filters ?? []).length >= 10}
             >
-              + Add
+              + {__("Add")}
             </Button>
           </div>
           {(trigger.filters ?? []).length === 0 ? (
             <div className="rounded border border-dashed border-edge px-3 py-4 text-center text-xs text-neutral-500">
-              No filters
+              {__("No filters")}
             </div>
           ) : (
             <div className="space-y-2">
@@ -3500,13 +3506,13 @@ function TriggerFilterRow({
           value={filter.field}
           onChange={(value) => onChange({ ...filter, field: value })}
           options={fieldOptions}
-          ariaLabel="Trigger filter field"
+          ariaLabel={__("Trigger filter field")}
         />
         <button
           type="button"
           onClick={onRemove}
           className="flex h-9 w-8 items-center justify-center rounded-md border border-edge text-neutral-500 transition-colors hover:border-red-500/40 hover:text-red-300"
-          aria-label="Remove trigger filter"
+          aria-label={__("Remove trigger filter")}
         >
           ×
         </button>
@@ -3518,7 +3524,7 @@ function TriggerFilterRow({
             onChange({ ...filter, operator: value as TriggerFilter["operator"] })
           }
           options={IF_ELSE_OPERATOR_OPTIONS}
-          ariaLabel="Trigger filter operator"
+          ariaLabel={__("Trigger filter operator")}
         />
         <Input
           value={filter.value}
@@ -3529,8 +3535,8 @@ function TriggerFilterRow({
             filter.operator === "is_empty" ||
             filter.operator === "is_not_empty"
           }
-          placeholder="Value"
-          aria-label="Trigger filter value"
+          placeholder={__("Value")}
+          aria-label={__("Trigger filter value")}
         />
       </div>
     </div>
@@ -3565,7 +3571,7 @@ function StepEditor({
   );
   return (
     <div className="h-full space-y-3 overflow-y-auto border-t border-edge pt-4">
-      <Field label="Action">
+      <Field label={__("Action")}>
         <Select
           value={step.kind==="erpnext"&&step.operation&&isCatalogOperation(step.operation)?step.operation:step.kind}
           onChange={(value) => onChange(createDefaultStep(value as ActionKind))}
@@ -3573,14 +3579,14 @@ function StepEditor({
             value: item.kind,
             label: item.title,
           }))}
-          ariaLabel="Action type"
+          ariaLabel={__("Action type")}
         />
       </Field>
-      <Field label="Step name">
+      <Field label={__("Step name")}>
         <Input
           value={step.label}
           onChange={(event) => onChange({ ...step, label: event.target.value })}
-          placeholder="Step name"
+          placeholder={__("Step name")}
         />
       </Field>
       <StepFields
@@ -3596,14 +3602,14 @@ function StepEditor({
             onClick={() => onMove(index, -1)}
             disabled={index === 0}
           >
-            Up
+            {__("Up")}
           </Button>
           <Button
             variant="ghost"
             onClick={() => onMove(index, 1)}
             disabled={index === stepCount - 1}
           >
-            Down
+            {__("Down")}
           </Button>
         </div>
         <Button
@@ -3611,7 +3617,7 @@ function StepEditor({
           onClick={onRemove}
           disabled={!canDeleteSingle && stepCount <= 1}
         >
-          Delete
+          {__("Delete")}
         </Button>
       </div>
     </div>
@@ -3638,7 +3644,7 @@ function StepFields({
     const waitAmount = step.durationMinutes / waitUnit.multiplier;
     return (
       <div className="grid grid-cols-[minmax(0,1fr)_120px] gap-2">
-        <Field label="Wait for">
+        <Field label={__("Wait for")}>
           <NumberInput
             value={String(waitAmount)}
             onChange={(value) =>
@@ -3653,7 +3659,7 @@ function StepFields({
             min={1}
           />
         </Field>
-        <Field label="Unit">
+        <Field label={__("Unit")}>
           <Select
             value={waitUnit.unit}
             onChange={(value) => {
@@ -3664,7 +3670,7 @@ function StepFields({
               });
             }}
             options={WAIT_UNIT_OPTIONS}
-            ariaLabel="Wait unit"
+            ariaLabel={__("Wait unit")}
           />
         </Field>
       </div>
@@ -3673,17 +3679,17 @@ function StepFields({
   if (step.kind === "if_else") {
     return (
       <div className="space-y-4">
-        <Field label="Conditional logic">
+        <Field label={__("Conditional logic")}>
           <Select
             value="build"
             onChange={() => undefined}
-            options={[{ value: "build", label: "Route actions using conditions" }]}
-            ariaLabel="Scenario recipe"
+            options={[{ value: "build", label: __("Route actions using conditions") }]}
+            ariaLabel={__("Scenario recipe")}
           />
         </Field>
         <div className="space-y-3">
           <div className="text-xs font-semibold uppercase text-neutral-500">
-            Branches
+            {__("Branches")}
           </div>
           {step.branches.map((branch, branchIndex) => (
             <div
@@ -3701,8 +3707,8 @@ function StepFields({
                     };
                     onChange({ ...step, branches });
                   }}
-                  placeholder="Branch"
-                  aria-label={`Branch ${branchIndex + 1} name`}
+                  placeholder={__("Branch")}
+                  aria-label={__("Branch {0} name", [branchIndex + 1])}
                 />
                 <button
                   type="button"
@@ -3716,7 +3722,7 @@ function StepFields({
                   }
                   disabled={step.branches.length <= 1}
                   className="flex h-9 w-8 items-center justify-center rounded-md border border-edge text-neutral-500 transition-colors hover:border-red-500/40 hover:text-red-300 disabled:cursor-not-allowed disabled:opacity-40"
-                  aria-label={`Delete branch ${branchIndex + 1}`}
+                  aria-label={__("Delete branch {0}", [branchIndex + 1])}
                 >
                   ×
                 </button>
@@ -3732,7 +3738,7 @@ function StepFields({
                 branches: [
                   ...step.branches,
                   {
-                    name: "Branch",
+                    name: __("Branch"),
                     field: "current_day_of_week",
                     operator: "is",
                     value: "Monday",
@@ -3743,19 +3749,19 @@ function StepFields({
             }
             disabled={step.branches.length >= 10}
           >
-            + Add Branch
+            + {__("Add Branch")}
           </Button>
           <div className="rounded-md border border-edge bg-ink/40 p-3">
             <div className="mb-2 text-xs font-semibold text-neutral-400">
-              Else Branch
+              {__("Else Branch")}
             </div>
             <Input
               value={step.elseLabel}
               onChange={(event) =>
                 onChange({ ...step, elseLabel: event.target.value })
               }
-              placeholder="None"
-              aria-label="None branch label"
+              placeholder={__("None")}
+              aria-label={__("None branch label")}
             />
           </div>
         </div>
@@ -3764,7 +3770,7 @@ function StepFields({
   }
   if (step.kind === "go_to") {
     return (
-      <Field label="Destination">
+      <Field label={__("Destination")}>
         <Select
           value={
             step.targetStepIndex === undefined
@@ -3778,26 +3784,26 @@ function StepFields({
             })
           }
           options={[
-            { value: "", label: "Select destination" },
+            { value: "", label: __("Select destination") },
             ...steps
               .map((item, itemIndex) => ({
                 value: String(itemIndex),
-                label: `Action ${itemIndex + 1}: ${stepTitle(item)}`,
+                label: __("Action {0}: {1}", [itemIndex + 1, stepTitle(item)]),
               }))
               .filter((option) => option.value !== String(goToSourceIndex)),
           ]}
-          ariaLabel="Go To destination"
+          ariaLabel={__("Go To destination")}
         />
       </Field>
     );
   }
   if (step.kind === "log") {
     return (
-      <Field label="Message">
+      <Field label={__("Message")}>
         <TextArea
           value={step.message}
           onChange={(value) => onChange({ ...step, message: value })}
-          placeholder="Log message"
+          placeholder={__("Log message")}
         />
       </Field>
     );
@@ -3805,18 +3811,18 @@ function StepFields({
   if (step.kind === "create_note") {
     return (
       <>
-        <Field label="Title">
+        <Field label={__("Title")}>
           <MergeFieldTextInput
             value={step.title}
             onChange={(value) => onChange({ ...step, title: value })}
-            placeholder="Note title"
+            placeholder={__("Note title")}
           />
         </Field>
-        <Field label="Body">
+        <Field label={__("Body")}>
           <TextArea
             value={step.body ?? ""}
             onChange={(value) => onChange({ ...step, body: value || undefined })}
-            placeholder="Note body"
+            placeholder={__("Note body")}
           />
         </Field>
       </>
@@ -3825,23 +3831,23 @@ function StepFields({
   if (step.kind === "create_task") {
     return (
       <>
-        <Field label="Title">
+        <Field label={__("Title")}>
           <MergeFieldTextInput
             value={step.title}
             onChange={(value) => onChange({ ...step, title: value })}
-            placeholder="Task title"
+            placeholder={__("Task title")}
           />
         </Field>
-        <Field label="Description">
+        <Field label={__("Description")}>
           <TextArea
             value={step.description ?? ""}
             onChange={(value) =>
               onChange({ ...step, description: value || undefined })
             }
-            placeholder="Task description"
+            placeholder={__("Task description")}
           />
         </Field>
-        <Field label="Due offset">
+        <Field label={__("Due offset")}>
           <NumberInput
             value={step.dueOffsetDays === undefined ? "" : String(step.dueOffsetDays)}
             onChange={(value) =>
@@ -3853,7 +3859,7 @@ function StepFields({
               })
             }
             min={0}
-            placeholder="Days from run"
+            placeholder={__("Days from run")}
           />
         </Field>
       </>
@@ -3863,35 +3869,35 @@ function StepFields({
     return (
       <>
         <div className="grid grid-cols-2 gap-2">
-          <Field label="Object">
+          <Field label={__("Object")}>
             <Select
               value={step.entityType}
               onChange={(value) =>
                 onChange(defaultUpdateStep(value as UpdateEntityType))
               }
               options={UPDATE_ENTITY_OPTIONS}
-              ariaLabel="Update record type"
+              ariaLabel={__("Update record type")}
             />
           </Field>
-          <Field label="Field">
+          <Field label={__("Field")}>
             <Select
               value={step.field}
               onChange={(value) => onChange({ ...step, field: value })}
               options={fieldOptions(step.entityType)}
-              ariaLabel="Update field"
+              ariaLabel={__("Update field")}
             />
           </Field>
         </div>
-        <Field label="Fixed record id">
+        <Field label={__("Fixed record id")}>
           <Input
             value={step.recordId}
             onChange={(event) =>
               onChange({ ...step, recordId: event.target.value })
             }
-            placeholder="Paste a Convex record id"
+            placeholder={__("Paste a Convex record id")}
           />
         </Field>
-        <Field label="Value">
+        <Field label={__("Value")}>
           <UpdateValueInput step={step} onChange={onChange} />
         </Field>
       </>
@@ -3900,24 +3906,24 @@ function StepFields({
   if (step.kind === "send_notification") {
     return (
       <>
-        <Field label="Channel">
+        <Field label={__("Channel")}>
           <Select
             value={step.channel}
             onChange={(value) =>
               onChange({ ...step, channel: value as "activity" | "slack" })
             }
             options={[
-              { value: "activity", label: "Activity" },
+              { value: "activity", label: __("Activity") },
               { value: "slack", label: "Slack" },
             ]}
-            ariaLabel="Notification channel"
+            ariaLabel={__("Notification channel")}
           />
         </Field>
-        <Field label="Message">
+        <Field label={__("Message")}>
           <TextArea
             value={step.message}
             onChange={(value) => onChange({ ...step, message: value })}
-            placeholder="Notification message"
+            placeholder={__("Notification message")}
           />
         </Field>
       </>
@@ -3939,7 +3945,7 @@ function UpdateValueInput({
         value={step.value}
         onChange={(value) => onChange({ ...step, value })}
         options={DEAL_STAGE_OPTIONS}
-        ariaLabel="Deal stage"
+        ariaLabel={__("Deal stage")}
       />
     );
   }
@@ -3949,7 +3955,7 @@ function UpdateValueInput({
         value={step.value}
         onChange={(value) => onChange({ ...step, value })}
         options={PROJECT_STATUS_OPTIONS}
-        ariaLabel="Project status"
+        ariaLabel={__("Project status")}
       />
     );
   }
@@ -3959,7 +3965,7 @@ function UpdateValueInput({
         value={step.value}
         onChange={(value) => onChange({ ...step, value })}
         options={TASK_STATUS_OPTIONS}
-        ariaLabel="Task status"
+        ariaLabel={__("Task status")}
       />
     );
   }
@@ -3967,7 +3973,7 @@ function UpdateValueInput({
     <Input
       value={step.value}
       onChange={(event) => onChange({ ...step, value: event.target.value })}
-      placeholder="Value"
+      placeholder={__("Value")}
     />
   );
 }
@@ -3989,25 +3995,25 @@ function WorkflowSettingsPanel({
     <div className="p-4">
       <Panel className="mx-auto max-w-2xl p-4">
         <div className="mb-4">
-          <h2 className="text-sm font-medium text-white">Settings</h2>
+          <h2 className="text-sm font-medium text-white">{__("Settings")}</h2>
           <p className="mt-1 text-xs text-neutral-500">
-            Name the recipe and keep a short internal note for the workflow list.
+            {__("Name the recipe and keep a short internal note for the workflow list.")}
           </p>
         </div>
         <div className="space-y-4">
-          <Field label="Recipe name">
+          <Field label={__("Recipe name")}>
             <Input
               value={name}
               onChange={(event) => onName(event.target.value)}
-              placeholder="Recipe name"
-              aria-label="Recipe name"
+              placeholder={__("Recipe name")}
+              aria-label={__("Recipe name")}
             />
           </Field>
-          <Field label="Description">
+          <Field label={__("Description")}>
             <TextArea
               value={description}
               onChange={onDescription}
-              placeholder="What this workflow does"
+              placeholder={__("What this workflow does")}
               rows={4}
             />
           </Field>
@@ -4039,7 +4045,7 @@ function RunHistory({
           <div>
             <h2 className="text-sm font-medium text-white">{title}</h2>
             <p className="mt-1 text-xs text-neutral-500">
-              {workflow ? workflow.name : "Select a workflow"}
+              {workflow ? workflow.name : __("Select a workflow")}
             </p>
           </div>
           {workflow?.currentVersion ? (
@@ -4047,11 +4053,11 @@ function RunHistory({
           ) : null}
         </div>
         {!workflow ? (
-          <EmptyState message="Select a workflow" />
+          <EmptyState message={__("Select a workflow")} />
         ) : runs === undefined ? (
-          <p className="text-sm text-neutral-500">Loading...</p>
+          <p className="text-sm text-neutral-500">{__("Loading...")}</p>
         ) : runs.length === 0 ? (
-          <EmptyState message="No runs recorded" />
+          <EmptyState message={__("No runs recorded")} />
         ) : (
           <div className="divide-y divide-edge">
             {runs.map((run) => (
@@ -4060,7 +4066,7 @@ function RunHistory({
                   <div className="flex min-w-0 items-center gap-2">
                     <RunStatusBadge status={run.status} />
                     <span className="truncate text-sm text-white">
-                      {run.triggerKind} run
+                      {__("{0} run", [run.triggerKind])}
                     </span>
                   </div>
                   <span className="text-xs text-neutral-500">
@@ -4082,7 +4088,7 @@ function RunHistory({
                           {step.label}
                         </span>
                         <span className="mt-1 block truncate text-neutral-500">
-                          {step.error ?? step.output ?? "No output"}
+                          {step.error ?? step.output ?? __("No output")}
                         </span>
                       </span>
                       <span className="text-right">
@@ -4104,7 +4110,7 @@ function VersionHistory({
   workflow,
   versions,
   currentVersionId,
-  title = "Versions",
+  title = __("Versions"),
 }: {
   workflow: Workflow | undefined;
   versions: Array<WorkflowVersionRow> | undefined;
@@ -4117,15 +4123,15 @@ function VersionHistory({
         <div className="mb-4">
           <h2 className="text-sm font-medium text-white">{title}</h2>
           <p className="mt-1 text-xs text-neutral-500">
-            {workflow ? workflow.name : "Select a workflow"}
+            {workflow ? workflow.name : __("Select a workflow")}
           </p>
         </div>
         {!workflow ? (
-          <EmptyState message="Select a workflow" />
+          <EmptyState message={__("Select a workflow")} />
         ) : versions === undefined ? (
-          <p className="text-sm text-neutral-500">Loading...</p>
+          <p className="text-sm text-neutral-500">{__("Loading...")}</p>
         ) : versions.length === 0 ? (
-          <EmptyState message="No versions recorded" />
+          <EmptyState message={__("No versions recorded")} />
         ) : (
           <div className="divide-y divide-edge">
             {versions.map((version) => (
@@ -4142,7 +4148,7 @@ function VersionHistory({
                     {triggerLabel(version.trigger)}
                   </div>
                   <div className="mt-0.5 truncate text-xs text-neutral-500">
-                    {version.steps.length} actions
+                    {__("{0} actions", [version.steps.length])}
                     {version.validationErrors.length > 0
                       ? ` - ${version.validationErrors[0]}`
                       : ""}
@@ -4205,9 +4211,10 @@ function StatusBadge({ status }: { status: WorkflowStatus }) {
     paused: "border-sky-500/30 bg-sky-500/10 text-sky-200",
     archived: "border-neutral-700 bg-neutral-900 text-neutral-400",
   }[status];
+  const label = { active: __("Active"), draft: __("Draft"), paused: __("Paused"), archived: __("Archived") }[status] ?? status;
   return (
     <span className={`rounded-full border px-2 py-0.5 text-xs ${classes}`}>
-      {status}
+      {label}
     </span>
   );
 }
@@ -4230,15 +4237,16 @@ function RunStatusBadge({ status }: { status: WorkflowRun["status"] }) {
     failed: "border-red-500/30 bg-red-500/10 text-red-400",
     canceled: "border-neutral-700 bg-neutral-900 text-neutral-400",
   }[status];
+  const label = { queued: __("Queued"), running: __("Running"), succeeded: __("Succeeded"), failed: __("Failed"), canceled: __("Canceled") }[status] ?? status;
   return (
     <span className={`rounded-full border px-2 py-0.5 text-xs ${classes}`}>
-      {status}
+      {label}
     </span>
   );
 }
 
 function createInitialWorkflowName() {
-  return `New Workflow : ${Date.now()}`;
+  return __("New Workflow : {0}", [Date.now()]);
 }
 
 function defaultTriggerFilter(entityType: EntityType): TriggerFilter {
@@ -4262,57 +4270,57 @@ function createDefaultStep(kind: ActionKind): DraftStep {
   if(isCrmOperation(kind))return createCrmStep(kind);
   if(isReservasOperation(kind))return createReservasStep(kind) as DraftStep;
   if(isPulseOperation(kind))return createPulseStep(kind);
-  if(kind==="run_ai_capability")return {kind,label:"Run AI Capability",configJson:JSON.stringify({capability:"meeting-summary",input:{notes:{$ref:"trigger.notes"}}})};
-  if(kind==="outgoing_webhook")return {kind,label:"Outgoing webhook",configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
-  if(kind==="api_request")return {kind,label:"API request",configJson:JSON.stringify({url:"",method:"GET",headers:{}})};
-  if(kind==="custom_code")return {kind,label:"Run Code",code:"return { documentName: input.name, processed: true };"};
-  if(kind==="get_document")return {kind,label:"Get document",configJson:JSON.stringify({doctype:"Task",name:{$ref:"trigger.name"}})};
-  if(kind==="erpnext")return {kind,label:"ERPNext document",operation:"get_document",configJson:JSON.stringify({doctype:"Task",name:{$ref:"trigger.name"}},null,2)};
-  if (kind === "noop") return { kind: "noop", label: "No operation" };
+  if(kind==="run_ai_capability")return {kind,label:__("Run AI Capability"),configJson:JSON.stringify({capability:"meeting-summary",input:{notes:{$ref:"trigger.notes"}}})};
+  if(kind==="outgoing_webhook")return {kind,label:__("Outgoing webhook"),configJson:JSON.stringify({url:"",method:"POST",headers:{},body:{$ref:"trigger"}},null,2)};
+  if(kind==="api_request")return {kind,label:__("API request"),configJson:JSON.stringify({url:"",method:"GET",headers:{}})};
+  if(kind==="custom_code")return {kind,label:__("Run Code"),code:"return { documentName: input.name, processed: true };"};
+  if(kind==="get_document")return {kind,label:__("Get document"),configJson:JSON.stringify({doctype:"Task",name:{$ref:"trigger.name"}})};
+  if(kind==="erpnext")return {kind,label:__("ERPNext document"),operation:"get_document",configJson:JSON.stringify({doctype:"Task",name:{$ref:"trigger.name"}},null,2)};
+  if (kind === "noop") return { kind: "noop", label: __("No operation") };
   if (kind === "create_note") {
-    return { kind: "create_note", label: "Create note", title: "Workflow note" };
+    return { kind: "create_note", label: __("Create note"), title: __("Workflow note") };
   }
   if (kind === "create_task") {
-    return { kind: "create_task", label: "Create task", title: "Workflow task" };
+    return { kind: "create_task", label: __("Create task"), title: __("Workflow task") };
   }
   if (kind === "update_record") return defaultUpdateStep("deal");
   if (kind === "send_notification") {
     return {
       kind: "send_notification",
-      label: "Send notification",
+      label: __("Send notification"),
       channel: "activity",
-      message: "Workflow notification.",
+      message: __("Workflow notification."),
     };
   }
   if (kind === "send_email") {
     return {
       kind: "send_email",
-      label: "Send email",
+      label: __("Send email"),
       to: "",
-      subject: "Workflow notification",
-      body: "This workflow sent an email.",
+      subject: __("Workflow notification"),
+      body: __("This workflow sent an email."),
     };
   }
   if (kind === "go_to") {
     return {
       kind: "go_to",
-      label: "Go To",
+      label: __("Go To"),
     };
   }
   if (kind === "wait") {
     return {
       kind: "wait",
-      label: "Wait",
+      label: __("Wait"),
       durationMinutes: 60,
     };
   }
   if (kind === "if_else") {
     return {
       kind: "if_else",
-      label: "If / Else",
+      label: __("If / Else"),
       branches: [
         {
-          name: "Branch",
+          name: __("Branch"),
           field: "current_day_of_week",
           operator: "is",
           value: "Monday",
@@ -4325,8 +4333,8 @@ function createDefaultStep(kind: ActionKind): DraftStep {
   }
   return {
     kind: "log",
-    label: "Record workflow event",
-    message: "Workflow executed.",
+    label: __("Record workflow event"),
+    message: __("Workflow executed."),
   };
 }
 
@@ -4467,13 +4475,13 @@ function waitUnitForMinutes(minutes: number): {
 function formatDuration(minutes: number) {
   if (minutes % 1440 === 0) {
     const value = minutes / 1440;
-    return `${value} day${value === 1 ? "" : "s"}`;
+    return value === 1 ? __("1 day") : __("{0} days", [value]);
   }
   if (minutes % 60 === 0) {
     const value = minutes / 60;
-    return `${value} hour${value === 1 ? "" : "s"}`;
+    return value === 1 ? __("1 hour") : __("{0} hours", [value]);
   }
-  return `${minutes} minute${minutes === 1 ? "" : "s"}`;
+  return minutes === 1 ? __("1 minute") : __("{0} minutes", [minutes]);
 }
 
 function validateDraft(
@@ -4483,13 +4491,13 @@ function validateDraft(
   allowEmpty = false,
 ) {
   const errors: Array<string> = [];
-  if (!name.trim()) errors.push("Workflow name is required.");
-  if (triggers.length === 0) errors.push("Workflow trigger is required.");
-  if (triggers.length > 8) errors.push("Workflow supports up to 8 triggers.");
+  if (!name.trim()) errors.push(__("Workflow name is required."));
+  if (triggers.length === 0) errors.push(__("Workflow trigger is required."));
+  if (triggers.length > 8) errors.push(__("Workflow supports up to 8 triggers."));
   for (const [index, trigger] of triggers.entries()) {
-    const label = `Trigger ${index + 1}`;
+    const label = __("Trigger {0}", [index + 1]);
     if (trigger.kind === "schedule" && trigger.intervalMinutes < 5) {
-      errors.push(`${label} schedule interval must be at least 5 minutes.`);
+      errors.push(__("{0} schedule interval must be at least 5 minutes.", [label]));
     }
     if (
       trigger.kind === "record" &&
@@ -4500,114 +4508,114 @@ function validateDraft(
       trigger.entityType !== "task"
     ) {
       errors.push(
-        `${label} stage/status changes only apply to deals, projects, or tasks.`,
+        __("{0} stage/status changes only apply to deals, projects, or tasks.", [label]),
       );
     }
     if (trigger.kind === "record") {
       const filters = trigger.filters ?? [];
-      if (filters.length > 10) errors.push(`${label} supports up to 10 filters.`);
+      if (filters.length > 10) errors.push(__("{0} supports up to 10 filters.", [label]));
       for (const [filterIndex, filter] of filters.entries()) {
         if (!filter.field.trim()) {
-          errors.push(`${label} filter ${filterIndex + 1} needs a field.`);
+          errors.push(__("{0} filter {1} needs a field.", [label, filterIndex + 1]));
         }
         if (
           filter.operator !== "is_empty" &&
           filter.operator !== "is_not_empty" &&
           !filter.value.trim()
         ) {
-          errors.push(`${label} filter ${filterIndex + 1} needs a value.`);
+          errors.push(__("{0} filter {1} needs a value.", [label, filterIndex + 1]));
         }
       }
     }
   }
-  if (!allowEmpty && steps.length === 0) errors.push("Add at least one action before testing or publishing.");
+  if (!allowEmpty && steps.length === 0) errors.push(__("Add at least one action before testing or publishing."));
   for (const [index, step] of steps.entries()) {
-    const label = `Action ${index + 1}`;
-    if (!step.label.trim()) errors.push(`${label} needs a name.`);
+    const label = __("Action {0}", [index + 1]);
+    if (!step.label.trim()) errors.push(__("{0} needs a name.", [label]));
     if (step.kind === "log" && !step.message.trim()) {
-      errors.push(`${label} needs a log message.`);
+      errors.push(__("{0} needs a log message.", [label]));
     }
     if (step.kind === "create_note" && !step.title.trim() && !step.body?.trim()) {
-      errors.push(`${label} needs note content.`);
+      errors.push(__("{0} needs note content.", [label]));
     }
     if (step.kind === "create_task" && !step.title.trim()) {
-      errors.push(`${label} needs a task title.`);
+      errors.push(__("{0} needs a task title.", [label]));
     }
     if (
       step.kind === "create_task" &&
       step.dueOffsetDays !== undefined &&
       (step.dueOffsetDays < 0 || step.dueOffsetDays > 3650)
     ) {
-      errors.push(`${label} due offset must be between 0 and 3650 days.`);
+      errors.push(__("{0} due offset must be between 0 and 3650 days.", [label]));
     }
     if (step.kind === "update_record") {
       if (!fieldOptions(step.entityType).some((option) => option.value === step.field)) {
-        errors.push(`${label} targets an unsupported field.`);
+        errors.push(__("{0} targets an unsupported field.", [label]));
       }
-      if (!step.recordId.trim()) errors.push(`${label} needs a record id.`);
-      if (!step.value.trim()) errors.push(`${label} needs a value.`);
+      if (!step.recordId.trim()) errors.push(__("{0} needs a record id.", [label]));
+      if (!step.value.trim()) errors.push(__("{0} needs a value.", [label]));
     }
     if (step.kind === "send_notification" && !step.message.trim()) {
-      errors.push(`${label} needs a notification message.`);
+      errors.push(__("{0} needs a notification message.", [label]));
     }
     if (step.kind === "send_email") {
       if (!step.to.includes("@") && !hasMergeField(step.to)) {
-        errors.push(`${label} needs an email recipient.`);
+        errors.push(__("{0} needs an email recipient.", [label]));
       }
-      if (!step.subject.trim()) errors.push(`${label} needs an email subject.`);
-      if (!step.body.trim()) errors.push(`${label} needs an email body.`);
+      if (!step.subject.trim()) errors.push(__("{0} needs an email subject.", [label]));
+      if (!step.body.trim()) errors.push(__("{0} needs an email body.", [label]));
     }
     if (step.kind === "wait") {
       if (!Number.isFinite(step.durationMinutes) || step.durationMinutes < 1) {
-        errors.push(`${label} wait must be at least 1 minute.`);
+        errors.push(__("{0} wait must be at least 1 minute.", [label]));
       }
       if (step.durationMinutes > 525600) {
-        errors.push(`${label} wait cannot be longer than 365 days.`);
+        errors.push(__("{0} wait cannot be longer than 365 days.", [label]));
       }
     }
     if (step.kind === "if_else") {
-      if (step.branches.length === 0) errors.push(`${label} needs at least one branch.`);
-      if (step.branches.length > 10) errors.push(`${label} supports up to 10 branches.`);
+      if (step.branches.length === 0) errors.push(__("{0} needs at least one branch.", [label]));
+      if (step.branches.length > 10) errors.push(__("{0} supports up to 10 branches.", [label]));
       for (const [branchIndex, branch] of step.branches.entries()) {
         if (!branch.name.trim()) {
-          errors.push(`${label} branch ${branchIndex + 1} needs a name.`);
+          errors.push(__("{0} branch {1} needs a name.", [label, branchIndex + 1]));
         }
         if (!branch.field.trim()) {
-          errors.push(`${label} branch ${branchIndex + 1} needs a field.`);
+          errors.push(__("{0} branch {1} needs a field.", [label, branchIndex + 1]));
         }
         if (
           branch.operator !== "is_empty" &&
           branch.operator !== "is_not_empty" &&
           !branch.value.trim()
         ) {
-          errors.push(`${label} branch ${branchIndex + 1} needs a value.`);
+          errors.push(__("{0} branch {1} needs a value.", [label, branchIndex + 1]));
         }
         validateBranchDraftSteps(
           errors,
-          `${label} branch ${branchIndex + 1}`,
+          __("{0} branch {1}", [label, branchIndex + 1]),
           branch.steps ?? [],
           steps.length,
         );
       }
-      if (!step.elseLabel.trim()) errors.push(`${label} needs a None branch label.`);
+      if (!step.elseLabel.trim()) errors.push(__("{0} needs a None branch label.", [label]));
       validateBranchDraftSteps(
         errors,
-        `${label} None branch`,
+        __("{0} None branch", [label]),
         step.elseSteps ?? [],
         steps.length,
       );
     }
     if (step.kind === "go_to") {
       if (step.targetStepIndex === undefined) {
-        errors.push(`${label} needs a Go To destination.`);
+        errors.push(__("{0} needs a Go To destination.", [label]));
       } else if (
         !Number.isInteger(step.targetStepIndex) ||
         step.targetStepIndex < 0 ||
         step.targetStepIndex >= steps.length
       ) {
-        errors.push(`${label} has an invalid Go To destination.`);
+        errors.push(__("{0} has an invalid Go To destination.", [label]));
       } else if (step.targetStepIndex === index) {
-        errors.push(`${label} cannot go to itself.`);
+        errors.push(__("{0} cannot go to itself.", [label]));
       }
     }
   }
@@ -4621,35 +4629,35 @@ function validateBranchDraftSteps(
   topLevelStepCount: number,
 ) {
   for (const [index, step] of steps.entries()) {
-    const actionLabel = `${label} action ${index + 1}`;
-    if (!step.label.trim()) errors.push(`${actionLabel} needs a name.`);
+    const actionLabel = __("{0} action {1}", [label, index + 1]);
+    if (!step.label.trim()) errors.push(__("{0} needs a name.", [actionLabel]));
     if (step.kind === "log" && !step.message.trim()) {
-      errors.push(`${actionLabel} needs a log message.`);
+      errors.push(__("{0} needs a log message.", [actionLabel]));
     }
     if (step.kind === "send_email") {
       if (!step.to.includes("@") && !hasMergeField(step.to)) {
-        errors.push(`${actionLabel} needs an email recipient.`);
+        errors.push(__("{0} needs an email recipient.", [actionLabel]));
       }
-      if (!step.subject.trim()) errors.push(`${actionLabel} needs an email subject.`);
-      if (!step.body.trim()) errors.push(`${actionLabel} needs an email body.`);
+      if (!step.subject.trim()) errors.push(__("{0} needs an email subject.", [actionLabel]));
+      if (!step.body.trim()) errors.push(__("{0} needs an email body.", [actionLabel]));
     }
     if (step.kind === "wait") {
       if (!Number.isFinite(step.durationMinutes) || step.durationMinutes < 1) {
-        errors.push(`${actionLabel} wait must be at least 1 minute.`);
+        errors.push(__("{0} wait must be at least 1 minute.", [actionLabel]));
       }
       if (step.durationMinutes > 525600) {
-        errors.push(`${actionLabel} wait cannot be longer than 365 days.`);
+        errors.push(__("{0} wait cannot be longer than 365 days.", [actionLabel]));
       }
     }
     if (step.kind === "go_to") {
       if (step.targetStepIndex === undefined) {
-        errors.push(`${actionLabel} needs a Go To destination.`);
+        errors.push(__("{0} needs a Go To destination.", [actionLabel]));
       } else if (
         !Number.isInteger(step.targetStepIndex) ||
         step.targetStepIndex < 0 ||
         step.targetStepIndex >= topLevelStepCount
       ) {
-        errors.push(`${actionLabel} has an invalid Go To destination.`);
+        errors.push(__("{0} has an invalid Go To destination.", [actionLabel]));
       }
     }
   }
@@ -4668,7 +4676,7 @@ function testDisabledReason({
   validationErrors: Array<string>;
 }) {
   if (draftValidationErrors.length > 0) return draftValidationErrors[0];
-  if (!dirty && !workflow) return "Select or create a workflow to test.";
+  if (!dirty && !workflow) return __("Select or create a workflow to test.");
   if (!dirty && validationErrors.length > 0) return validationErrors[0];
   return "";
 }
@@ -4677,7 +4685,7 @@ function defaultUpdateStep(entityType: UpdateEntityType): DraftStep {
   if (entityType === "deal") {
     return {
       kind: "update_record",
-      label: "Update deal",
+      label: __("Update deal"),
       entityType,
       recordId: "",
       field: "stage",
@@ -4687,7 +4695,7 @@ function defaultUpdateStep(entityType: UpdateEntityType): DraftStep {
   if (entityType === "project") {
     return {
       kind: "update_record",
-      label: "Update project",
+      label: __("Update project"),
       entityType,
       recordId: "",
       field: "status",
@@ -4697,7 +4705,7 @@ function defaultUpdateStep(entityType: UpdateEntityType): DraftStep {
   if (entityType === "task") {
     return {
       kind: "update_record",
-      label: "Update task",
+      label: __("Update task"),
       entityType,
       recordId: "",
       field: "status",
@@ -4706,7 +4714,7 @@ function defaultUpdateStep(entityType: UpdateEntityType): DraftStep {
   }
   return {
     kind: "update_record",
-    label: `Update ${entityType}`,
+    label: __("Update {0}", [entityLabel(entityType as EntityType)]),
     entityType,
     recordId: "",
     field: entityType === "company" ? "description" : "title",
@@ -4717,11 +4725,11 @@ function defaultUpdateStep(entityType: UpdateEntityType): DraftStep {
 function fieldOptions(entityType: UpdateEntityType) {
   if (entityType === "company") {
     return [
-      { value: "description", label: "Description" },
-      { value: "industry", label: "Industry" },
+      { value: "description", label: __("Description") },
+      { value: "industry", label: __("Industry") },
     ];
   }
-  if (entityType === "contact") return [{ value: "title", label: "Title" }];
+  if (entityType === "contact") return [{ value: "title", label: __("Title") }];
   return [
     {
       value: entityType === "deal" ? "stage" : "status",
@@ -4733,46 +4741,46 @@ function fieldOptions(entityType: UpdateEntityType) {
 function triggerTitle(trigger: DraftTriggerState) {
   if(trigger?.kind==="crm")return crmTriggerTitle(trigger);
   if(isReservasTrigger(trigger))return reservasTriggerTitle(trigger);
-  if(trigger?.kind==="incoming_webhook")return trigger.name||"Incoming webhook";
-  if(trigger?.kind==="document_event")return `${trigger.doctype} event`;
-  if (!trigger) return "Add a Trigger";
-  if (trigger.kind === "schedule") return "Custom Date Reminder";
+  if(trigger?.kind==="incoming_webhook")return trigger.name||__("Incoming webhook");
+  if(trigger?.kind==="document_event")return __("{0} event", [trigger.doctype]);
+  if (!trigger) return __("Add a Trigger");
+  if (trigger.kind === "schedule") return __("Custom Date Reminder");
   if (trigger.kind === "record") {
     const entity = entityLabel(trigger.entityType);
     if (trigger.entityType === "deal" && trigger.event === "stage_changed") {
-      return "Opportunity Stage Changed";
+      return __("Opportunity Stage Changed");
     }
     if (trigger.entityType === "task" && trigger.event === "status_changed") {
-      return "Task Completed";
+      return __("Task Completed");
     }
     if (trigger.entityType === "contact" && trigger.event === "created") {
-      return "Contact Created";
+      return __("Contact Created");
     }
-    if (trigger.event === "created") return `${entity} Added`;
-    if (trigger.event === "updated") return `${entity} Changed`;
-    return `${entity} ${eventLabel(trigger.event)}`;
+    if (trigger.event === "created") return __("{0} Added", [entity]);
+    if (trigger.event === "updated") return __("{0} Changed", [entity]);
+    return __("{0} {1}", [entity, eventLabel(trigger.event)]);
   }
-  return "Launch manually";
+  return __("Launch manually");
 }
 
 function triggerLabel(trigger: DraftTriggerState) {
   if(trigger?.kind==="crm")return crmTriggerLabel(trigger);
   if(isReservasTrigger(trigger))return reservasTriggerLabel(trigger);
-  if(trigger?.kind==="incoming_webhook")return "Receive a JSON payload";
-  if(trigger?.kind==="document_event")return `${trigger.doctype} · ${{after_insert:"Created",on_update:"Updated",on_submit:"Submitted",on_cancel:"Cancelled",on_update_after_submit:"Updated after submission"}[trigger.event]??trigger.event}`;
-  if (!trigger) return "Choose how this workflow starts";
-  if (trigger.kind === "schedule") return `Every ${trigger.intervalMinutes}m`;
+  if(trigger?.kind==="incoming_webhook")return __("Receive a JSON payload");
+  if(trigger?.kind==="document_event")return `${trigger.doctype} · ${{after_insert:__("Created"),on_update:__("Updated"),on_submit:__("Submitted"),on_cancel:__("Cancelled"),on_update_after_submit:__("Updated after submission")}[trigger.event]??trigger.event}`;
+  if (!trigger) return __("Choose how this workflow starts");
+  if (trigger.kind === "schedule") return __("Every {0}m", [trigger.intervalMinutes]);
   if (trigger.kind === "record") {
     const filters = trigger.filters?.length
-      ? ` · ${trigger.filters.length} filter${trigger.filters.length === 1 ? "" : "s"}`
+      ? " · " + (trigger.filters.length === 1 ? __("1 filter") : __("{0} filters", [trigger.filters.length]))
       : "";
-    return `${trigger.entityType} ${trigger.event.replaceAll("_", " ")}${filters}`;
+    return `${entityLabel(trigger.entityType)} · ${eventLabel(trigger.event)}${filters}`;
   }
-  return "Manual";
+  return __("Manual");
 }
 
 function entityLabel(entityType: EntityType) {
-  if (entityType === "deal") return "Opportunity";
+  if (entityType === "deal") return __("Opportunity");
   return ENTITY_OPTIONS.find((option) => option.value === entityType)?.label ?? entityType;
 }
 
@@ -4805,30 +4813,30 @@ function stepTitle(step: DraftStep) {
 }
 
 function stepSubtitle(step: DraftStep) {
-  if(step.kind==="run_ai_capability"){try{return JSON.parse(step.configJson).capability||"Choose an AI capability"}catch{return "Choose an AI capability"}}
-  if(step.kind==="api_request"){try{const c=JSON.parse(step.configJson);return (c.method||"GET")+" "+(c.url||"Configure request")}catch{return "Configure API request"}}
-  if(step.kind==="custom_code")return "Transform data with JavaScript";
-  if(step.kind==="get_document"){try{return "Get "+JSON.parse(step.configJson).doctype}catch{return "Get an ERPNext document"}}
-  if(step.kind==="erpnext"&&step.operation&&isCrmOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.subject||c.email_template||c.template||c.body||"Write the message"}catch{return "Write the message"}}
-  if(step.kind==="erpnext"&&step.operation&&isReservasOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.service||(c.booking==="{{trigger.name}}"?"This booking":c.booking)||"Booking"}catch{return "Booking"}}
-  if(step.kind==="erpnext")return step.operation?.replaceAll("_"," ")||"ERPNext action";
-  if(step.kind==="outgoing_webhook"){try{return JSON.parse(step.configJson).url||"Configure HTTP request"}catch{return "Configure HTTP request"}}
+  if(step.kind==="run_ai_capability"){try{return JSON.parse(step.configJson).capability||__("Choose an AI capability")}catch{return __("Choose an AI capability")}}
+  if(step.kind==="api_request"){try{const c=JSON.parse(step.configJson);return (c.method||"GET")+" "+(c.url||__("Configure request"))}catch{return __("Configure API request")}}
+  if(step.kind==="custom_code")return __("Transform data with JavaScript");
+  if(step.kind==="get_document"){try{return __("Get {0}", [JSON.parse(step.configJson).doctype])}catch{return __("Get an ERPNext document")}}
+  if(step.kind==="erpnext"&&step.operation&&isCrmOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.subject||c.email_template||c.template||c.body||__("Write the message")}catch{return __("Write the message")}}
+  if(step.kind==="erpnext"&&step.operation&&isReservasOperation(step.operation)){try{const c=JSON.parse(step.configJson);return c.service||(c.booking==="{{trigger.name}}"?__("This booking"):c.booking)||__("Booking")}catch{return __("Booking")}}
+  if(step.kind==="erpnext")return step.operation?.replaceAll("_"," ")||__("ERPNext action");
+  if(step.kind==="outgoing_webhook"){try{return JSON.parse(step.configJson).url||__("Configure HTTP request")}catch{return __("Configure HTTP request")}}
   if (step.kind === "noop") return step.label;
   if (step.kind === "log") return step.message;
-  if (step.kind === "create_note") return step.title || "Untitled note";
-  if (step.kind === "create_task") return step.title || "Untitled task";
+  if (step.kind === "create_note") return step.title || __("Untitled note");
+  if (step.kind === "create_task") return step.title || __("Untitled task");
   if (step.kind === "update_record") {
-    return `${step.entityType}.${step.field} = ${step.value || "value"}`;
+    return `${step.entityType}.${step.field} = ${step.value || __("value")}`;
   }
   if (step.kind === "send_notification") return `${step.channel}: ${step.message}`;
   if (step.kind === "wait") return formatDuration(step.durationMinutes);
   if (step.kind === "if_else") {
-    return `${step.branches.length} branch${step.branches.length === 1 ? "" : "es"} + none`;
+    return step.branches.length === 1 ? __("1 branch + none") : __("{0} branches + none", [step.branches.length]);
   }
   if (step.kind === "go_to") {
     return step.targetStepIndex === undefined
-      ? "Choose destination"
-      : `Go to Action ${step.targetStepIndex + 1}`;
+      ? __("Choose destination")
+      : __("Go to Action {0}", [step.targetStepIndex + 1]);
   }
-  return step.subject || "Email";
+  return step.subject || __("Email");
 }

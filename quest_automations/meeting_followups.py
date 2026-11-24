@@ -3,6 +3,7 @@ import hashlib
 import html
 import json
 import frappe
+from frappe import _
 from .chatgpt_connection import OWNER, require_owner, credentials
 from .core import chatgpt
 
@@ -21,12 +22,12 @@ def meeting_current(doc):
     uid = event.get('custom_cal_booking_uid')
     matches = uid == doc.booking_uid if uid else '<p>Booking: ' + doc.booking_uid + '</p>' in (event.description or '')
     if not matches or event.status != 'Cancelled':
-        frappe.throw('This cancellation is no longer current. Review the meeting before following up.')
+        frappe.throw(_('This cancellation is no longer current. Review the meeting before following up.'))
     return event
 
 def recipient_for(event):
     if event.reference_doctype not in ('CRM Lead', 'Contact') or not event.reference_docname:
-        frappe.throw('The meeting must link to a CRM Lead or Contact.')
+        frappe.throw(_('The meeting must link to a CRM Lead or Contact.'))
     person = frappe.get_doc(event.reference_doctype, event.reference_docname)
     person.check_permission('read')
     if event.reference_doctype == 'CRM Lead':
@@ -39,7 +40,7 @@ def recipient_for(event):
     from frappe.utils import validate_email_address
     address = validate_email_address(address or '', throw=True).strip().lower()
     if address == OWNER or address == 'joscasjac24@gmail.com' or address.endswith('@questmediahub.com'):
-        frappe.throw('Internal bookings do not receive customer cancellation follow-ups.')
+        frappe.throw(_('Internal bookings do not receive customer cancellation follow-ups.'))
     return address, person
 
 def queue_draft(name):
@@ -83,7 +84,7 @@ def generate_draft(name):
             event = meeting_current(doc)
             address, person = recipient_for(event)
             if address != doc.recipient:
-                frappe.throw('CRM email changed. Review the cancellation record before generating a draft.')
+                frappe.throw(_('CRM email changed. Review the cancellation record before generating a draft.'))
             context = context_for(doc, event, person)
             from .followup_playbook import current
             policy = current()
@@ -143,18 +144,18 @@ def approve_and_send(name, expected_hash):
     if doc.status == 'Queued':
         return {'status': 'Queued', 'communication': doc.sent_communication}
     if doc.status != 'Needs review' or doc.recommendation == 'no_follow_up':
-        frappe.throw('This draft is not available for sending.')
+        frappe.throw(_('This draft is not available for sending.'))
     if not (doc.subject or '').strip() or not (doc.body or '').strip():
-        frappe.throw('The approved email needs a subject and message.')
+        frappe.throw(_('The approved email needs a subject and message.'))
     import hmac
     if not hmac.compare_digest(draft_hash(doc), str(expected_hash)):
-        frappe.throw('The draft changed. Review the current recipient and message again.')
+        frappe.throw(_('The draft changed. Review the current recipient and message again.'))
     event = meeting_current(doc)
-    address, _ = recipient_for(event)
+    address, _ignored = recipient_for(event)
     if address != doc.recipient:
-        frappe.throw('The CRM email changed. Review the recipient before approving.')
+        frappe.throw(_('The CRM email changed. Review the recipient before approving.'))
     if not frappe.db.exists('Email Account', {'email_id': SENDER, 'enable_outgoing': 1}):
-        frappe.throw('The Joseph email account must be enabled before sending.')
+        frappe.throw(_('The Joseph email account must be enabled before sending.'))
     body = '<div style="white-space:pre-wrap">' + html.escape(doc.body) + '</div>'
     communication = frappe.get_doc({'doctype': 'Communication', 'communication_type': 'Communication',
         'communication_medium': 'Email', 'sent_or_received': 'Sent', 'subject': doc.subject,
@@ -179,7 +180,7 @@ def dismiss(name):
     frappe.db.sql('select name from `tabQuest Meeting Followup` where name=%s for update', (name,))
     doc = frappe.get_doc(DOCTYPE, name)
     if doc.status == 'Queued':
-        frappe.throw('This message has already been queued.')
+        frappe.throw(_('This message has already been queued.'))
     doc.status = 'Dismissed'
     save_internal(doc)
     if doc.task:

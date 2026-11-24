@@ -1,4 +1,5 @@
 import catalog from './pulseCatalog.json';
+import {__} from '../lib/i18n';
 import type {ErpStep} from './types';
 export type PulseOperation = `pulse_${string}`;
 export type PulseParameterType = 'string'|'object'|'array'|'boolean'|'number';
@@ -12,8 +13,8 @@ export function pulseInitialConfig(operation:string):Record<string,unknown> {
  return Object.fromEntries((pulseActions[operation]?.required??[]).map(key=>[key,pulseDefaultValue(operation,key)]));
 }
 export function createPulseStep(operation:PulseOperation):Extract<ErpStep,{kind:'erpnext'}> {
- return {kind:'erpnext',operation,label:pulseActions[operation].label,configJson:JSON.stringify(pulseInitialConfig(operation))};
+ return {kind:'erpnext',operation,label:__(pulseActions[operation].label),configJson:JSON.stringify(pulseInitialConfig(operation))};
 }
 export const PULSE_ACTION_LIBRARY = Object.entries(pulseActions).map(([kind,entry])=>({
- kind:kind as PulseOperation,title:entry.label,description:'Use native ERPNext records with Pulse permissions and validation.',group:'Pulse',icon:'record' as const,
+ kind:kind as PulseOperation,title:__(entry.label),description:__('Use native ERPNext records with Pulse permissions and validation.'),group:'Pulse',icon:'record' as const,
 }));

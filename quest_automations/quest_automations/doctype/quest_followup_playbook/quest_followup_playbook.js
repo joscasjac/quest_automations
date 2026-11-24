@@ -4,7 +4,7 @@ frappe.ui.form.on('Quest Followup Playbook', {
     frm.add_custom_button(__('Test instructions'), () => {
       const dialog = new frappe.ui.Dialog({title: __('Try a cancellation scenario'), fields: [
         {fieldname:'scenario', fieldtype:'Long Text', label:__('Scenario'), reqd:1,
-          default:'Alex is interested in a website redesign but cancelled because of an urgent deadline. They asked for our booking link to choose a time next week. No scope or pricing has been agreed.'}
+          default:__('Alex is interested in a website redesign but cancelled because of an urgent deadline. They asked for our booking link to choose a time next week. No scope or pricing has been agreed.')}
       ], primary_action_label:__('Generate test draft'), async primary_action(values) {
         dialog.disable_primary_action();
         try {
@@ -12,7 +12,7 @@ frappe.ui.form.on('Quest Followup Playbook', {
           const {message: result} = await frappe.call({method:'quest_automations.followup_playbook.preview', args:{values:JSON.stringify(policy),scenario:values.scenario},type:'POST',timeout:180000});
           dialog.hide();
           const e = frappe.utils.escape_html;
-          frappe.msgprint({title:__('Test result — nothing sent'), message:`<p><b>${e(result.draft.recommendation)}</b></p><p>${e(result.draft.rationale)}</p><hr><p><b>${e(result.draft.subject)}</b></p><div style="white-space:pre-wrap">${e(result.draft.body)}</div><hr><small>Policy ${e(result.revision)} · ${e(result.model)}</small>`,wide:true});
+          frappe.msgprint({title:__('Test result — nothing sent'), message:`<p><b>${e(result.draft.recommendation)}</b></p><p>${e(result.draft.rationale)}</p><hr><p><b>${e(result.draft.subject)}</b></p><div style="white-space:pre-wrap">${e(result.draft.body)}</div><hr><small>${__('Policy {0}',[e(result.revision)])} · ${e(result.model)}</small>`,wide:true});
         } finally { dialog.enable_primary_action(); }
       }});
       dialog.show();

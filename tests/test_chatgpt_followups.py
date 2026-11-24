@@ -14,6 +14,7 @@ frappe.session = types.SimpleNamespace(user='joseph@questmediahub.com')
 frappe.PermissionError = PermissionError
 frappe.get_roles = lambda: ['System Manager']
 frappe.throw = lambda message, *args: (_ for _ in ()).throw(PermissionError(message))
+frappe._ = lambda message, *args, **kwargs: message
 frappe.db = Mock()
 frappe.sendmail = Mock()
 frappe.get_doc = Mock()

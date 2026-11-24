@@ -1,9 +1,10 @@
 import {useEffect,useState} from 'react';
+import {__} from '../lib/i18n';
 import type {Workflow,Version,Run,Trigger,EditorStep} from './types';
 export async function request(path:string,method='GET',body?:unknown){
  const native=(window as any).automationFrappe;
  const response=await fetch(native?'/api/method/quest_automations.api.dispatch':'/api/v1/'+path,native?{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':native.csrfToken},body:JSON.stringify({path:'api/v1/'+path,method,body:body??{}})}:{method,headers:{Authorization:'Bearer '+sessionStorage.getItem('automation-token'),'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
- const envelope=await response.json();const data=native?envelope.message:envelope;if(!response.ok||data?.error)throw new Error(data?.error||envelope.error||'API request failed');return data;
+ const envelope=await response.json();const data=native?envelope.message:envelope;if(!response.ok||data?.error)throw new Error(data?.error||envelope.error||__('API request failed'));return data;
 
 }
 type Ref<T>={name:string;result?:T};
@@ -18,7 +19,7 @@ export function normalizeDefinition(d:any){
  const remap=(v:any):any=>Array.isArray(v)?v.map(remap):v&&typeof v==='object'?Object.fromEntries(Object.entries(v).map(([k,x])=>[k,k==='$ref'&&typeof x==='string'?x.replace(/^steps\.([^.]+)/,(_:string,id:string)=>'steps.'+(ids[id]??id)):remap(x)])):v;
  const convert=(s:any):EditorStep=>{
   s={...s,config:remap(s.config)};
-  if(s.kind==='delay')return {kind:'wait',label:'Wait',durationMinutes:s.config.seconds/60};
+  if(s.kind==='delay')return {kind:'wait',label:__('Wait'),durationMinutes:s.config.seconds/60};
   return {kind:s.kind==='outgoing_webhook'?'api_request':'erpnext',label:s.kind.replaceAll('_',' '),operation:s.kind,configJson:JSON.stringify(s.config,null,2)};
  };
  return {schemaVersion:2,name:d.name,description:d.description,triggers,steps:d.steps.map(convert)};

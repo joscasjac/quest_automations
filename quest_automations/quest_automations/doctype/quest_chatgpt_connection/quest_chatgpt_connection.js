@@ -6,7 +6,7 @@ frappe.ui.form.on('Quest ChatGPT Connection', {
       const { message: options } = await frappe.call({ method: 'quest_automations.chatgpt_connection.sign_in_options', type: 'POST' });
       await frm.reload_doc();
       const escape = frappe.utils.escape_html;
-      frappe.msgprint({ title: __('Connect your ChatGPT plan'), message: `<p>Complete the Quest Automations sign-in helper on your computer, then import its protected registration file here. AI requests run on your Frappe Cloud site after sign-in; your computer can be turned off.</p><p>Host ID: <code>${escape(options.host_id)}</code></p><p>Registration ID: <code>${escape(options.client_id || '(first sign-in)')}</code></p><p>This connects ChatGPT plan usage. It does not provide access to your ChatGPT conversations. Manage access and limits in <a href="https://chatgpt.com/settings/usage" target="_blank" rel="noopener">ChatGPT Settings</a>.</p>` });
+      frappe.msgprint({ title: __('Connect your ChatGPT plan'), message: `<p>${__('Complete the Quest Automations sign-in helper on your computer, then import its protected registration file here. AI requests run on your Frappe Cloud site after sign-in; your computer can be turned off.')}</p><p>${__('Host ID:')} <code>${escape(options.host_id)}</code></p><p>${__('Registration ID:')} <code>${escape(options.client_id || __('(first sign-in)'))}</code></p><p>${__('This connects ChatGPT plan usage. It does not provide access to your ChatGPT conversations. Manage access and limits in {0}.', ['<a href="https://chatgpt.com/settings/usage" target="_blank" rel="noopener">' + escape(__('ChatGPT Settings')) + '</a>'])}</p>` });
     });
     frm.add_custom_button(__('Import protected registration'), () => {
       const picker = document.createElement('input');

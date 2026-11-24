@@ -1,0 +1,2 @@
+# frontend/index.html is the Vite dev-server shell only; production serves quest_automations/www/automations.html
+path:frontend/index.html

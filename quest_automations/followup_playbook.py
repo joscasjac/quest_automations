@@ -3,6 +3,7 @@ import hashlib
 import json
 from urllib.parse import urlsplit
 import frappe
+from frappe import _
 from .chatgpt_connection import require_owner, credentials
 from .core import chatgpt
 
@@ -45,7 +46,7 @@ def preview(values, scenario):
     if isinstance(values, str):
         values = json.loads(values)
     if not isinstance(scenario, str) or not scenario.strip() or len(scenario) > 12000:
-        frappe.throw('Provide a test scenario under 12,000 characters.')
+        frappe.throw(_('Provide a test scenario under 12,000 characters.'))
     try:
         policy = snapshot(values)
     except ValueError as error:

@@ -1,3 +1,4 @@
+import {__} from '../lib/i18n';
 // Reservas (bookings) on this site: triggers when something happens to a booking, and steps that
 // book, move or cancel. Triggers are Booking document events that Reservas announces itself
 // (last_event changes), so an ordinary edit in Desk never starts them. Steps are ERPNext actions
@@ -14,12 +15,12 @@ export function isReservasOperation(value:string):value is ReservasOperation{ret
 
 const THIS_BOOKING='{{trigger.name}}';
 const STEPS:Record<string,{title:string;description:string;label:string;config:Record<string,unknown>}>={
- reservas_booking_link:{title:'Reservas: booking page link',description:'Get the link where the customer picks a time, to send in an email or WhatsApp.',label:'Booking link',config:{service:''}},
- reservas_find_times:{title:'Reservas: find free times',description:'Look up open times for a service. Later steps can use the earliest one.',label:'Find free times',config:{service:'',from_date:'',days:7}},
- reservas_book:{title:'Reservas: book a time',description:'Book a service for someone. Paid services hold the time and return a payment link.',label:'Book a time',config:{service:'',start:'',customer_name:'',phone:'',email:''}},
- reservas_reschedule:{title:'Reservas: move a booking',description:'Move a booking to another time. The customer is emailed the change.',label:'Move booking',config:{booking:THIS_BOOKING,start:''}},
- reservas_cancel:{title:'Reservas: cancel a booking',description:'Cancel a booking. A paid one is flagged so someone decides the refund.',label:'Cancel booking',config:{booking:THIS_BOOKING,reason:''}},
- reservas_set_status:{title:'Reservas: mark completed or no-show',description:'Close a confirmed booking as completed or as a no-show.',label:'Mark booking',config:{booking:THIS_BOOKING,status:'Completed'}},
+ reservas_booking_link:{title:__('Reservas: booking page link'),description:__('Get the link where the customer picks a time, to send in an email or WhatsApp.'),label:__('Booking link'),config:{service:''}},
+ reservas_find_times:{title:__('Reservas: find free times'),description:__('Look up open times for a service. Later steps can use the earliest one.'),label:__('Find free times'),config:{service:'',from_date:'',days:7}},
+ reservas_book:{title:__('Reservas: book a time'),description:__('Book a service for someone. Paid services hold the time and return a payment link.'),label:__('Book a time'),config:{service:'',start:'',customer_name:'',phone:'',email:''}},
+ reservas_reschedule:{title:__('Reservas: move a booking'),description:__('Move a booking to another time. The customer is emailed the change.'),label:__('Move booking'),config:{booking:THIS_BOOKING,start:''}},
+ reservas_cancel:{title:__('Reservas: cancel a booking'),description:__('Cancel a booking. A paid one is flagged so someone decides the refund.'),label:__('Cancel booking'),config:{booking:THIS_BOOKING,reason:''}},
+ reservas_set_status:{title:__('Reservas: mark completed or no-show'),description:__('Close a confirmed booking as completed or as a no-show.'),label:__('Mark booking'),config:{booking:THIS_BOOKING,status:'Completed'}},
 };
 export const RESERVAS_ACTION_LIBRARY=RESERVAS_OPERATIONS.map(kind=>({kind:kind as ReservasOperation,title:STEPS[kind].title,description:STEPS[kind].description,group:'Reservas',icon:'calendar' as const}));
 export function createReservasStep(operation:ReservasOperation):Extract<ErpStep,{kind:'erpnext'}>{
@@ -28,15 +29,15 @@ export function createReservasStep(operation:ReservasOperation):Extract<ErpStep,
 
 // What Reservas announces (reservas.events.EVENTS), with how the editor names it.
 const EVENTS:Array<{value:string;title:string;description:string}>=[
- {value:'Booked',title:'Booking made',description:'Someone booked, on the page, through an agent, in Desk or from a workflow. Paid services are still awaiting payment.'},
- {value:'Confirmed',title:'Booking confirmed',description:'Free bookings right away; paid ones once the bank approves.'},
- {value:'Rescheduled',title:'Booking moved',description:'The customer or staff moved it to another time.'},
- {value:'Cancelled',title:'Booking cancelled',description:'The customer or staff cancelled it.'},
- {value:'Expired',title:'Hold expired',description:'The customer did not pay in time and the time was released.'},
- {value:'Reminder sent',title:'Reminder sent',description:'The reminder email went out, before the booking.'},
- {value:'Completed',title:'Booking completed',description:'The booking took place (marked by staff, or 12 hours after it ended).'},
- {value:'No-show',title:'Customer did not show',description:'Staff marked it as a no-show.'},
- {value:'Needs attention',title:'Booking needs attention',description:'Paid after the hold ran out, or cancelled after paying: someone has to decide.'},
+ {value:'Booked',title:__('Booking made'),description:__('Someone booked, on the page, through an agent, in Desk or from a workflow. Paid services are still awaiting payment.')},
+ {value:'Confirmed',title:__('Booking confirmed'),description:__('Free bookings right away; paid ones once the bank approves.')},
+ {value:'Rescheduled',title:__('Booking moved'),description:__('The customer or staff moved it to another time.')},
+ {value:'Cancelled',title:__('Booking cancelled'),description:__('The customer or staff cancelled it.')},
+ {value:'Expired',title:__('Hold expired'),description:__('The customer did not pay in time and the time was released.')},
+ {value:'Reminder sent',title:__('Reminder sent'),description:__('The reminder email went out, before the booking.')},
+ {value:'Completed',title:__('Booking completed'),description:__('The booking took place (marked by staff, or 12 hours after it ended).')},
+ {value:'No-show',title:__('Customer did not show'),description:__('Staff marked it as a no-show.')},
+ {value:'Needs attention',title:__('Booking needs attention'),description:__('Paid after the hold ran out, or cancelled after paying: someone has to decide.')},
 ];
 type Condition={field:string;operator:'is'|'is_not'|'contains'|'does_not_contain'|'is_empty'|'is_not_empty';value:string};
 export function reservasTrigger(event:string,service=''):Trigger{
@@ -49,8 +50,8 @@ export function isReservasTrigger(trigger:any):boolean{
  return trigger?.kind==='document_event'&&trigger.doctype==='Booking'&&Array.isArray(trigger.changedFields)&&trigger.changedFields.includes('last_event_on')&&trigger.condition?.field==='last_event';
 }
 function triggerService(trigger:any):string{return (trigger.condition?.conditions??[]).find((c:Condition)=>c.field==='service')?.value??''}
-export function reservasTriggerTitle(trigger:any){return EVENTS.find(e=>e.value===trigger.condition?.value)?.title??'Reservas booking event'}
-export function reservasTriggerLabel(trigger:any){const s=triggerService(trigger);return s?`Reservas · ${s}`:'Reservas · any booking page'}
+export function reservasTriggerTitle(trigger:any){return EVENTS.find(e=>e.value===trigger.condition?.value)?.title??__('Reservas booking event')}
+export function reservasTriggerLabel(trigger:any){const s=triggerService(trigger);return s?`Reservas · ${s}`:__('Reservas · any booking page')}
 
 type Context={services:Array<{name:string;label:string;enabled:number}>;resources:Array<{name:string;label:string;enabled:number}>};
 let shared:Promise<Context|null>|null=null;
@@ -67,7 +68,7 @@ function Label({name,hint,children}:{name:string;hint?:string;children:ReactNode
 function ServiceSelect({value,onChange,allowAny,ctx}:{value:string;onChange:(v:string)=>void;allowAny?:string;ctx:Context|null}){
  const services=ctx?.services??[];
  const known=!value||services.some(s=>s.name===value)||value.includes('{{');
- return <Select ariaLabel="Booking page" value={value} options={[{value:'',label:allowAny??'Choose a booking page'},...services.map(s=>({value:s.name,label:s.label+(s.enabled?'':' (off)')})),...(known?[]:[{value,label:value+' (not found)'}])]} onChange={onChange}/>;
+ return <Select ariaLabel={__('Booking page')} value={value} options={[{value:'',label:allowAny??__('Choose a booking page')},...services.map(s=>({value:s.name,label:s.enabled?s.label:__('{0} (off)',[s.label])})),...(known?[]:[{value,label:__('{0} (not found)',[value])}])]} onChange={onChange}/>;
 }
 
 export function ReservasTriggerFields({trigger,onChange}:{trigger:Trigger;onChange:(t:Trigger)=>void}){
@@ -76,13 +77,13 @@ export function ReservasTriggerFields({trigger,onChange}:{trigger:Trigger;onChan
  const service=triggerService(trigger);
  const set=(e:string,s:string)=>onChange({...reservasTrigger(e,s),id:(trigger as any).id} as Trigger);
  return <div className="space-y-5 text-sm">
-  <Label name="When" hint={EVENTS.find(e=>e.value===event)?.description}>
-   <Select ariaLabel="Booking event" value={event} options={EVENTS.map(e=>({value:e.value,label:e.title}))} onChange={e=>set(e,service)}/>
+  <Label name={__('When')} hint={EVENTS.find(e=>e.value===event)?.description}>
+   <Select ariaLabel={__('Booking event')} value={event} options={EVENTS.map(e=>({value:e.value,label:e.title}))} onChange={e=>set(e,service)}/>
   </Label>
-  <Label name="Booking page" hint="Only bookings for this page, or any.">
-   <ServiceSelect ctx={ctx} value={service} allowAny="Any booking page" onChange={s=>set(event,s)}/>
+  <Label name={__('Booking page')} hint={__('Only bookings for this page, or any.')}>
+   <ServiceSelect ctx={ctx} value={service} allowAny={__('Any booking page')} onChange={s=>set(event,s)}/>
   </Label>
-  <p className="text-xs text-neutral-500">Later steps can use the booking’s fields: {'{{trigger.customer_name}}'}, {'{{trigger.phone}}'}, {'{{trigger.email}}'}, {'{{trigger.starts_on}}'}, {'{{trigger.service}}'}, {'{{trigger.resource}}'}, {'{{trigger.status}}'}. Use {'{{trigger.name}}'} for “this booking” in Reservas steps.</p>
+  <p className="text-xs text-neutral-500">{__('Later steps can use the booking’s fields: {0}. Use {1} for “this booking” in Reservas steps.',['{{trigger.customer_name}}, {{trigger.phone}}, {{trigger.email}}, {{trigger.starts_on}}, {{trigger.service}}, {{trigger.resource}}, {{trigger.status}}','{{trigger.name}}'])}</p>
  </div>;
 }
 
@@ -92,29 +93,29 @@ export function ReservasActionFields({step,onChange}:{step:ErpStep;onChange:(s:E
  const update=(patch:Record<string,unknown>)=>onChange({...step,configJson:JSON.stringify({...config,...patch})});
  const op=step.operation as string;
  const text=(key:string,label:string)=><Label key={key} name={label}><MappedInput label={label} value={typeof config[key]==='object'&&config[key]?.$ref?'{{'+config[key].$ref+'}}':String(config[key]??'')} onChange={v=>update({[key]:v})}/></Label>;
- const service=(hint?:string,any?:string)=><Label name="Booking page" hint={hint}><ServiceSelect ctx={ctx} value={String(config.service??'')} allowAny={any} onChange={s=>update({service:s})}/></Label>;
- const thisBooking=<Label name="Which booking" hint="The booking that started this workflow, or another booking ID from an earlier step.">
-  <Select ariaLabel="Which booking" value={config.booking===THIS_BOOKING?'this':'other'} options={[{value:'this',label:'The booking that started the workflow'},{value:'other',label:'Another booking'}]} onChange={v=>update({booking:v==='this'?THIS_BOOKING:''})}/>
+ const service=(hint?:string,any?:string)=><Label name={__('Booking page')} hint={hint}><ServiceSelect ctx={ctx} value={String(config.service??'')} allowAny={any} onChange={s=>update({service:s})}/></Label>;
+ const thisBooking=<Label name={__('Which booking')} hint={__('The booking that started this workflow, or another booking ID from an earlier step.')}>
+  <Select ariaLabel={__('Which booking')} value={config.booking===THIS_BOOKING?'this':'other'} options={[{value:'this',label:__('The booking that started the workflow')},{value:'other',label:__('Another booking')}]} onChange={v=>update({booking:v==='this'?THIS_BOOKING:''})}/>
  </Label>;
- if(op==='reservas_booking_link')return <div className="space-y-5">{service('Use the link in a later step as {{steps.<this step>.url}}.','All booking pages')}</div>;
+ if(op==='reservas_booking_link')return <div className="space-y-5">{service(__('Use the link in a later step as {0}.',['{{steps.<this step>.url}}']),__('All booking pages'))}</div>;
  if(op==='reservas_find_times')return <div className="space-y-5">
   {service()}
-  {text('from_date','From date (YYYY-MM-DD, empty for today)')}
-  <Label name="Days to look ahead"><Select ariaLabel="Days" value={String(config.days??7)} options={[1,3,7,14].map(n=>({value:String(n),label:n+(n===1?' day':' days')}))} onChange={v=>update({days:Number(v)})}/></Label>
-  <p className="text-xs text-neutral-500">Returns first (the earliest start), count and days. If nothing is free, next_free has the next day with times.</p>
+  {text('from_date',__('From date (YYYY-MM-DD, empty for today)'))}
+  <Label name={__('Days to look ahead')}><Select ariaLabel={__('Days')} value={String(config.days??7)} options={[1,3,7,14].map(n=>({value:String(n),label:n===1?__('1 day'):__('{0} days',[n])}))} onChange={v=>update({days:Number(v)})}/></Label>
+  <p className="text-xs text-neutral-500">{__('Returns first (the earliest start), count and days. If nothing is free, next_free has the next day with times.')}</p>
  </div>;
  if(op==='reservas_book')return <div className="space-y-5">
   {service()}
-  {text('start','Start (YYYY-MM-DD HH:MM, site time)')}
-  {text('customer_name','Customer name')}
-  {text('phone','Phone (WhatsApp)')}
-  {text('email','Email')}
-  {text('notes','Notes (optional)')}
-  <p className="text-xs text-neutral-500">The time must be free, exactly like on the booking page. A paid service holds the time; send payment_url to the customer. url is their booking page.</p>
+  {text('start',__('Start (YYYY-MM-DD HH:MM, site time)'))}
+  {text('customer_name',__('Customer name'))}
+  {text('phone',__('Phone (WhatsApp)'))}
+  {text('email',__('Email'))}
+  {text('notes',__('Notes (optional)'))}
+  <p className="text-xs text-neutral-500">{__('The time must be free, exactly like on the booking page. A paid service holds the time; send payment_url to the customer. url is their booking page.')}</p>
  </div>;
- if(op==='reservas_reschedule')return <div className="space-y-5">{thisBooking}{config.booking!==THIS_BOOKING&&text('booking','Booking ID')}{text('start','New start (YYYY-MM-DD HH:MM, site time)')}</div>;
- if(op==='reservas_cancel')return <div className="space-y-5">{thisBooking}{config.booking!==THIS_BOOKING&&text('booking','Booking ID')}{text('reason','Reason (optional, shown on the booking)')}</div>;
- return <div className="space-y-5">{thisBooking}{config.booking!==THIS_BOOKING&&text('booking','Booking ID')}
-  <Label name="Mark as"><Select ariaLabel="Status" value={String(config.status??'Completed')} options={[{value:'Completed',label:'Completed'},{value:'No-show',label:'No-show'}]} onChange={status=>update({status})}/></Label>
+ if(op==='reservas_reschedule')return <div className="space-y-5">{thisBooking}{config.booking!==THIS_BOOKING&&text('booking',__('Booking ID'))}{text('start',__('New start (YYYY-MM-DD HH:MM, site time)'))}</div>;
+ if(op==='reservas_cancel')return <div className="space-y-5">{thisBooking}{config.booking!==THIS_BOOKING&&text('booking',__('Booking ID'))}{text('reason',__('Reason (optional, shown on the booking)'))}</div>;
+ return <div className="space-y-5">{thisBooking}{config.booking!==THIS_BOOKING&&text('booking',__('Booking ID'))}
+  <Label name={__('Mark as')}><Select ariaLabel={__('Status')} value={String(config.status??'Completed')} options={[{value:'Completed',label:__('Completed')},{value:'No-show',label:__('No-show')}]} onChange={status=>update({status})}/></Label>
  </div>;
 }

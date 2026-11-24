@@ -76,7 +76,7 @@ function ModelMenu({status,disabled,onModel,onEffort}:{status:Status;disabled:bo
    aria-label={__('Model: {0}',[modelName(active)])}
    className="flex max-w-[200px] items-center gap-1.5 rounded-md px-2 py-1 text-xs text-neutral-400 hover:bg-raised hover:text-white disabled:opacity-40">
    <span className="truncate">{modelName(active)}</span>
-   {status.effort!=='default'&&<span className="text-neutral-500">· {__(EFFORTS[status.effort]??status.effort)}</span>}
+   {status.effort!=='default'&&<span className="text-neutral-500">· {__(EFFORTS[status.effort]??status.effort,null,'Thinking level')}</span>}
    <span aria-hidden="true">▾</span>
   </button>
   {open&&<div role="menu" className="absolute bottom-full left-0 z-20 mb-2 max-h-80 w-72 overflow-y-auto rounded-lg border border-edge bg-panel p-1 shadow-lg">
@@ -91,7 +91,7 @@ function ModelMenu({status,disabled,onModel,onEffort}:{status:Status;disabled:bo
     <div className="my-1 border-t border-edge"/>
     <p className="px-2 pb-1 pt-1 text-[11px] uppercase tracking-wide text-neutral-500">{__('Thinking')}</p>
     <div className="flex flex-wrap gap-1 px-2 pb-2">{['default',...efforts].map(level=><button key={level} type="button" role="menuitemradio" aria-checked={status.effort===level} onClick={()=>onEffort(level)}
-     className={`rounded-md border px-2 py-1 text-xs ${status.effort===level?'border-accent text-accent':'border-edge text-neutral-400 hover:text-white'}`}>{__(EFFORTS[level]??level)}</button>)}</div>
+     className={`rounded-md border px-2 py-1 text-xs ${status.effort===level?'border-accent text-accent':'border-edge text-neutral-400 hover:text-white'}`}>{__(EFFORTS[level]??level,null,'Thinking level')}</button>)}</div>
    </>}
   </div>}
  </div>;

@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 class QuestChatGPTConnection(Document):
@@ -7,4 +8,4 @@ class QuestChatGPTConnection(Document):
         require_owner()
         from quest_automations.protected_changes import is_internal_change
         if not is_internal_change():
-            frappe.throw('Use the connection buttons to change ChatGPT settings.')
+            frappe.throw(_('Use the connection buttons to change ChatGPT settings.'))

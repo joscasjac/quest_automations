@@ -20,6 +20,7 @@ import json
 import re
 
 import frappe
+from frappe import _
 
 from .core import ai_contract as contract
 from .core.definition import DefinitionError
@@ -205,7 +206,7 @@ def _first_field(doctype, names):
 
 class Compiler:
 	def __init__(self, plan):
-		need(isinstance(plan, dict) and plan.get('status', 'ready') == 'ready', 'Expected a ready plan.')
+		need(isinstance(plan, dict) and plan.get('status', 'ready') == 'ready', _('Expected a ready plan.'))
 		self.plan = plan
 		self.trigger = plan.get('trigger') or {}
 		self.doctype = _record_doctype(self.trigger)
@@ -228,7 +229,7 @@ class Compiler:
 			need(name in results, _t('unknown_result', name, root))
 			return 'steps.step_%d.data.%s' % (index, name)
 		if root in self.links:
-			need(name == 'url', 'A booking link step only has "url".')
+			need(name == 'url', _('A booking link step only has "url".'))
 			return 'steps.step_%d.url' % self.links[root]
 		raise PlanError(_t('unknown_placeholder', '{{' + root + '.' + name + '}}'))
 
@@ -282,7 +283,7 @@ class Compiler:
 			t = {**t, 'only_if': [{'field': 'last_event', 'is': 'equals', 'value': t['booking_event']}] + list(t.get('only_if') or [])}
 		elif kind == 'schedule':
 			every = t.get('every') or {}
-			need(every.get('unit') in UNITS and isinstance(every.get('amount'), (int, float)), 'Schedule needs every.amount and every.unit.')
+			need(every.get('unit') in UNITS and isinstance(every.get('amount'), (int, float)), _('Schedule needs every.amount and every.unit.'))
 			result = {'kind': 'schedule', 'intervalMinutes': max(5, int(every['amount'] * UNITS[every['unit']]))}
 		elif kind == 'manual':
 			result = {'kind': 'manual'}
@@ -339,7 +340,7 @@ class Compiler:
 			self.ai[sid] = (index, set(outputs))
 			return {'kind': 'run_ai_capability', 'label': label, 'configJson': json.dumps({'capability': key, 'input': inputs})}
 		if kind == 'booking_link':
-			need(not nested, 'Booking links can\'t go inside an "if".')
+			need(not nested, _('Booking links can\'t go inside an "if".'))
 			need('reservas_booking_link' in _extension_actions(), _t('unknown_doctype', 'Booking'))
 			sid = s.get('id')
 			need(isinstance(sid, str) and STEP_ID.fullmatch(sid) and sid not in self.ai and sid not in self.links, _t('bad_id', sid))
@@ -377,7 +378,7 @@ class Compiler:
 			return self._create('Notification Log', fields, label)
 		if kind == 'email':
 			subject, body = self.text(s.get('subject')), self.text(s.get('body')).replace('\n', '<br>')
-			need(subject and body, 'An email needs a subject and a body.')
+			need(subject and body, _('An email needs a subject and a body.'))
 			to = s.get('to') or 'record'
 			if to == 'record':
 				need(self.doctype, _t('no_record', 'email'))
@@ -404,13 +405,13 @@ class Compiler:
 			need(frappe.get_meta(self.doctype).has_field(field) and field not in ('docstatus', 'workflow_state'), _t('unknown_field', field, self.doctype))
 			return self._create(self.doctype, {field: self.text(s.get('value'))}, label, update=True)
 		if kind == 'wait':
-			need(s.get('unit') in UNITS and isinstance(s.get('amount'), (int, float)) and s['amount'] > 0, 'A wait needs amount and unit.')
+			need(s.get('unit') in UNITS and isinstance(s.get('amount'), (int, float)) and s['amount'] > 0, _('A wait needs amount and unit.'))
 			return {'kind': 'wait', 'label': label, 'durationMinutes': min(525600, s['amount'] * UNITS[s['unit']])}
 		if kind == 'if':
 			need(not nested, _t('if_in_if'))
 			then = [self.step(c, index, True) for c in s.get('then') or []]
 			otherwise = [self.step(c, index, True) for c in s.get('else') or []]
-			need(then or otherwise, 'An "if" needs steps in then or else.')
+			need(then or otherwise, _('An "if" needs steps in then or else.'))
 			yes, no = _t('yes'), _t('otherwise')
 			return {'kind': 'if_else', 'label': label if label != 'if' else _t('check'), 'elseLabel': no,
 				'branches': [{'name': yes, **self.condition(s), 'steps': then}], 'elseSteps': otherwise}
@@ -425,10 +426,10 @@ class Compiler:
 
 	def compile(self):
 		name = str(self.plan.get('name') or '').strip()[:200]
-		need(name, 'The plan needs a name.')
+		need(name, _('The plan needs a name.'))
 		trigger = self.compile_trigger()
 		steps = self.plan.get('steps') or []
-		need(isinstance(steps, list) and 1 <= len(steps) <= 40, 'Give the plan 1-40 steps.')
+		need(isinstance(steps, list) and 1 <= len(steps) <= 40, _('Give the plan 1-40 steps.'))
 		compiled = [self.step(s, i) for i, s in enumerate(steps)]
 		definition = {'schemaVersion': 2, 'name': name, 'triggers': [trigger], 'steps': compiled}
 		from .core.graph import validate_graph
@@ -506,8 +507,9 @@ def sentences(plan, fill=None, doctype=None):
 
 	out += [one(s) for s in plan.get('steps') or []]
 	if _lang() == 'es':
+		# Spanish contractions after filling in "el ..." phrases (a el → al, de el → del)
 		def tidy(item):
-			item['text'] = item['text'].replace(' a el ', ' al ').replace(' de el ', ' del ')
+			item['text'] = item['text'].replace(' a el ', ' al ').replace(' de el ', ' del ')  # i18n-ignore
 			for key in ('then', 'else'):
 				for child in item.get(key) or []:
 					tidy(child)
@@ -552,7 +554,7 @@ def _who(value, customer=False):
 
 
 def _doctype_label(doctype):
-	return _t('dt_' + doctype) if ('dt_' + doctype) in TEXT['en'] else doctype
+	return _t('dt_' + doctype) if ('dt_' + doctype) in _words() else doctype
 
 
 # ------------------------------------------------------------------ endpoints
@@ -592,7 +594,7 @@ def context():
 	else:
 		problem = None
 	types = _record_types()
-	return {'lang': _lang(), 'model': model, 'problem': problem, 'recipes': [r for r in RECIPES[_lang()] if r['needs'] in types or not r['needs']]}
+	return {'lang': _lang(), 'model': model, 'problem': problem, 'recipes': [r for r in _recipes() if r['needs'] in types or not r['needs']]}
 
 
 @frappe.whitelist(methods=['POST'])
@@ -698,7 +700,8 @@ def test(plan):
 	if owner:
 		name = frappe.db.get_value('User', owner, 'full_name') or owner
 		def named(item):
-			item['text'] = item['text'].replace(' al responsable del registro', ' a ' + name).replace(_t('record_owner'), name)
+			# the Spanish sentence contracted "a el responsable del registro" to "al ..." (see sentences)
+			item['text'] = item['text'].replace(' al responsable del registro', ' a ' + name).replace(_t('record_owner'), name)  # i18n-ignore
 			for child in item.get('steps') or []:
 				named(child)
 		for item in steps_out:
@@ -796,117 +799,112 @@ def _lang():
 
 
 def _t(key, *args):
-	text = TEXT[_lang()].get(key) or TEXT['en'].get(key) or key
+	text = _words().get(key) or key
 	return text.format(*args) if args else text
 
 
-TEXT = {
-	'en': {
-		'no_bridge': 'Install FAC Model Bridge and choose a model in the AI Command Center (/ai).',
-		'no_model': 'Choose a default model in the AI Command Center (/ai) first.',
-		'no_model_picked': 'Your {0} account is the default, but no model is picked for it yet. Choose one in the AI Command Center → Models and spending.',
-		'private_model': 'The model connection {0} is private. Share it with everyone in the AI Command Center (/ai).',
-		'model_failed': 'The AI did not answer properly. Try again.',
-		'describe_more': 'Describe what should happen in a sentence or two.',
-		'could_not_build': 'I couldn’t turn that into an automation ({0}). Try describing it differently.',
-		'no_sample': 'There are no «{0}» records yet to try this on. Create one and try again.',
-		'no_record': '{0} needs a trigger that starts from a record.',
-		'unknown_field': 'The field "{0}" does not exist on {1}.',
-		'unknown_result': 'The AI step "{1}" has no result called "{0}".',
-		'unknown_placeholder': '{0} is not a record field, AI result or link.',
-		'unknown_person': '{0} is not a team member on this site.',
-		'unknown_doctype': '{0} is not available on this site.',
-		'bad_operator': 'Unknown comparison "{0}".',
-		'bad_trigger': 'Unknown trigger "{0}".',
-		'bad_booking_event': 'Unknown booking event "{0}".',
-		'bad_step': 'Unknown step "{0}".',
-		'bad_id': '"{0}" must be a short lowercase name (letters, digits, _).',
-		'ai_in_if': 'AI steps can\'t go inside an "if".',
-		'if_in_if': 'An "if" can\'t go inside another "if".',
-		'ai_give': 'An AI step needs 1-20 inputs in "give".',
-		'ai_get': 'An AI step needs 1-20 results in "get".',
-		'ai_choices': 'The choice result "{0}" needs its choices.',
-		'no_email_field': '{0} has no email field to send to.',
-		'sms_crm': 'SMS can only be sent to CRM leads or deals.',
-		'review_instead': 'AI never emails customers on its own: AI-written messages become a task with the draft, for someone to review and send.',
-		'review_title': 'Review and send: {0}',
-		'do_review': 'Create a task for {0} to review and send the draft «{1}»',
-		'cant_do': 'Can’t do that yet',
-		'made_by_builder': 'Created by the automation builder for one workflow step.',
-		'ai_needs_update': 'AI steps need the latest Quest Automations (with Model Connections). You can try this plan, but update Automations before saving it.',
-		'yes': 'Yes', 'otherwise': 'Otherwise', 'check': 'Check',
-		'when_created': 'When {0} is created', 'when_updated': 'When {0} is changed', 'when_fields': ' (only {0})',
-		'when_status': 'When the status of {0} becomes «{1}»', 'when_booking': 'When a booking {0}',
-		'when_every': 'Every {0} {1}', 'when_manual': 'When someone runs it by hand', 'only_if': ', only if {0}',
-		'do_ai': 'AI: {0} → gives {1}', 'do_task': 'Create the task «{0}» for {1}', 'do_note': 'Add the note «{0}» to the record',
-		'do_notify': 'Notify {0}: «{1}»', 'do_email': 'Email {0}: «{1}»', 'do_sms': 'Send an SMS: «{0}»',
-		'do_update': 'Set {0} to «{1}»', 'do_wait': 'Wait {0} {1}', 'do_link': 'Get the booking link ({0})', 'do_if': 'If {0}',
-		'any_service': 'any service', 'record_owner': 'the record’s owner', 'the_customer': 'the customer',
-		'op_equals': '{0} is «{1}»', 'op_not_equals': '{0} is not «{1}»', 'op_contains': '{0} contains «{1}»',
-		'op_not_contains': '{0} doesn’t contain «{1}»', 'op_empty': '{0} is empty', 'op_not_empty': '{0} is filled in',
-		'unit_minutes': 'minutes', 'unit_hours': 'hours', 'unit_days': 'days', 'unit_weeks': 'weeks',
-		'unit1_minutes': 'minute', 'unit1_hours': 'hour', 'unit1_days': 'day', 'unit1_weeks': 'week',
-		'booking_Booked': 'is made', 'booking_Confirmed': 'is confirmed', 'booking_Rescheduled': 'is moved', 'booking_Cancelled': 'is cancelled',
-		'booking_Expired': 'expires unpaid', 'booking_Completed': 'is completed', 'booking_No-show': 'is a no-show',
-		'booking_Needs attention': 'needs attention', 'booking_Reminder sent': 'gets its reminder',
-		'dt_CRM Lead': 'a lead', 'dt_CRM Deal': 'a deal', 'dt_Booking': 'a booking', 'dt_Customer': 'a customer', 'dt_Contact': 'a contact',
-		'dt_Quotation': 'a quotation', 'dt_Sales Order': 'a sales order', 'dt_Sales Invoice': 'an invoice', 'dt_Payment Entry': 'a payment',
-		'dt_Task': 'a task', 'dt_Issue': 'a support ticket',
-	},
-	'es': {
-		'no_bridge': 'Instale FAC Model Bridge y elija un modelo en el Centro de IA (/ai).',
-		'no_model': 'Primero elija un modelo predeterminado en el Centro de IA (/ai).',
-		'no_model_picked': 'Su cuenta de {0} es la predeterminada, pero aún no tiene un modelo elegido. Elíjalo en Centro de IA → Modelos y gasto.',
-		'private_model': 'La conexión de modelo {0} es privada. Compártala con todos en el Centro de IA (/ai).',
-		'model_failed': 'La IA no respondió bien. Intente de nuevo.',
-		'describe_more': 'Describa en una o dos frases qué debe pasar.',
-		'could_not_build': 'No pude convertir eso en una automatización ({0}). Intente describirlo de otra forma.',
-		'no_sample': 'Aún no hay registros de «{0}» para probar. Cree uno e intente de nuevo.',
-		'no_record': '{0} necesita un disparador que empiece desde un registro.',
-		'unknown_field': 'El campo "{0}" no existe en {1}.',
-		'unknown_person': '{0} no es parte del equipo en este sitio.',
-		'unknown_doctype': '{0} no está disponible en este sitio.',
-		'review_instead': 'La IA nunca escribe a clientes por su cuenta: los mensajes que redacta quedan como tarea con el borrador, para que alguien los revise y envíe.',
-		'review_title': 'Revisar y enviar: {0}',
-		'do_review': 'Crear una tarea para que {0} revise y envíe el borrador «{1}»',
-		'cant_do': 'No se pudo',
-		'made_by_builder': 'Creada por el asistente de automatizaciones para un paso de un flujo.',
-		'ai_needs_update': 'Los pasos de IA necesitan la versión más reciente de Automatizaciones (con conexiones de modelo). Puede probar este plan, pero actualice Automatizaciones antes de guardarlo.',
-		'yes': 'Sí', 'otherwise': 'Si no', 'check': 'Revisar',
-		'when_created': 'Cuando se crea {0}', 'when_updated': 'Cuando cambia {0}', 'when_fields': ' (solo {0})',
-		'when_status': 'Cuando el estado de {0} pasa a «{1}»', 'when_booking': 'Cuando una reserva {0}',
-		'when_every': 'Cada {0} {1}', 'when_manual': 'Cuando alguien la ejecuta a mano', 'only_if': ', solo si {0}',
-		'do_ai': 'IA: {0} → devuelve {1}', 'do_task': 'Crear la tarea «{0}» para {1}', 'do_note': 'Agregar la nota «{0}» al registro',
-		'do_notify': 'Avisar a {0}: «{1}»', 'do_email': 'Enviar correo a {0}: «{1}»', 'do_sms': 'Enviar SMS: «{0}»',
-		'do_update': 'Cambiar {0} a «{1}»', 'do_wait': 'Esperar {0} {1}', 'do_link': 'Obtener el enlace para reservar ({0})', 'do_if': 'Si {0}',
-		'any_service': 'cualquier servicio', 'record_owner': 'el responsable del registro', 'the_customer': 'el cliente',
-		'op_equals': '{0} es «{1}»', 'op_not_equals': '{0} no es «{1}»', 'op_contains': '{0} contiene «{1}»',
-		'op_not_contains': '{0} no contiene «{1}»', 'op_empty': '{0} está vacío', 'op_not_empty': '{0} tiene valor',
-		'unit_minutes': 'minutos', 'unit_hours': 'horas', 'unit_days': 'días', 'unit_weeks': 'semanas',
-		'unit1_minutes': 'minuto', 'unit1_hours': 'hora', 'unit1_days': 'día', 'unit1_weeks': 'semana',
-		'booking_Booked': 'se agenda', 'booking_Confirmed': 'se confirma', 'booking_Rescheduled': 'se mueve', 'booking_Cancelled': 'se cancela',
-		'booking_Expired': 'vence sin pago', 'booking_Completed': 'se completa', 'booking_No-show': 'queda como no asistió',
-		'booking_Needs attention': 'necesita atención', 'booking_Reminder sent': 'recibe su recordatorio',
-		'dt_CRM Lead': 'un prospecto', 'dt_CRM Deal': 'un negocio', 'dt_Booking': 'una reserva', 'dt_Customer': 'un cliente', 'dt_Contact': 'un contacto',
-		'dt_Quotation': 'una cotización', 'dt_Sales Order': 'una orden de venta', 'dt_Sales Invoice': 'una factura', 'dt_Payment Entry': 'un pago',
-		'dt_Task': 'una tarea', 'dt_Issue': 'un ticket de soporte',
-	},
-}
+def _words():
+	"""The builder's messages and plan sentences, in the person's language."""
+	return {
+		"no_bridge": _("Install FAC Model Bridge and choose a model in the AI Command Center (/ai)."),
+		"no_model": _("Choose a default model in the AI Command Center (/ai) first."),
+		"no_model_picked": _("Your {0} account is the default, but no model is picked for it yet. Choose one in the AI Command Center → Models and spending."),
+		"private_model": _("The model connection {0} is private. Share it with everyone in the AI Command Center (/ai)."),
+		"model_failed": _("The AI did not answer properly. Try again."),
+		"describe_more": _("Describe what should happen in a sentence or two."),
+		"could_not_build": _("I couldn’t turn that into an automation ({0}). Try describing it differently."),
+		"no_sample": _("There are no «{0}» records yet to try this on. Create one and try again."),
+		"no_record": _("{0} needs a trigger that starts from a record."),
+		"unknown_field": _("The field \"{0}\" does not exist on {1}."),
+		"unknown_result": _("The AI step \"{1}\" has no result called \"{0}\"."),
+		"unknown_placeholder": _("{0} is not a record field, AI result or link."),
+		"unknown_person": _("{0} is not a team member on this site."),
+		"unknown_doctype": _("{0} is not available on this site."),
+		"bad_operator": _("Unknown comparison \"{0}\"."),
+		"bad_trigger": _("Unknown trigger \"{0}\"."),
+		"bad_booking_event": _("Unknown booking event \"{0}\"."),
+		"bad_step": _("Unknown step \"{0}\"."),
+		"bad_id": _("\"{0}\" must be a short lowercase name (letters, digits, _)."),
+		"ai_in_if": _("AI steps can't go inside an \"if\"."),
+		"if_in_if": _("An \"if\" can't go inside another \"if\"."),
+		"ai_give": _("An AI step needs 1-20 inputs in \"give\"."),
+		"ai_get": _("An AI step needs 1-20 results in \"get\"."),
+		"ai_choices": _("The choice result \"{0}\" needs its choices."),
+		"no_email_field": _("{0} has no email field to send to."),
+		"sms_crm": _("SMS can only be sent to CRM leads or deals."),
+		"review_instead": _("AI never emails customers on its own: AI-written messages become a task with the draft, for someone to review and send."),
+		"review_title": _("Review and send: {0}"),
+		"do_review": _("Create a task for {0} to review and send the draft «{1}»"),
+		"cant_do": _("Can’t do that yet"),
+		"made_by_builder": _("Created by the automation builder for one workflow step."),
+		"ai_needs_update": _("AI steps need the latest Quest Automations (with Model Connections). You can try this plan, but update Automations before saving it."),
+		"yes": _("Yes"),
+		"otherwise": _("Otherwise"),
+		"check": _("Check condition"),
+		"when_created": _("When {0} is created"),
+		"when_updated": _("When {0} is changed"),
+		"when_fields": _(" (only {0})"),
+		"when_status": _("When the status of {0} becomes «{1}»"),
+		"when_booking": _("When a booking {0}"),
+		"when_every": _("Every {0} {1}"),
+		"when_manual": _("When someone runs it by hand"),
+		"only_if": _(", only if {0}"),
+		"do_ai": _("AI: {0} → gives {1}"),
+		"do_task": _("Create the task «{0}» for {1}"),
+		"do_note": _("Add the note «{0}» to the record"),
+		"do_notify": _("Notify {0}: «{1}»"),
+		"do_email": _("Email {0}: «{1}»"),
+		"do_sms": _("Send an SMS: «{0}»"),
+		"do_update": _("Set {0} to «{1}»"),
+		"do_wait": _("Wait {0} {1}"),
+		"do_link": _("Get the booking link ({0})"),
+		"do_if": _("If {0}"),
+		"any_service": _("any service"),
+		"record_owner": _("the record’s owner"),
+		"the_customer": _("the customer"),
+		"op_equals": _("{0} is «{1}»"),
+		"op_not_equals": _("{0} is not «{1}»"),
+		"op_contains": _("{0} contains «{1}»"),
+		"op_not_contains": _("{0} doesn’t contain «{1}»"),
+		"op_empty": _("{0} is empty"),
+		"op_not_empty": _("{0} is filled in"),
+		"unit_minutes": _("minutes"),
+		"unit_hours": _("hours"),
+		"unit_days": _("days"),
+		"unit_weeks": _("weeks"),
+		"unit1_minutes": _("minute"),
+		"unit1_hours": _("hour"),
+		"unit1_days": _("day"),
+		"unit1_weeks": _("week"),
+		"booking_Booked": _("is made"),
+		"booking_Confirmed": _("is confirmed"),
+		"booking_Rescheduled": _("is moved"),
+		"booking_Cancelled": _("is cancelled"),
+		"booking_Expired": _("expires unpaid"),
+		"booking_Completed": _("is completed"),
+		"booking_No-show": _("is a no-show"),
+		"booking_Needs attention": _("needs attention"),
+		"booking_Reminder sent": _("gets its reminder"),
+		"dt_CRM Lead": _("a lead"),
+		"dt_CRM Deal": _("a deal"),
+		"dt_Booking": _("a booking"),
+		"dt_Customer": _("a customer"),
+		"dt_Contact": _("a contact"),
+		"dt_Quotation": _("a quotation"),
+		"dt_Sales Order": _("a sales order"),
+		"dt_Sales Invoice": _("an invoice"),
+		"dt_Payment Entry": _("a payment"),
+		"dt_Task": _("a task"),
+		"dt_Issue": _("a support ticket"),
+	}
+
 
 # Ready-made descriptions; `needs` hides one when the site lacks that record type.
-RECIPES = {
-	'en': [
-		{'title': 'Welcome new leads', 'needs': 'CRM Lead', 'text': 'When a new lead comes in, assign a call task to the lead owner for today and email the lead a short welcome from the owner.'},
-		{'title': 'Sort incoming leads', 'needs': 'CRM Lead', 'text': 'When a new lead comes in, have the AI read their message and decide if it is urgent. If it is urgent, notify the lead owner right away.'},
-		{'title': 'After a meeting', 'needs': 'Booking', 'text': 'When a booking is completed, have the AI summarize the notes into decisions and to-dos, and add the summary as a note.'},
-		{'title': 'Win back no-shows', 'needs': 'Booking', 'text': 'When someone doesn’t show up to their booking, wait one hour and send them the link to book again.'},
-		{'title': 'Follow up on deals', 'needs': 'CRM Deal', 'text': 'When a deal moves to Proposal, wait 3 days and create a follow-up task for the deal owner.'},
-	],
-	'es': [
-		{'title': 'Dar la bienvenida a prospectos', 'needs': 'CRM Lead', 'text': 'Cuando entre un prospecto nuevo, crea una tarea de llamada para su responsable y envíale al prospecto un correo corto de bienvenida.'},
-		{'title': 'Clasificar prospectos', 'needs': 'CRM Lead', 'text': 'Cuando entre un prospecto nuevo, que la IA lea su mensaje y decida si es urgente. Si es urgente, avisa de inmediato a su responsable.'},
-		{'title': 'Después de una reunión', 'needs': 'Booking', 'text': 'Cuando se complete una reserva, que la IA resuma las notas en decisiones y pendientes, y agrega el resumen como nota.'},
-		{'title': 'Recuperar inasistencias', 'needs': 'Booking', 'text': 'Cuando alguien no asista a su reserva, espera una hora y envíale el enlace para volver a reservar.'},
-		{'title': 'Dar seguimiento a negocios', 'needs': 'CRM Deal', 'text': 'Cuando un negocio pase a Propuesta, espera 3 días y crea una tarea de seguimiento para su responsable.'},
-	],
-}
+def _recipes():
+	return [
+		{'title': _("Welcome new leads"), 'needs': "CRM Lead", 'text': _("When a new lead comes in, assign a call task to the lead owner for today and email the lead a short welcome from the owner.")},
+		{'title': _("Sort incoming leads"), 'needs': "CRM Lead", 'text': _("When a new lead comes in, have the AI read their message and decide if it is urgent. If it is urgent, notify the lead owner right away.")},
+		{'title': _("After a meeting"), 'needs': "Booking", 'text': _("When a booking is completed, have the AI summarize the notes into decisions and to-dos, and add the summary as a note.")},
+		{'title': _("Win back no-shows"), 'needs': "Booking", 'text': _("When someone doesn’t show up to their booking, wait one hour and send them the link to book again.")},
+		{'title': _("Follow up on deals"), 'needs': "CRM Deal", 'text': _("When a deal moves to Proposal, wait 3 days and create a follow-up task for the deal owner.")},
+	]

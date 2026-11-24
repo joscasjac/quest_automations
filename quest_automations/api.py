@@ -4,6 +4,7 @@ from pathlib import Path
 import hashlib,hmac,json
 from urllib.parse import urlsplit,parse_qs,unquote,urlencode
 import frappe
+from frappe import _
 from .store import Store
 from .core.definition import DefinitionError,validate,select_trigger,EVENTS,PULSE_ACTIONS
 from .core.engine import preview
@@ -15,7 +16,7 @@ def has_access():
     from .store import EDITOR_ROLES
     return frappe.session.user!='Guest' and bool(set(EDITOR_ROLES)&set(frappe.get_roles()))
 def require_access():
-    if not has_access():frappe.throw('System Manager or Sales Manager access is required',frappe.PermissionError)
+    if not has_access():frappe.throw(_('System Manager or Sales Manager access is required'),frappe.PermissionError)
 def endpoint(workflow_id,trigger_id,token):
     query={'workflow_id':workflow_id,'trigger_id':trigger_id,'token':token}
     return frappe.utils.get_url()+'/api/method/quest_automations.api.webhook?'+urlencode(query)
@@ -23,11 +24,11 @@ def endpoint(workflow_id,trigger_id,token):
 @frappe.whitelist(methods=['GET','POST'])
 def dispatch(path='',method='GET',body=None):
     require_access();store=Store();method=method.upper();body=json.loads(body) if isinstance(body,str) else body or {}
-    if method not in ('GET','POST','PUT'):frappe.throw('Unsupported method')
-    if method!='GET' and frappe.request.method!='POST':frappe.throw('Mutations require POST')
+    if method not in ('GET','POST','PUT'):frappe.throw(_('Unsupported method'))
+    if method!='GET' and frappe.request.method!='POST':frappe.throw(_('Mutations require POST'))
     parsed=urlsplit(path);route=parsed.path.strip('/');params=parse_qs(parsed.query)
-    if not isinstance(body,dict):frappe.throw('Request body must be an object')
-    if len(json.dumps(body).encode())>1024*1024:frappe.throw('Request exceeds 1 MB')
+    if not isinstance(body,dict):frappe.throw(_('Request body must be an object'))
+    if len(json.dumps(body).encode())>1024*1024:frappe.throw(_('Request exceeds 1 MB'))
     try:
         if route=='api/v1/connection':return {'erpnextConfigured':True,'publicBaseUrl':frappe.utils.get_url(),'native':True}
         if route=='api/v1/doctypes':return {'items':erp_doctypes(),'source':'live'}

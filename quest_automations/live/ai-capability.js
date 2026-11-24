@@ -12,7 +12,7 @@ frappe.ui.form.on('Quest AI Capability', {
         try {
           const {message:run}=await frappe.call({method:'quest_automations.ai_capabilities.test',type:'POST',args:{name:frm.is_new()?'':frm.doc.name,values:JSON.stringify(values),input_value:input.input,request_id:crypto.randomUUID()}});
           dialog.hide();
-          frappe.msgprint({title:__('AI test queued'),message:`<p>A debug run was queued. It uses your connected ChatGPT allowance and runs no follow-on actions.</p><p><a href="/desk/quest-ai-run/${encodeURIComponent(run.run)}">Open test result</a></p>`});
+          frappe.msgprint({title:__('AI test queued'),message:`<p>${__('A debug run was queued. It uses your connected ChatGPT allowance and runs no follow-on actions.')}</p><p><a href="/desk/quest-ai-run/${encodeURIComponent(run.run)}">${__('Open test result')}</a></p>`});
         } finally { dialog.enable_primary_action(); }
       }});
       dialog.show();

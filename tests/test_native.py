@@ -7,6 +7,7 @@ frappe.session=types.SimpleNamespace(user='manager@example.com')
 frappe.PermissionError=PermissionError
 frappe.get_roles=lambda:['System Manager']
 frappe.throw=lambda msg,*args:(_ for _ in ()).throw(PermissionError(msg))
+frappe._=lambda msg,*args,**kwargs:msg
 sys.modules['frappe']=frappe
 from quest_automations import native,api
 from quest_automations.core.graph import execute_native

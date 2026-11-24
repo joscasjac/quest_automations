@@ -1,4 +1,5 @@
 import {SearchSelect} from '../adapter/SearchSelect';
+import {__} from '../lib/i18n';
 import {useFieldSources} from '../adapter/FieldSources';
 import {
   useEffect,
@@ -122,8 +123,8 @@ export function MergeFieldTextInput({
         }}
         className="relative z-10 w-full bg-transparent text-transparent caret-white placeholder:text-neutral-500 selection:bg-accent/30 focus:outline-none"
       />
-      <button type="button" aria-label="Insert custom value" title="Custom values" onMouseDown={e=>e.preventDefault()} onClick={()=>setShowFields(!showFields)} className="relative z-20 mt-1 block text-xs text-accent hover:underline">Custom values</button>
-      {showFields&&<SearchSelect label="Choose custom value" value="" options={sources.map(f=>({value:f.path,label:f.label,detail:f.group}))} onChange={path=>{const token='{{'+path+'}}';const start=inputRef.current?.selectionStart??value.length;const end=inputRef.current?.selectionEnd??start;onChange(value.slice(0,start)+token+value.slice(end));setShowFields(false);requestAnimationFrame(()=>{inputRef.current?.focus();inputRef.current?.setSelectionRange(start+token.length,start+token.length)})}}/>}
+      <button type="button" aria-label={__('Insert custom value')} title={__('Custom values')} onMouseDown={e=>e.preventDefault()} onClick={()=>setShowFields(!showFields)} className="relative z-20 mt-1 block text-xs text-accent hover:underline">{__('Custom values')}</button>
+      {showFields&&<SearchSelect label={__('Choose custom value')} value="" options={sources.map(f=>({value:f.path,label:f.label,detail:f.group}))} onChange={path=>{const token='{{'+path+'}}';const start=inputRef.current?.selectionStart??value.length;const end=inputRef.current?.selectionEnd??start;onChange(value.slice(0,start)+token+value.slice(end));setShowFields(false);requestAnimationFrame(()=>{inputRef.current?.focus();inputRef.current?.setSelectionRange(start+token.length,start+token.length)})}}/>}
       {helper.menu}
     </span>
   );
@@ -210,8 +211,8 @@ export function MergeFieldTextarea({
         }}
         className="relative z-10 h-full w-full resize-none bg-transparent text-transparent caret-white placeholder:text-neutral-500 selection:bg-accent/30 focus:outline-none"
       />
-      <button type="button" aria-label="Insert custom value" title="Custom values" onMouseDown={e=>e.preventDefault()} onClick={()=>setShowFields(!showFields)} className="relative z-20 mt-1 block text-xs text-accent hover:underline">Custom values</button>
-      {showFields&&<SearchSelect label="Choose custom value" value="" options={sources.map(f=>({value:f.path,label:f.label,detail:f.group}))} onChange={path=>{const token='{{'+path+'}}';const start=textareaRef.current?.selectionStart??value.length;const end=textareaRef.current?.selectionEnd??start;onChange(value.slice(0,start)+token+value.slice(end));setShowFields(false);requestAnimationFrame(()=>{textareaRef.current?.focus();textareaRef.current?.setSelectionRange(start+token.length,start+token.length)})}}/>}
+      <button type="button" aria-label={__('Insert custom value')} title={__('Custom values')} onMouseDown={e=>e.preventDefault()} onClick={()=>setShowFields(!showFields)} className="relative z-20 mt-1 block text-xs text-accent hover:underline">{__('Custom values')}</button>
+      {showFields&&<SearchSelect label={__('Choose custom value')} value="" options={sources.map(f=>({value:f.path,label:f.label,detail:f.group}))} onChange={path=>{const token='{{'+path+'}}';const start=textareaRef.current?.selectionStart??value.length;const end=textareaRef.current?.selectionEnd??start;onChange(value.slice(0,start)+token+value.slice(end));setShowFields(false);requestAnimationFrame(()=>{textareaRef.current?.focus();textareaRef.current?.setSelectionRange(start+token.length,start+token.length)})}}/>}
       {helper.menu}
     </span>
   );

@@ -5,6 +5,7 @@ import {useEffect,useRef,useState} from 'react';
 import type {ReactNode} from 'react';
 import {useNavigate,useSearchParams} from 'react-router-dom';
 import {Button,Panel} from '../components/ui';
+import {__} from '../lib/i18n';
 
 type Sentence={kind:string;text:string;then?:Sentence[];else?:Sentence[];steps?:Sentence[];took?:'then'|'else';result?:Record<string,unknown>};
 type Question={question:string;choices:string[]};
@@ -13,32 +14,49 @@ type TestResult={record:string|null;doctype:string|null;trigger:Sentence;steps:S
 type Context={lang:'es'|'en';model:string|null;problem:string|null;recipes:Array<{title:string;text:string}>};
 
 const WORDS={
- es:{title:'Crear con IA',subtitle:'Cuéntele qué quiere que pase. La IA arma la automatización, usted la revisa y la prueba antes de activarla.',
-  ask:'¿Qué quiere que pase?',placeholder:'Ej.: Cuando entre un prospecto nuevo, crea una tarea de llamada para su responsable y avísame si viene de la web.',
-  recipes:'O empiece con una de estas',make:'Armar el plan',making:'Armando el plan…',questions:'Un par de preguntas antes',
-  questionsHint:'Así la automatización hace exactamente lo que usted quiere.',other:'Otra respuesta…',continue:'Continuar',
-  plan:'Así funcionaría',name:'Nombre',change:'¿Algo que cambiar?',changePlaceholder:'Ej.: también avísale a María',changeButton:'Cambiar',changing:'Cambiando…',
-  test:'Probar con un registro real',testing:'Probando…',save:'Guardar sin activar',activate:'Activar',activating:'Activando…',
-  startOver:'Empezar de nuevo',tested:'Prueba con',testedNone:'Prueba',nothingDone:'No se creó, cambió ni envió nada. Los pasos de IA sí se ejecutaron para que vea lo que escribirían.',
-  then:'Sí:',else:'Si no:',took:'tomaría este camino',skipped:'no aplica',
-  active:'¡Lista y activa!',activeText:'Empieza a funcionar con el próximo registro que cumpla la condición. Puede ver cada ejecución en el historial.',
-  saved:'Guardada sin activar',savedText:'Actívela cuando quiera desde aquí o desde la lista.',
-  advanced:'Ver en el editor avanzado',back:'Volver a mis automatizaciones',another:'Crear otra',
-  noModel:'Elija un modelo de IA primero',openAi:'Abrir Centro de IA',editedElsewhere:'Esta automatización se editó en el editor avanzado. Ábrala allí para cambiarla.',
-  uses:'Usa',stepWords:{trigger:'Cuándo',ai:'IA',task:'Tarea',note:'Nota',notify:'Aviso',email:'Correo',sms:'SMS',update:'Cambio',wait:'Espera',if:'Si',link:'Enlace',other:'Paso'}},
- en:{title:'Build with AI',subtitle:'Say what should happen. The AI builds the automation; you review and test it before turning it on.',
-  ask:'What should happen?',placeholder:'E.g. When a new lead comes in, create a call task for the lead owner and let me know if it came from the website.',
-  recipes:'Or start from one of these',make:'Build the plan',making:'Building the plan…',questions:'A couple of questions first',
-  questionsHint:'So the automation does exactly what you want.',other:'Another answer…',continue:'Continue',
-  plan:'Here’s how it would work',name:'Name',change:'Anything to change?',changePlaceholder:'E.g. also let Maria know',changeButton:'Change',changing:'Changing…',
-  test:'Try it on a real record',testing:'Trying…',save:'Save without turning on',activate:'Turn on',activating:'Turning on…',
-  startOver:'Start over',tested:'Tried with',testedNone:'Trial',nothingDone:'Nothing was created, changed or sent. AI steps did run so you can see what they would write.',
-  then:'Yes:',else:'Otherwise:',took:'would take this path',skipped:'doesn’t apply',
-  active:'Done and turned on!',activeText:'It starts with the next record that matches. Every run shows in its history.',
-  saved:'Saved, not turned on',savedText:'Turn it on whenever you like, here or from the list.',
-  advanced:'Open in the advanced editor',back:'Back to my automations',another:'Build another',
-  noModel:'Choose an AI model first',openAi:'Open AI Command Center',editedElsewhere:'This automation was edited in the advanced editor. Open it there to change it.',
-  uses:'Uses',stepWords:{trigger:'When',ai:'AI',task:'Task',note:'Note',notify:'Notice',email:'Email',sms:'SMS',update:'Change',wait:'Wait',if:'If',link:'Link',other:'Step'}},
+ title:__('Build with AI'),
+ subtitle:__('Say what should happen. The AI builds the automation; you review and test it before turning it on.'),
+ ask:__('What should happen?'),
+ placeholder:__('E.g. When a new lead comes in, create a call task for the lead owner and let me know if it came from the website.'),
+ recipes:__('Or start from one of these'),
+ make:__('Build the plan'),
+ making:__('Building the plan…'),
+ questions:__('A couple of questions first'),
+ questionsHint:__('So the automation does exactly what you want.'),
+ other:__('Another answer…'),
+ continue:__('Continue'),
+ plan:__('Here’s how it would work'),
+ name:__('Name'),
+ change:__('Anything to change?'),
+ changePlaceholder:__('E.g. also let Maria know'),
+ changeButton:__('Apply change'),
+ changing:__('Changing…'),
+ test:__('Try it on a real record'),
+ testing:__('Trying…'),
+ save:__('Save without turning on'),
+ activate:__('Turn on'),
+ activating:__('Turning on…'),
+ startOver:__('Start over'),
+ tested:__('Tried with'),
+ testedNone:__('Trial'),
+ nothingDone:__('Nothing was created, changed or sent. AI steps did run so you can see what they would write.'),
+ then:__('Yes:'),
+ else:__('Otherwise:'),
+ took:__('would take this path'),
+ skipped:__('doesn’t apply'),
+ active:__('Done and turned on!'),
+ activeText:__('It starts with the next record that matches. Every run shows in its history.'),
+ saved:__('Saved, not turned on'),
+ savedText:__('Turn it on whenever you like, here or from the list.'),
+ advanced:__('Open in the advanced editor'),
+ back:__('Back to my automations'),
+ another:__('Build another'),
+ noModel:__('Choose an AI model first'),
+ openAi:__('Open AI Command Center'),
+ editedElsewhere:__('This automation was edited in the advanced editor. Open it there to change it.'),
+ uses:__('Uses'),
+ nothingDoneShort:__('Nothing was created, changed or sent.'),
+ stepWords:{trigger:__('When'),ai:__('AI'),task:__('Task'),note:__('Note'),notify:__('Notice'),email:__('Mail'),sms:__('SMS'),update:__('Change'),wait:__('Wait'),if:__('If'),link:__('Link'),other:__('Step')} as Record<string,string>,
 };
 
 async function call<T>(method:string,args:Record<string,unknown>={},post=true):Promise<T>{
@@ -49,7 +67,7 @@ async function call<T>(method:string,args:Record<string,unknown>={},post=true):P
  if(!response.ok){
   let message='';
   try{message=JSON.parse(JSON.parse(data._server_messages)[0]).message}catch{message=data.exception?.split(':').slice(1).join(':').trim()||''}
-  throw new Error(message||'Something went wrong. Try again.');
+  throw new Error(message||__('Something went wrong. Try again.'));
  }
  return data.message as T;
 }
@@ -65,7 +83,7 @@ function Chip({kind,words}:{kind:string;words:Record<string,string>}){
  return <span className={`mt-0.5 inline-flex w-16 shrink-0 justify-center rounded-full px-2 py-0.5 text-[11px] font-medium ${TONE[kind]??'border border-emerald-800 text-emerald-400'}`}>{words[kind]??words.other}</span>;
 }
 
-function Steps({items,words,nested=false}:{items:Sentence[];words:typeof WORDS.es;nested?:boolean}):ReactNode{
+function Steps({items,words,nested=false}:{items:Sentence[];words:typeof WORDS;nested?:boolean}):ReactNode{
  return <ol className={nested?'mt-2 space-y-2 border-l border-edge pl-4':'space-y-2'}>{items.map((s,i)=><li key={i} className="rounded-md border border-edge bg-ink px-3 py-2.5">
   <div className="flex items-start gap-3"><Chip kind={s.kind} words={words.stepWords}/><p className="text-sm leading-6 text-white"><Rich text={s.text}/></p></div>
   {s.result&&<dl className="mt-2 space-y-1.5 rounded-md bg-white/5 p-3 text-sm">{Object.entries(s.result).map(([k,v])=><div key={k}><dt className="text-xs text-neutral-500">{k}</dt><dd className="whitespace-pre-wrap text-neutral-200">{typeof v==='boolean'?(v?'✓':'✗'):String(v)}</dd></div>)}</dl>}
@@ -79,7 +97,7 @@ function Steps({items,words,nested=false}:{items:Sentence[];words:typeof WORDS.e
 
 export function DescribePage(){
  const navigate=useNavigate();const [params]=useSearchParams();const existing=params.get('id');
- const [ctx,setCtx]=useState<Context|null>(null);const w=WORDS[ctx?.lang??'es'];
+ const [ctx,setCtx]=useState<Context|null>(null);const w=WORDS;
  const [description,setDescription]=useState('');
  const [questions,setQuestions]=useState<Question[]|null>(null);const [answers,setAnswers]=useState<string[]>([]);
  const [draft,setDraft]=useState<Draft|null>(null);const [change,setChange]=useState('');
@@ -181,7 +199,7 @@ export function DescribePage(){
    {trial&&<Panel className="mt-4 p-5">
     <h2 className="mb-3 text-sm text-neutral-500">{trial.record?<>{w.tested} <span className="font-medium text-white">{trial.record}</span></>:w.testedNone}</h2>
     <Steps items={[trial.trigger,...trial.steps]} words={w}/>
-    <p className="mt-3 text-xs text-neutral-500">{trial.steps.some(s=>s.kind==='ai')?w.nothingDone:w.nothingDone.split('. ')[0]+'.'}</p>
+    <p className="mt-3 text-xs text-neutral-500">{trial.steps.some(s=>s.kind==='ai')?w.nothingDone:w.nothingDoneShort}</p>
    </Panel>}
 
    <div className="sticky bottom-0 mt-4 flex flex-wrap items-center justify-end gap-2 border-t border-edge bg-ink/90 py-3 backdrop-blur">

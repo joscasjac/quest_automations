@@ -1,4 +1,5 @@
 import frappe
+from frappe import _
 from frappe.model.document import Document
 
 class QuestMeetingFollowup(Document):
@@ -10,9 +11,9 @@ class QuestMeetingFollowup(Document):
         previous = self.get_doc_before_save()
         if self.is_new():
             if not self.booking_uid or len(self.booking_uid) > 100:
-                frappe.throw('Provide a valid Cal.com booking UID.')
+                frappe.throw(_('Provide a valid Cal.com booking UID.'))
             event = meeting_current(self)
-            self.recipient, _ = recipient_for(event)
+            self.recipient, _ignored = recipient_for(event)
             self.status = 'Waiting for ChatGPT'
             self.subject = self.body = self.rationale = self.evidence = self.recommendation = self.model = ''
             self.playbook_snapshot = ''
@@ -30,13 +31,13 @@ class QuestMeetingFollowup(Document):
                         current_value = '' if current_value is None else str(current_value)
                         previous_value = '' if previous_value is None else str(previous_value)
                     if current_value != previous_value:
-                        frappe.throw('Use the follow-up actions to change ' + field.label + '.')
+                        frappe.throw(_('Use the follow-up actions to change {0}.').format(_(field.label)))
             if previous.status != 'Needs review' and (self.subject != previous.subject or self.body != previous.body):
-                frappe.throw('Only drafts awaiting review can be edited.')
+                frappe.throw(_('Only drafts awaiting review can be edited.'))
         if self.subject and ('\n' in self.subject or '\r' in self.subject or len(self.subject) > 140):
-            frappe.throw('Provide a single-line email subject up to 140 characters.')
+            frappe.throw(_('Provide a single-line email subject up to 140 characters.'))
         if self.body and len(self.body) > 12000:
-            frappe.throw('The draft must be under 12,000 characters.')
+            frappe.throw(_('The draft must be under 12,000 characters.'))
 
     def after_insert(self):
         from quest_automations.meeting_followups import create_task, queue_draft
