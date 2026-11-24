@@ -512,7 +512,22 @@ const DEFAULT_TRIGGER: DraftTrigger = { kind: "manual" };
 export function Workflows() {
   const navigate = useNavigate();
   const workflows = useQuery(api.workflows.list);
-  const rows = workflows ?? [];
+  const deleteWorkflow = useMutation(api.workflows.deleteWorkflow);
+  const [deleting, setDeleting] = useState<string | null>(null);
+  const [hidden, setHidden] = useState<string[]>([]);
+  const rows = (workflows ?? []).filter((w) => !hidden.includes(w._id));
+  const remove = async (workflow: { _id: string; name: string }) => {
+    if (!window.confirm(__("Delete the workflow «{0}» with its webhook endpoints, captured samples, schedules, versions and run history? This cannot be undone.", [workflow.name]))) return;
+    setDeleting(workflow._id);
+    try {
+      await deleteWorkflow({ definitionId: workflow._id });
+      setHidden((ids) => [...ids, workflow._id]);
+    } catch (error) {
+      window.dispatchEvent(new CustomEvent("automation-error", { detail: (error as Error).message }));
+    } finally {
+      setDeleting(null);
+    }
+  };
 
   return (
     <div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] flex-col bg-ink">
@@ -538,12 +553,15 @@ export function Workflows() {
 
       <main className="min-h-0 flex-1 overflow-auto p-6">
         <Panel className="overflow-hidden">
-          <div className="grid grid-cols-[minmax(220px,1.3fr)_130px_180px_110px_150px] border-b border-edge px-4 py-2 text-xs font-medium text-neutral-500 max-lg:hidden">
-            <span>{__("Name")}</span>
-            <span>{__("Status")}</span>
-            <span>{__("Trigger")}</span>
-            <span>{__("Runs")}</span>
-            <span>{__("Last update")}</span>
+          <div className="flex items-center border-b border-edge pr-4 text-xs font-medium text-neutral-500 max-lg:hidden">
+            <div className="grid flex-1 grid-cols-[minmax(220px,1.3fr)_130px_180px_110px_150px] gap-3 px-4 py-2">
+              <span>{__("Name")}</span>
+              <span>{__("Status")}</span>
+              <span>{__("Trigger")}</span>
+              <span>{__("Runs")}</span>
+              <span>{__("Last update")}</span>
+            </div>
+            <span className="w-16" aria-hidden="true" />
           </div>
           {workflows === undefined ? (
             <div className="p-4 text-sm text-neutral-500">{__("Loading...")}</div>
@@ -565,11 +583,11 @@ export function Workflows() {
           ) : (
             <div className="divide-y divide-edge">
               {rows.map((workflow) => (
+                <div key={workflow._id} className="flex items-center pr-4 transition-colors hover:bg-raised/50">
                 <button
-                  key={workflow._id}
                   type="button"
                   onClick={() => navigate(`/app/workflows/${workflow._id}`)}
-                  className="grid w-full grid-cols-[minmax(220px,1.3fr)_130px_180px_110px_150px] items-center gap-3 px-4 py-3 text-left transition-colors hover:bg-raised/50 max-lg:grid-cols-1 max-lg:gap-2"
+                  className="grid min-w-0 flex-1 grid-cols-[minmax(220px,1.3fr)_130px_180px_110px_150px] items-center gap-3 px-4 py-3 text-left max-lg:grid-cols-1 max-lg:gap-2"
                 >
                   <span className="min-w-0">
                     <span className="block truncate text-sm font-medium text-white">
@@ -592,6 +610,17 @@ export function Workflows() {
                     {shortDate(workflow.updatedAt)}
                   </span>
                 </button>
+                <button
+                  type="button"
+                  disabled={deleting !== null}
+                  onClick={() => remove(workflow)}
+                  aria-label={__("Delete the workflow «{0}»", [workflow.name])}
+                  title={__("Delete workflow")}
+                  className="w-16 shrink-0 rounded-md px-2 py-1.5 text-sm text-red-400 transition-colors hover:bg-red-500/10 disabled:opacity-40"
+                >
+                  {deleting === workflow._id ? "…" : __("Delete")}
+                </button>
+                </div>
               ))}
             </div>
           )}
@@ -846,7 +875,11 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
 
   const removeTrigger = async (index: number) => {
     const target=draftTriggers[index];
-    if(selected && target?.id && workflowTriggerList(selected).some(t=>t.id===target.id)){
+    const saved=Boolean(selected && target?.id && workflowTriggerList(selected).some(t=>t.id===target.id));
+    if(target&&!window.confirm(saved
+      ?__("Remove the trigger «{0}»? Its webhook address, captured samples and schedule are deleted too. This cannot be undone.",[triggerLabel(target)])
+      :__("Remove the trigger «{0}»?",[triggerLabel(target)])))return;
+    if(selected && saved){
       setBusy('delete-trigger');
       try{await deleteSavedTrigger({definitionId:selected._id,triggerId:target.id})}
       catch(error){setFormError((error as Error).message);return}

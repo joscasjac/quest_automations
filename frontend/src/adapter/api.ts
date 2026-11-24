@@ -1,10 +1,17 @@
 import {useEffect,useState} from 'react';
 import {__} from '../lib/i18n';
 import type {Workflow,Version,Run,Trigger,EditorStep} from './types';
+// Frappe's own errors (permission, a record still linked): the first server message, or the exception text
+function frappeMessage(envelope:any):string{
+ const plain=(html:string)=>new DOMParser().parseFromString(String(html),'text/html').body.textContent?.trim()||'';
+ try{const first=JSON.parse(JSON.parse(envelope._server_messages)[0]);const text=plain(first.message??first);if(text)return text}catch{}
+ const exception=typeof envelope.exception==='string'?envelope.exception:'';
+ return plain(exception.includes(':')?exception.split(':').slice(1).join(':'):exception);
+}
 export async function request(path:string,method='GET',body?:unknown){
  const native=(window as any).automationFrappe;
  const response=await fetch(native?'/api/method/quest_automations.api.dispatch':'/api/v1/'+path,native?{method:'POST',credentials:'same-origin',headers:{'Content-Type':'application/json','X-Frappe-CSRF-Token':native.csrfToken},body:JSON.stringify({path:'api/v1/'+path,method,body:body??{}})}:{method,headers:{Authorization:'Bearer '+sessionStorage.getItem('automation-token'),'Content-Type':'application/json'},body:body===undefined?undefined:JSON.stringify(body)});
- const envelope=await response.json();const data=native?envelope.message:envelope;if(!response.ok||data?.error)throw new Error(data?.error||envelope.error||__('API request failed'));return data;
+ const envelope=await response.json().catch(()=>({}));const data=native?envelope.message:envelope;if(!response.ok||data?.error||envelope.exc_type)throw new Error(data?.error||envelope.error||frappeMessage(envelope)||__('API request failed'));return data;
 
 }
 type Ref<T>={name:string;result?:T};

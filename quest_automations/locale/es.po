@@ -792,6 +792,18 @@ msgstr "¿Eliminar esta automatización y todos sus registros guardados? No se p
 msgid "Delete workflow"
 msgstr "Eliminar automatización"
 
+msgid "Delete the workflow «{0}» with its webhook endpoints, captured samples, schedules, versions and run history? This cannot be undone."
+msgstr "¿Eliminar la automatización «{0}» con sus webhooks, las muestras capturadas, las programaciones, las versiones y el historial de ejecuciones? No se puede deshacer."
+
+msgid "Delete the workflow «{0}»"
+msgstr "Eliminar la automatización «{0}»"
+
+msgid "Remove the trigger «{0}»? Its webhook address, captured samples and schedule are deleted too. This cannot be undone."
+msgstr "¿Quitar el disparador «{0}»? También se borran su dirección de webhook, las muestras capturadas y su programación. No se puede deshacer."
+
+msgid "Remove the trigger «{0}»?"
+msgstr "¿Quitar el disparador «{0}»?"
+
 msgid "Enrollment History"
 msgstr "Historial de inscripciones"
 
