@@ -1,6 +1,7 @@
 import {PULSE_ACTION_LIBRARY,createPulseStep,isPulseOperation} from '../adapter/pulseCatalog';
 import {CopilotPanel} from './Copilot';
 import type {CopilotContext} from './Copilot';
+import {flowAvailable, useFlowLink} from './flowBridge';
 import {__} from '../lib/i18n';
 import {RESERVAS_ACTION_LIBRARY,RESERVAS_TRIGGER_LIBRARY,createReservasStep,isReservasOperation,isReservasTrigger,reservasTriggerTitle,reservasTriggerLabel} from '../adapter/ReservasFields';
 import type {ReservasOperation} from '../adapter/ReservasFields';
@@ -1238,7 +1239,9 @@ export function WorkflowBuilderPage({ mode }: { mode: "new" | "detail" }) {
       setGotoPickerFor(null);
       setActiveTab("builder");
     },
-  };
+  };  // Frappe Flow on the page (qf_flow) works on this workflow like the AI sidebar did
+  useFlowLink(copilotContext, dirty);
+
 
   return (
     <WorkflowDraftContext.Provider value={{save:()=>saveBuilder(true),busy:busy!==null,savedTriggerIds:workflowTriggerList(selected).flatMap(t=>t.id?[t.id]:[])}}><FieldSourcesProvider triggers={draftTriggers} steps={draftSteps} selection={selectedNode}><div className="-mx-6 -my-6 flex min-h-[calc(100vh-48px)] bg-ink"><div className="flex min-w-0 flex-1 flex-col">
@@ -1451,9 +1454,10 @@ function BuilderTopBar({
           </button>
           <button
             type="button"
-            onClick={onCopilot}
-            aria-pressed={copilotOpen}
-            aria-controls="copilot-title"
+            onClick={flowAvailable() ? undefined : onCopilot}
+            data-flow-toggle={flowAvailable() ? "" : undefined}
+            aria-pressed={flowAvailable() ? undefined : copilotOpen}
+            aria-controls={flowAvailable() ? undefined : "copilot-title"}
             className={`flex h-9 items-center gap-1.5 rounded-md border px-3 text-sm transition-colors ${
               copilotOpen ? "border-accent text-accent" : "border-edge text-white hover:bg-raised"
             }`}
